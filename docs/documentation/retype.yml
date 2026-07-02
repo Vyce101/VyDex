@@ -1,0 +1,16 @@
+# Configures the VyDex Retype documentation site.
+input: .
+output: .retype
+url: https://vyce101.github.io/VyDex/
+
+branding:
+  title: VyDex
+  label: Docs
+
+links:
+  - text: Repository
+    link: https://github.com/Vyce101/VyDex
+    icon: mark-github
+
+footer:
+  copyright: "&copy; Copyright {{ year }}. All rights reserved."

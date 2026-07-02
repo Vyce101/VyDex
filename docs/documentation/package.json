@@ -1,0 +1,13 @@
+{
+  "name": "@vydex/documentation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "retype build .",
+    "start": "retype start ."
+  },
+  "devDependencies": {
+    "retypeapp": "4.5.3"
+  }
+}
