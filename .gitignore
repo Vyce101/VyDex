@@ -1,5 +1,11 @@
 # Files excluded from the public repository.
 AGENTS.md
+node_modules/
+.astro/
+dist/
+playwright-report/
+test-results/
+.vitest/
 docs/documentation/.retype/
 docs/documentation/retype.manifest
 docs/documentation/node_modules/
