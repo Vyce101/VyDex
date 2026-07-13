@@ -1,0 +1,35 @@
+/* Defines project-owned visual tokens for the static application. */
+:root {
+  color-scheme: light dark;
+  --color-action: #0892d0;
+  --color-background: #f4f7f9;
+  --color-surface: #ffffff;
+  --color-text-primary: #1b2430;
+  --color-text-secondary: #4a5568;
+  --color-accent: #1b2430;
+  --color-border: #d1d9e0;
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --font-family-body: "Source Sans 3 Variable", "Segoe UI", Arial, sans-serif;
+  --font-family-heading: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
+  --font-size-body: 1rem;
+  --line-height-body: 1.6;
+  --space-2: 0.5rem;
+  --space-4: 1rem;
+  --space-8: 2rem;
+  --content-width: 48rem;
+  --border-radius: 0.5rem;
+  --focus-outline: 0.1875rem solid var(--color-action);
+  --focus-offset: 0.1875rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1b2430;
+    --color-surface: #142030;
+    --color-text-primary: #e8f7fc;
+    --color-text-secondary: #7a90a4;
+    --color-accent: #e8f7fc;
+    --color-border: #243447;
+  }
+}
