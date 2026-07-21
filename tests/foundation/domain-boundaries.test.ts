@@ -69,7 +69,7 @@ function isForbiddenDomainImport(specifier: string, fileName: string): boolean {
 }
 
 describe("domain module boundaries", () => {
-  test("provides each empty boundary through the public entry point", () => {
+  test("provides each domain boundary through the public entry point", () => {
     expect(existsSync(DOMAIN_PUBLIC_ENTRY)).toBe(true);
 
     const publicExports = getModuleSpecifiers(readFileSync(DOMAIN_PUBLIC_ENTRY, "utf8"), DOMAIN_PUBLIC_ENTRY);
