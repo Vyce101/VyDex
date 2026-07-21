@@ -16,3 +16,5 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 ### Security
+
+- Updated Astro to 7.1.3 to address a reflected cross-site scripting vulnerability in View Transition animation values.
