@@ -47,7 +47,7 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **A public evidence ledger.** Users will be able to read structured claims alongside their sources, caveats, scope, evidence strength, update history, and careful interpretation, then download the latest accepted records as structured data.
 
-These product capabilities describe the intended VyDex system. The current repository contains only the foundation needed to build them safely.
+These product capabilities describe the intended VyDex system. The repository now includes the static application foundation and the canonical data contracts needed to build them, but it does not yet provide the Stage 1 public interface.
 
 ## Why It Is Different
 
@@ -63,9 +63,9 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex is at the foundation-build stage. The repository can install pinned dependencies, type-check, run its foundation tests, produce a static Astro build, and run responsive browser and accessibility checks.
+VyDex is at the foundation-build stage. The repository can install pinned dependencies, type-check, run its domain and foundation tests, produce a static Astro build, and run responsive browser and accessibility checks. Its framework-independent domain layer now defines strict contracts for Entries, Topic Trails, Methodologies, Entry publication snapshots, and release metadata, along with safe Markdown and cross-record validation.
 
-The current `/` route is a technical fixture, not the Stage 1 homepage. Canonical record contracts, publication revisions, material-activity rules, releases, product routes, canonical URLs, and public export formats have not been implemented yet. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
+The current `/` route is a technical fixture, not the Stage 1 homepage. No canonical records have been authored or loaded yet. Publication commands, snapshot creation and comparison, material-activity rules, release construction, product routes, canonical URLs, and public export formats remain unimplemented. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
 
 ## Major Milestones Roadmap
 
