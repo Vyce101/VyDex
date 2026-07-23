@@ -9,6 +9,10 @@ import {
   REVIEW_STATUSES,
   SOURCE_ROLES,
 } from "../../src/domain/canonical-records";
+import type {
+  CanonicalRecordSource,
+  LoadedCanonicalRecords,
+} from "../../src/domain/release-construction";
 
 export const IDS = {
   entry: "01900000-0000-7000-8000-000000000001",
@@ -228,6 +232,100 @@ export function createValidReleaseMetadata() {
   return {
     release_id: IDS.release,
     generated_at: "2026-07-21T20:30:00.123Z",
+  };
+}
+
+export function createValidAboutRecord() {
+  const prose = "Complete public About prose with a [safe link](https://example.com).";
+  return {
+    header_lead: prose,
+    positioning: "A versioned evidence ledger for frontier claims",
+    maintainer_line: prose,
+    maintainer: {
+      name: "Example Maintainer",
+      public_alias: "Example Alias",
+      descriptor: "An independent builder in South Africa",
+      linkedin_url: "https://www.linkedin.com/in/example-maintainer",
+      github_url: "https://github.com/example-maintainer",
+    },
+    what_vydex_is: [prose, prose],
+    why_vydex_exists: [prose, prose, prose],
+    who_runs_vydex: [prose, prose],
+    scope_limits: {
+      introduction: prose,
+      curated_not_exhaustive: prose,
+      english_language_bias: prose,
+      verification_varies_by_domain: prose,
+      ai_heavy_coverage: prose,
+      evidence_can_change: prose,
+      coverage_baseline: [prose, prose, prose],
+    },
+    how_vydex_stays_careful: {
+      methodology: prose,
+      sources: prose,
+      updates: prose,
+    },
+    related_links: {
+      methodology: { title: "Methodology", description: "Read the public judgment standard" },
+      changelog: { title: "Changelog", description: "Review material evidence-ledger changes" },
+      export_json: { title: "Export", description: "Download structured public data" },
+    },
+  };
+}
+
+export function createValidMethodologyPublicationEvent() {
+  return {
+    type: "methodology_change",
+    methodology_id: IDS.methodology,
+    date: "2026-01-01",
+    title: "Methodology v1.0.0 Published",
+    summary: "Published the initial public judgment standard for Stage 1 entries.",
+  };
+}
+
+export function createLoadedCanonicalRecords(): LoadedCanonicalRecords {
+  const source = (
+    record_type: CanonicalRecordSource["record_type"],
+    filename: string,
+    value: unknown,
+  ): CanonicalRecordSource => ({
+    record_type,
+    filename,
+    raw_text: JSON.stringify(value),
+    value,
+  });
+  const entry = createValidEntry();
+  const primaryTrail = createValidTopicTrail();
+  const secondaryTrail = createValidSecondaryTopicTrail();
+  const methodology = createValidMethodology();
+  const about = createValidAboutRecord();
+  const event = createValidMethodologyPublicationEvent();
+  const snapshot = createValidSnapshot();
+  return {
+    entries: [source("entry", "data/canonical-records/entries/entry.json", entry)],
+    topic_trails: [
+      source("topic_trail", "data/canonical-records/topic-trails/primary.json", primaryTrail),
+      source("topic_trail", "data/canonical-records/topic-trails/secondary.json", secondaryTrail),
+    ],
+    methodologies: [
+      source("methodology", "data/canonical-records/methodologies/1.0.0.json", methodology),
+    ],
+    about: [source("about", "data/canonical-records/about/about.json", about)],
+    methodology_publication_events: [
+      source(
+        "methodology_publication_event",
+        "data/canonical-records/methodology-publication-events/1.0.0.json",
+        event,
+      ),
+    ],
+    entry_publication_snapshots: [
+      source(
+        "entry_publication_snapshot",
+        `data/publication-snapshots/entries/${IDS.entry}/1-${IDS.snapshot}.json`,
+        snapshot,
+      ),
+    ],
+    diagnostics: [],
   };
 }
 
