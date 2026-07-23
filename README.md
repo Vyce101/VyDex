@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="#current-status"><img alt="Current status: release model foundation" src="https://img.shields.io/badge/status-release%20model%20foundation-0892D0" /></a>
+  <a href="#current-status"><img alt="Current status: dataset generation foundation" src="https://img.shields.io/badge/status-dataset%20generation%20foundation-0892D0" /></a>
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest and Playwright configured" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
@@ -47,7 +47,9 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **A public evidence ledger.** Users will be able to read structured claims alongside their sources, caveats, scope, evidence strength, update history, and careful interpretation, then download the latest accepted records as structured data.
 
-These product capabilities describe the intended VyDex system. The repository now includes the static application foundation, canonical data contracts, immutable publication revisions, and validated release construction needed to build them, but it does not yet provide the Stage 1 public interface.
+**Versioned structured releases.** Each dataset release has an immutable Schema, release-specific path, fixed release metadata, and deterministic JSON. A stable convenience URL can point to the newest immutable artifact without replacing it.
+
+These product capabilities describe the intended VyDex system. The repository now includes the static application foundation, canonical data contracts, immutable publication revisions, validated release construction, and Dataset `1.0.0` generation needed to build them, but it does not yet provide the Stage 1 public interface.
 
 ## Why It Is Different
 
@@ -63,11 +65,13 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex is at the release-model foundation stage. The repository can install pinned dependencies, type-check, run its domain and foundation tests, produce a static Astro build, and run responsive browser and accessibility checks. Its framework-independent domain layer defines strict contracts for Entries, Topic Trails, Methodologies, About content, Entry publication snapshots, Methodology publication events, and release metadata. It validates revision histories, constructs detached immutable snapshots, enforces materiality and alias-history rules, and derives current and meaningful activity dates.
+VyDex is at the dataset-generation foundation stage. The repository installs pinned dependencies, type-checks, runs domain and foundation tests, produces a static Astro build, and checks responsive browser and accessibility behavior. Its framework-independent domain layer defines strict contracts for Entries, Topic Trails, Methodologies, About content, Entry publication snapshots, Methodology publication events, release metadata, and the public Dataset `1.0.0` format.
 
-The read-only canonical loader and deterministic release constructor now validate repository records, select current published snapshots, resolve Topic Trail membership, construct canonical URLs and redirect descriptors, derive the public Changelog, and prepare the versioned dataset model. Strict production returns no release when a blocking diagnostic exists; private preview retains invalid source records without treating them as valid public data.
+The read-only canonical loader and deterministic release constructor validate repository records, select current published snapshots, resolve Topic Trail membership, construct canonical URLs and redirect descriptors, and derive the public Changelog. Strict production returns no release when a blocking diagnostic exists; private preview retains invalid source records without treating them as public data.
 
-The current `/` route is still a technical fixture, not the Stage 1 homepage. No production content has been authored or published yet. Publication commands, snapshot persistence, public pages, dataset serialization, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
+Dataset generation now consumes only a validated production release. It projects current public Entries into deterministic JSON, validates the result against the origin-specific immutable Schema, derives the release artifact and stable-latest redirect descriptors, and can write the immutable file beneath an injected output root without overwriting different bytes. Astro publishes the versioned Schema at `/schemas/vydex-dataset/1.0.0.json`, and CI verifies the static output with a frozen dependency install.
+
+The current `/` route is still a technical fixture, not the Stage 1 homepage. No production content or genuine dataset artifact has been published. Publication commands, snapshot persistence, public pages, persisted release descriptors, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The final public origin and genuine launch dataset will be supplied by those later release and content workflows.
 
 ## Major Milestones Roadmap
 

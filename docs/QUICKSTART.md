@@ -7,6 +7,7 @@
 - **npm:** `11.6.2`
 - **Local services:** None. VyDex does not require a backend, database, CMS, or external content service.
 - **API keys or model providers:** None.
+- **Public site origin:** Static builds require a root-only HTTPS `PUBLIC_SITE_ORIGIN` so the Dataset Schema can use its absolute canonical URL.
 - **Hardware:** No special hardware is required. Browser testing downloads a local Chromium build and requires additional disk space.
 
 ## Git commands
@@ -36,6 +37,22 @@ Install exactly the dependency versions recorded in the root lockfile:
 npm ci
 ```
 
+## Configure static builds
+
+For local build verification, use the reserved example origin. In PowerShell:
+
+```powershell
+$env:PUBLIC_SITE_ORIGIN = "https://vydex.example"
+```
+
+On macOS or Linux:
+
+```bash
+export PUBLIC_SITE_ORIGIN="https://vydex.example"
+```
+
+Set the real root-only HTTPS origin in the production build environment when deployment is configured. Do not add a path, query, fragment, username, or password.
+
 ## Run VyDex
 
 Start the local Astro application:
@@ -64,6 +81,8 @@ Install Chromium once, then run the responsive browser and accessibility tests:
 npm run test:browser:install
 npm run test:browser
 ```
+
+The browser-test command supplies `https://vydex.example` for its isolated static build, so it does not use a production hostname.
 
 ## Downloading the latest installation
 

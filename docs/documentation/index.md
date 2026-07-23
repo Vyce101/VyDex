@@ -8,7 +8,7 @@ label: Home
 
 VyDex is a versioned evidence ledger for threshold-crossing claims in AI, science, and technology.
 
-These docs explain how to run the current foundation and how canonical records, publication revisions, release construction, and the static application fit together. User guides and public Methodology documentation will appear when those workflows exist.
+These docs cover the current application foundation, canonical records, publication revisions, release construction, deterministic dataset generation, and the boundaries between them. User guides and public Methodology documentation will appear when those workflows exist.
 
 ## Choose a Path
 
