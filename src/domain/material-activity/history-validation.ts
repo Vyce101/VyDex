@@ -295,5 +295,20 @@ export function validateEntryRevisionHistory(
     validateLaterRevision(previous, snapshot, diagnostics);
   }
 
+  const current = ordered.at(-1)!;
+  const historicalSlugs = new Set(ordered.slice(0, -1).map((snapshot) => snapshot.entry.slug));
+  for (const historicalSlug of historicalSlugs) {
+    if (historicalSlug === current.entry.slug || current.entry.aliases.includes(historicalSlug)) continue;
+    diagnostics.push(
+      createHistoryDiagnostic(
+        "historical_slug_alias_missing",
+        ["entry", "aliases"],
+        "The current published Entry must retain every previous published slug as a direct alias.",
+        historicalSlug,
+        current.revision_id,
+      ),
+    );
+  }
+
   return diagnostics.length > 0 ? { success: false, diagnostics } : { success: true, data: ordered, diagnostics: [] };
 }
