@@ -1,0 +1,4 @@
+# Preserves immutable JSON Schema response metadata on Cloudflare Pages.
+/schemas/vydex-dataset/1.0.0.json
+  Content-Type: application/schema+json; charset=utf-8
+  Cache-Control: public, max-age=31536000, immutable
