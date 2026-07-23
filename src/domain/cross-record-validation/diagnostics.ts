@@ -24,9 +24,10 @@ export type ValidationResult<T> =
   | { success: true; data: T; diagnostics: readonly [] }
   | { success: false; diagnostics: ValidationDiagnostic[] };
 
-type RecordIdentityField = "id" | "revision_id" | "release_id";
+type RecordIdentityField = "id" | "revision_id" | "release_id" | "methodology_id";
 
-function getRecordId(value: unknown, identityField: RecordIdentityField): string | undefined {
+function getRecordId(value: unknown, identityField: RecordIdentityField | null): string | undefined {
+  if (identityField === null) return undefined;
   if (typeof value !== "object" || value === null) {
     return undefined;
   }
@@ -71,7 +72,7 @@ export function createSchemaDiagnostics(
   error: z.ZodError,
   input: LocatedRecordInput,
   recordType: string,
-  identityField: RecordIdentityField,
+  identityField: RecordIdentityField | null,
 ): ValidationDiagnostic[] {
   const recordId = getRecordId(input.value, identityField);
 
