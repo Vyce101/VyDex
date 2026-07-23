@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="#current-status"><img alt="Current status: foundation build" src="https://img.shields.io/badge/status-foundation%20build-0892D0" /></a>
+  <a href="#current-status"><img alt="Current status: release model foundation" src="https://img.shields.io/badge/status-release%20model%20foundation-0892D0" /></a>
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest and Playwright configured" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
@@ -47,7 +47,7 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **A public evidence ledger.** Users will be able to read structured claims alongside their sources, caveats, scope, evidence strength, update history, and careful interpretation, then download the latest accepted records as structured data.
 
-These product capabilities describe the intended VyDex system. The repository now includes the static application foundation and the canonical data contracts needed to build them, but it does not yet provide the Stage 1 public interface.
+These product capabilities describe the intended VyDex system. The repository now includes the static application foundation, canonical data contracts, immutable publication revisions, and validated release construction needed to build them, but it does not yet provide the Stage 1 public interface.
 
 ## Why It Is Different
 
@@ -63,9 +63,11 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex is at the foundation-build stage. The repository can install pinned dependencies, type-check, run its domain and foundation tests, produce a static Astro build, and run responsive browser and accessibility checks. Its framework-independent domain layer defines strict contracts for Entries, Topic Trails, Methodologies, Entry publication snapshots, and release metadata, along with safe Markdown and cross-record validation. It can also validate Entry revision histories, construct detached immutable snapshots from supplied publication metadata, enforce materiality rules, and derive current and meaningful activity dates.
+VyDex is at the release-model foundation stage. The repository can install pinned dependencies, type-check, run its domain and foundation tests, produce a static Astro build, and run responsive browser and accessibility checks. Its framework-independent domain layer defines strict contracts for Entries, Topic Trails, Methodologies, About content, Entry publication snapshots, Methodology publication events, and release metadata. It validates revision histories, constructs detached immutable snapshots, enforces materiality and alias-history rules, and derives current and meaningful activity dates.
 
-The current `/` route is a technical fixture, not the Stage 1 homepage. No canonical records have been authored, loaded, or published yet. Filesystem record loaders, publication commands, snapshot persistence, release construction, product routes, canonical URLs, public revision browsing, and public export formats remain unimplemented. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
+The read-only canonical loader and deterministic release constructor now validate repository records, select current published snapshots, resolve Topic Trail membership, construct canonical URLs and redirect descriptors, derive the public Changelog, and prepare the versioned dataset model. Strict production returns no release when a blocking diagnostic exists; private preview retains invalid source records without treating them as valid public data.
+
+The current `/` route is still a technical fixture, not the Stage 1 homepage. No production content has been authored or published yet. Publication commands, snapshot persistence, public pages, dataset serialization, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
 
 ## Major Milestones Roadmap
 

@@ -2,13 +2,13 @@
 label: Home
 ---
 
-# VyDex Documentation
+<h1 align="center">VyDex Documentation</h1>
 
 ![VyDex versioned evidence preview|900](https://raw.githubusercontent.com/Vyce101/VyDex/main/docs/assets/Social%20Preview%20%28186KB%29.jpg)
 
 VyDex is a versioned evidence ledger for threshold-crossing claims in AI, science, and technology.
 
-These docs cover the codebase that exists today: how to run it, how the static application and canonical-record systems work, and which boundaries future implementation must preserve. User guides and public Methodology documentation will appear when their workflows exist.
+These docs explain how to run the current foundation and how canonical records, publication revisions, release construction, and the static application fit together. User guides and public Methodology documentation will appear when those workflows exist.
 
 ## Choose a Path
 

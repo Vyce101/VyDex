@@ -25,7 +25,7 @@ It does not own:
 - Generating revision IDs or reading the current clock.
 - Choosing filenames, directories, or repository tracking policy.
 - Persisting returned snapshots or creating releases.
-- Terminal output, rotating-file logs, public pages, or historical browsing.
+- Terminal output, logging side effects, public pages, or historical browsing.
 
 ## Inputs and Outputs
 
@@ -40,10 +40,11 @@ The operation returns either a complete, deeply readonly `EntryPublicationSnapsh
 1. Validate the proposed Entry and caller-supplied publication metadata with the canonical schemas.
 2. Validate the existing snapshots, then order copies by revision number without mutating caller input.
 3. Require revision numbers to begin at 1 without gaps or duplicates, and require publication timestamps to increase strictly with revision number.
-4. Resolve the proposed and historical Methodology ID/version pairs against the supplied Methodology collection.
-5. Compare the latest published Entry with the proposed Entry and check the category, materiality, and declared semantic paths.
-6. Assign the next revision number, construct a complete snapshot, validate it with the canonical snapshot schema, detach it, and freeze its nested values.
-7. Derive current revision metadata, Date Added, Date Updated, and latest meaningful activity from the completed sequence.
+4. Require the current published Entry to retain every earlier published slug as a direct alias.
+5. Resolve the proposed and historical Methodology ID/version pairs against the supplied Methodology collection.
+6. Compare the latest published Entry with the proposed Entry and check the category, materiality, and declared semantic paths.
+7. Assign the next revision number, construct a complete snapshot, validate it with the canonical snapshot schema, detach it, and freeze its nested values.
+8. Derive current revision metadata, Date Added, Date Updated, and latest meaningful activity from the completed sequence.
 
 The operation is deterministic. Identical inputs produce the same result because the domain does not generate IDs, read the clock, access files, or use ambient process state.
 
@@ -70,9 +71,9 @@ A non-material revision becomes current but does not move Date Updated or replac
 
 ## Failure Behavior
 
-Publication stops before snapshot construction when any input or history rule fails. Blocking conditions include invalid canonical state, empty summaries, duplicate or discontinuous revisions, contradictory chronology, unresolved Methodologies, duplicate Methodology IDs, category/materiality conflicts, unchanged material declarations, and disabled Stage 1 removal.
+Publication stops before snapshot construction when any input or history rule fails. Blocking conditions include invalid canonical state, empty summaries, duplicate or discontinuous revisions, contradictory chronology, missing historical slug aliases, unresolved Methodologies, duplicate Methodology IDs, category/materiality conflicts, unchanged material declarations, and disabled Stage 1 removal.
 
-The domain returns `ValidationDiagnostic` values. A future command may format or log those diagnostics, but formatting and logging do not belong in this system.
+The domain returns `ValidationDiagnostic` values. A future command may format them for standard output or standard error, but formatting and process exit behavior do not belong in this system.
 
 ## Internal Edge Cases
 
@@ -80,6 +81,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format or
 - Revision number is the authoritative sequence, but timestamps must agree with that order and cannot be equal.
 - An empty history is valid only while proposing the initial publication. Standalone activity derivation rejects an empty sequence.
 - Stored material updates may have depended on a transient semantic declaration. Historical validation verifies objective contradictions but does not try to reconstruct that earlier editorial judgment.
+- When a published slug changes, the newest snapshot must retain every earlier published slug as a direct alias. Release construction uses those aliases for direct permanent-redirect descriptors.
 - A source selector must use a valid non-numeric citation ID. Array indices, malformed selectors, unknown fields, duplicate paths, and declarations for unchanged fields fail validation.
 
 ## Cross-System Edge Cases
@@ -88,6 +90,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format or
 - Every historical snapshot must resolve to the exact supplied Methodology ID and public version that it records. Older revisions may reference older Methodology records.
 - Aggregate canonical validation can validate repository-wide identities and relationships. The publication operation validates only the complete referenced Methodology set supplied for one Entry history.
 - Repository persistence remains separate. A successful return does not mean a snapshot file exists or that a release includes it.
+- [Release Construction](release-construction.md) validates complete stored histories, selects the newest snapshot, and derives public routes, Changelog events, and export records.
 - Historical public browsing remains future Stage 3 work; retained snapshots have no public revision route yet.
 
 ## Invariants
@@ -99,6 +102,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format or
 - Publication timestamps use UTC and increase strictly with revision number.
 - Material changes cannot be published as non-material.
 - Update summaries must be non-empty plain text and provide the permanent public explanation of what changed.
+- Previously published slugs remain direct aliases of the current published slug.
 - Date Added and Date Updated come only from stored publication timestamps.
 - Domain operations remain free of filesystem, logging, clock, randomness, and UI behavior.
 

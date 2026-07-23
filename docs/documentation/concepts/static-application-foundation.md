@@ -1,6 +1,6 @@
 ---
 label: Static Application Foundation
-order: 100
+order: 400
 ---
 
 # Static Application Foundation
@@ -40,7 +40,9 @@ The current `/` page is a build fixture, not the Stage 1 homepage or a product i
 
 ## Interactions With Other Project Areas
 
-The canonical-record domain module defines the data contracts consumed by loaders, [publication revisions](publication-revisions.md), pages, and exports. Publication revisions and material activity remain framework-independent; the foundation provides their dependency boundary and test environment but does not own their behavior.
+The canonical-record domain module defines the data contracts consumed by loaders, [publication revisions](publication-revisions.md), [release construction](release-construction.md), pages, and exports. Publication revisions, material activity, routing, export projection, and release construction remain framework-independent; the foundation provides their dependency boundary and test environment but does not own their behavior.
+
+The application release adapter composes the read-only canonical loader with the framework-independent constructor. It reads `PUBLIC_SITE_ORIGIN` at the application boundary and defaults private preview to `http://localhost:4321`. Astro pages and components must use this shared release entry point rather than parse authoring files directly.
 
 The repository also reserves separate locations for canonical records, publication snapshots, generated release data, and static output. Storage and generation behavior remain separate from the application foundation.
 
@@ -50,9 +52,10 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 
 ## Internal Edge Cases
 
-- The domain entry exports canonical records, cross-record validation, publication revisions, and material activity alongside boundaries reserved for later tickets. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
+- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, export projection, and release construction. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
-- The application base path is `/`, but no `site` or `PUBLIC_SITE_ORIGIN` value exists yet.
+- The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. No production hostname is hardcoded or selected yet.
+- The current fixture does not call strict release construction because the repository has no production canonical content or persisted release descriptor.
 - Vitest runs both foundation architecture tests and domain validation tests in a Node environment.
 
 ## Cross-System Edge Cases
@@ -61,6 +64,7 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 - Canonical records and publication snapshots must not be placed in generated output folders.
 - A failed browser test can occur after `dist/` has been generated. The presence of that directory does not mean a release is ready.
 - Domain code may use framework-independent packages such as Zod and Markdown parsers, but it must not depend on Astro pages, layouts, or components.
+- Environment access belongs to the application adapter. The release constructor accepts an explicit site origin and never reads `process.env` or `import.meta.env`.
 
 ## Invariants
 
@@ -77,6 +81,7 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 
 - `astro.config.ts` — Static application configuration.
 - `src/domain/` — Framework-independent domain boundary.
+- `src/adapters/` — Read-only filesystem loading and application configuration boundaries.
 - `src/pages/` and `src/layouts/` — Astro-owned rendering boundary.
 - `src/styles/` — Design tokens and global native CSS.
 - `tests/foundation/` — Architecture checks.

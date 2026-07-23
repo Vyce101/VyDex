@@ -1,23 +1,23 @@
 ---
 label: Canonical Records
-order: 300
+order: 100
 ---
 
 # Canonical Records
 
-Canonical records are the framework-independent data contracts for VyDex entries, Topic Trails, Methodology versions, publication snapshots, and release descriptors. This page is for maintainers, technical users, and coding agents that need to validate records or change the domain model safely.
+Canonical records are the framework-independent data contracts for VyDex Entries, Topic Trails, Methodology versions, About content, publication events, Entry snapshots, and release descriptors. This page is for maintainers, technical users, and coding agents that need to validate records or change the domain model safely.
 
 ## Purpose and Ownership
 
-The canonical-record system gives each durable record a stable shape before storage, publication, rendering, and export workflows are added. It owns:
+The canonical-record system gives stored and singleton content a stable shape that loaders, publication workflows, release construction, rendering, and exports can share. It owns:
 
 - Stable machine values and their TypeScript and Zod representations.
 - UUIDv7 identities, public slugs, dates, timestamps, and Methodology version primitives.
-- Strict schemas for every current durable record type.
+- Strict schemas for current durable records and Stage 1 singleton content.
 - Entry-local source citations and their evidence metadata.
 - Safe prose profiles for plain text and Markdown fields.
 - Record-local validation and aggregate validation across record collections.
-- Structured diagnostics that later commands can format or log.
+- Structured diagnostics that callers can retain or format.
 
 It does not own:
 
@@ -36,9 +36,13 @@ A `TopicTrail` provides a durable identity, public name, description, current sl
 
 A `Methodology` stores a public version and complete public content in named sections. Its structure owns lists, examples, definitions, and hierarchy, while each Markdown leaf supplies prose only.
 
+An `AboutRecord` stores the complete structured Stage 1 About content. It is a singleton without its own UUID because other records do not reference or version it. Its related-link fields contain titles and descriptions; [Release Construction](release-construction.md) supplies their canonical destinations.
+
+A `MethodologyPublicationEvent` records the one separately authored Stage 1 Methodology Changelog event. It references Methodology `1.0.0` by UUID and must use that Methodology's effective date.
+
 An `EntryPublicationSnapshot` stores revision metadata with a complete validated Entry payload. The schema defines the durable shape; the separate [Publication Revisions](publication-revisions.md) system validates history, constructs snapshots, and derives activity without changing the canonical contract.
 
-`ReleaseMetadata` currently contains only a durable release ID and generation timestamp. Release construction and generated manifests belong to later systems.
+`ReleaseMetadata` contains a durable release ID and generation timestamp. The release constructor validates these explicit caller-supplied values and uses them unchanged; descriptor creation and persistence remain outside the canonical-record system.
 
 Sources remain embedded in their parent Entry. A citation ID is unique within that Entry, but it is not a global durable identity and does not create a normalized evidence graph.
 
@@ -47,9 +51,10 @@ Sources remain embedded in their parent Entry. A citation ID is unique within th
 1. A caller passes an unknown value and may attach a filename for diagnostic context.
 2. The record-specific validator checks the strict schema, controlled values, text profiles, dates, identifiers, required fields, and record-local conditional rules.
 3. Successful parsing returns a typed record. Leading and trailing text whitespace may be trimmed, but meaningful internal Markdown structure is preserved.
-4. Aggregate validation receives collections of locally valid records and checks global UUID uniqueness, Entry and Topic Trail slug namespaces, relationships, and snapshot consistency.
+4. Aggregate validation receives collections of locally valid durable records and checks global UUID uniqueness, Entry and Topic Trail slug namespaces, relationships, and snapshot consistency.
 5. The caller must select either authoring validation or Stage 1 production validation. Production validation additionally rejects current public Entries whose Entry State is `removed`.
-6. Any blocking issue returns a structured diagnostic instead of writing to the terminal or filesystem.
+6. Release construction separately validates singleton cardinality and cross-record rules for About content and the Methodology publication event.
+7. Any blocking issue returns a structured diagnostic instead of writing to the terminal or filesystem.
 
 Validation continues across independent records where it is safe to do so, allowing one run to report unrelated failures together. Invalid records are not silently repaired, and unknown object fields are rejected rather than discarded.
 
@@ -61,7 +66,7 @@ Entry claims and Caveats use inline Markdown. They may contain ordinary inline f
 
 Entry detail, Frontier Delta, and Significance fields accept block Markdown for paragraphs, lists, tables, blockquotes, links, and code. Headings remain forbidden because the record structure owns page hierarchy.
 
-Methodology Markdown accepts one or more prose paragraphs with safe inline formatting. Lists, tables, headings, examples, and definition rows come from the surrounding structured fields and cannot be recreated inside a Markdown leaf.
+Methodology and About paragraph Markdown accepts one or more prose paragraphs with safe inline formatting. Lists, tables, headings, examples, and definition rows come from the surrounding structured fields and cannot be recreated inside a Markdown leaf.
 
 All Markdown profiles reject images, raw HTML, executable MDX constructs, and unsafe link protocols. Literal HTML or JSX inside inline code or fenced code remains text and does not trigger a false failure.
 
@@ -85,11 +90,13 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 ## Cross-System Edge Cases
 
 - Durable UUIDv7 IDs share one global namespace across current Entries, Topic Trails, Methodologies, snapshot revisions, and release descriptors. Entry-local citation IDs are excluded.
+- `AboutRecord` has no durable ID, and a Methodology publication event references an existing Methodology ID rather than introducing another durable identity.
 - Entry relationships use UUIDs, never titles, filenames, names, or slugs.
 - Every primary and secondary Topic Trail reference and every Methodology reference must resolve during aggregate validation.
 - A snapshot’s outer Entry and Methodology IDs must match its embedded Entry, and its stored Methodology public version must match the referenced Methodology record.
 - The schema recognizes `removed` for durable compatibility. Stage 1 production validation rejects it only for current public Entries, not for historical snapshot payloads.
-- Later loaders and release commands may format diagnostics and exit with a failure code, but they must not move filesystem or process behavior into the domain module.
+- The canonical loader retains filenames and raw invalid JSON for preview diagnostics, but filesystem access stays in the adapter boundary.
+- Release construction may combine valid canonical records into derived public data, but it must not repair or widen the stored contracts.
 
 ## Invariants
 
@@ -108,9 +115,9 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - `src/domain/canonical-records/` — Stable values, primitives, prose profiles, and record schemas.
 - `src/domain/cross-record-validation/` — Diagnostic conversion and aggregate invariants.
 - `src/domain/index.ts` — Public framework-independent domain entry point.
-- `tests/domain/` — Valid fixtures, schema checks, Markdown safety, and aggregate validation tests.
+- `tests/domain/` — Valid fixtures, schema checks, Markdown safety, singleton content, and aggregate validation tests.
 
-Publication behavior belongs to `src/domain/publication-revisions/` and `src/domain/material-activity/`. See [Publication Revisions](publication-revisions.md) before changing snapshot history or derived-date behavior.
+Publication behavior belongs to `src/domain/publication-revisions/` and `src/domain/material-activity/`. Resolved public data belongs to `src/domain/release-construction/`. See [Publication Revisions](publication-revisions.md) before changing snapshot history and [Release Construction](release-construction.md) before changing derived release values.
 
 ## Before Changing Canonical Records
 
@@ -121,6 +128,7 @@ Check:
 - Whether a controlled value change also requires exhaustive label maps, Methodology definition keys, conditional rules, and tests to change.
 - Whether a prose change preserves the distinction between plain text, inline Markdown, Entry block Markdown, and Methodology Markdown.
 - Whether an aggregate rule can report the record, path, invalid value, violated rule, and related identity without filesystem access.
+- Whether singleton content should remain outside the durable UUID namespace.
 - Whether compatibility behavior for aliases, snapshots, or removed Entries would be broken.
 
 Read [Static Application Foundation](static-application-foundation.md) before changing dependency direction, root tooling, or the Astro/domain boundary.
