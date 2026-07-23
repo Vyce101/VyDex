@@ -1,6 +1,6 @@
 // Verifies the framework-independent domain boundary and its import direction.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, extname, join, normalize, resolve } from "node:path";
+import { dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import ts from "typescript";
 import { describe, expect, test } from "vitest";
 
@@ -71,8 +71,9 @@ function isForbiddenDomainImport(specifier: string, fileName: string): boolean {
     return false;
   }
 
-  const resolvedImport = normalize(resolve(dirname(fileName), specifier));
-  return !resolvedImport.startsWith(`${normalize(DOMAIN_ROOT)}\\`) && resolvedImport !== normalize(DOMAIN_ROOT);
+  const resolvedImport = resolve(dirname(fileName), specifier);
+  const relativeImport = relative(DOMAIN_ROOT, resolvedImport);
+  return relativeImport === ".." || relativeImport.startsWith(`..${sep}`) || isAbsolute(relativeImport);
 }
 
 describe("domain module boundaries", () => {
@@ -100,6 +101,7 @@ describe("domain module boundaries", () => {
     const sampleFile = join(DOMAIN_ROOT, "sample.ts");
 
     expect(isForbiddenDomainImport("zod", sampleFile)).toBe(false);
+    expect(isForbiddenDomainImport("./canonical-records", sampleFile)).toBe(false);
     expect(isForbiddenDomainImport("astro/zod", sampleFile)).toBe(true);
     expect(isForbiddenDomainImport("../pages/index.astro", sampleFile)).toBe(true);
     expect(isForbiddenDomainImport("@/components/Card.astro", sampleFile)).toBe(true);
