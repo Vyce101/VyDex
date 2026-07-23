@@ -16,7 +16,7 @@
     "build": "npm run typecheck && npm test && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "test:browser:install": "playwright install chromium",
-    "test:browser": "npm run build && playwright test"
+    "test:browser": "cross-env PUBLIC_SITE_ORIGIN=https://vydex.example npm run build && playwright test"
   },
   "dependencies": {
     "@fontsource-variable/source-sans-3": "5.2.9",

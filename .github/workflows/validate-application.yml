@@ -1,0 +1,42 @@
+# Validates the pinned static application, Dataset Schema, and browser contract.
+name: Validate application
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Type-check, test, build, and verify static output
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PUBLIC_SITE_ORIGIN: https://vydex.example
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up exact Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install immutable dependency tree
+        run: npm ci
+
+      - name: Build and run domain checks
+        run: npm run build
+
+      - name: Install pinned Chromium runtime
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify static browser output
+        run: npx playwright test
