@@ -1,2 +1,3 @@
-// Reserves the boundary for future release construction.
-export {};
+// Exposes canonical release-construction contracts and the deterministic constructor.
+export * from "./construct-release-model";
+export * from "./types";
