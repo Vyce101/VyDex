@@ -8,6 +8,13 @@ const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const DOMAIN_ROOT = join(PROJECT_ROOT, "src", "domain");
 const DOMAIN_PUBLIC_ENTRY = join(DOMAIN_ROOT, "index.ts");
 const FOUNDATION_PAGE = join(PROJECT_ROOT, "src", "pages", "index.astro");
+const APPLICATION_RELEASE_ADAPTER = join(
+  PROJECT_ROOT,
+  "src",
+  "adapters",
+  "application-release",
+  "index.ts",
+);
 const EXPECTED_BOUNDARIES = [
   "canonical-records",
   "cross-record-validation",
@@ -101,5 +108,33 @@ describe("domain module boundaries", () => {
   test("has the Astro fixture consume the domain public entry point", () => {
     const pageSource = readFileSync(FOUNDATION_PAGE, "utf8");
     expect(pageSource).toContain('import type {} from "@domain";');
+  });
+
+  test("keeps authoring-file parsing behind the canonical loader", () => {
+    const presentationDirectories = ["pages", "components"].map((directory) =>
+      join(PROJECT_ROOT, "src", directory),
+    );
+    const presentationFiles = presentationDirectories.flatMap((directory) =>
+      existsSync(directory)
+        ? readdirSync(directory, { recursive: true })
+            .filter((entry): entry is string => typeof entry === "string")
+            .filter((entry) => [".astro", ".ts", ".tsx"].includes(extname(entry)))
+            .map((entry) => join(directory, entry))
+        : [],
+    );
+    const violations = presentationFiles.flatMap((fileName) => {
+      const source = readFileSync(fileName, "utf8");
+      return source.includes("node:fs") || source.includes("data/canonical-records")
+        ? [fileName]
+        : [];
+    });
+    expect(violations).toEqual([]);
+  });
+
+  test("provides one application adapter that composes loading and release construction", () => {
+    const source = readFileSync(APPLICATION_RELEASE_ADAPTER, "utf8");
+    expect(source).toContain("loadCanonicalRecords");
+    expect(source).toContain("constructReleaseModel");
+    expect(source).toContain("PUBLIC_SITE_ORIGIN");
   });
 });
