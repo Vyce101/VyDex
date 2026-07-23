@@ -12,4 +12,4 @@ These pages explain the system contracts that exist in VyDex today. They are wri
 - [Publication Revisions](publication-revisions.md) — Immutable Entry snapshots, revision history, materiality rules, and derived activity.
 - [Static Application Foundation](static-application-foundation.md) — Static Astro build, domain separation, styling foundation, and test boundaries.
 
-Concept pages describe current behavior and ownership. Step-by-step user workflows belong in [Guides](guides.md), and planned capabilities remain identified as future work until their implementation exists.
+Concept pages describe current behavior and ownership. Step-by-step user workflows belong in [Guides](../guides.md), and planned capabilities remain identified as future work until their implementation exists.

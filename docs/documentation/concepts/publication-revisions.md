@@ -1,5 +1,6 @@
 ---
 label: Publication Revisions
+order: 200
 ---
 
 # Publication Revisions

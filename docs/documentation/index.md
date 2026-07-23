@@ -13,6 +13,6 @@ These docs cover the codebase that exists today: how to run it, how the static a
 ## Choose a Path
 
 - [I want to run VyDex](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)
-- [I want to understand VyDex](concepts.md)
+- [I want to understand VyDex](concepts/)
 - [I want to use VyDex](guides.md)
 - [I want to contribute to the codebase](https://github.com/Vyce101/VyDex)

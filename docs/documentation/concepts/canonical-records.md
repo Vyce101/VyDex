@@ -1,5 +1,6 @@
 ---
 label: Canonical Records
+order: 300
 ---
 
 # Canonical Records

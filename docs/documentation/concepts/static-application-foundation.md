@@ -1,5 +1,6 @@
 ---
 label: Static Application Foundation
+order: 100
 ---
 
 # Static Application Foundation
