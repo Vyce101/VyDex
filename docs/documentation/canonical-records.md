@@ -35,7 +35,7 @@ A `TopicTrail` provides a durable identity, public name, description, current sl
 
 A `Methodology` stores a public version and complete public content in named sections. Its structure owns lists, examples, definitions, and hierarchy, while each Markdown leaf supplies prose only.
 
-An `EntryPublicationSnapshot` stores revision metadata with a complete validated Entry payload. The schema defines the durable shape but does not create, number, compare, or publish snapshots.
+An `EntryPublicationSnapshot` stores revision metadata with a complete validated Entry payload. The schema defines the durable shape; the separate [Publication Revisions](publication-revisions.md) system validates history, constructs snapshots, and derives activity without changing the canonical contract.
 
 `ReleaseMetadata` currently contains only a durable release ID and generation timestamp. Release construction and generated manifests belong to later systems.
 
@@ -108,6 +108,8 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - `src/domain/cross-record-validation/` — Diagnostic conversion and aggregate invariants.
 - `src/domain/index.ts` — Public framework-independent domain entry point.
 - `tests/domain/` — Valid fixtures, schema checks, Markdown safety, and aggregate validation tests.
+
+Publication behavior belongs to `src/domain/publication-revisions/` and `src/domain/material-activity/`. See [Publication Revisions](publication-revisions.md) before changing snapshot history or derived-date behavior.
 
 ## Before Changing Canonical Records
 

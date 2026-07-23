@@ -63,9 +63,9 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex is at the foundation-build stage. The repository can install pinned dependencies, type-check, run its domain and foundation tests, produce a static Astro build, and run responsive browser and accessibility checks. Its framework-independent domain layer now defines strict contracts for Entries, Topic Trails, Methodologies, Entry publication snapshots, and release metadata, along with safe Markdown and cross-record validation.
+VyDex is at the foundation-build stage. The repository can install pinned dependencies, type-check, run its domain and foundation tests, produce a static Astro build, and run responsive browser and accessibility checks. Its framework-independent domain layer defines strict contracts for Entries, Topic Trails, Methodologies, Entry publication snapshots, and release metadata, along with safe Markdown and cross-record validation. It can also validate Entry revision histories, construct detached immutable snapshots from supplied publication metadata, enforce materiality rules, and derive current and meaningful activity dates.
 
-The current `/` route is a technical fixture, not the Stage 1 homepage. No canonical records have been authored or loaded yet. Publication commands, snapshot creation and comparison, material-activity rules, release construction, product routes, canonical URLs, and public export formats remain unimplemented. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
+The current `/` route is a technical fixture, not the Stage 1 homepage. No canonical records have been authored, loaded, or published yet. Filesystem record loaders, publication commands, snapshot persistence, release construction, product routes, canonical URLs, public revision browsing, and public export formats remain unimplemented. The Astro application is intended for Cloudflare Pages, but deployment configuration and the final public origin are deliberately deferred.
 
 ## Major Milestones Roadmap
 

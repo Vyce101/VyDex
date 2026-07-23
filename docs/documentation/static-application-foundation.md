@@ -39,7 +39,7 @@ The current `/` page is a build fixture, not the Stage 1 homepage or a product i
 
 ## Interactions With Other Project Areas
 
-The canonical-record domain module defines the data contracts that later loaders, publication workflows, pages, and exports will consume. The foundation only provides the dependency boundary and test environment for that module.
+The canonical-record domain module defines the data contracts consumed by loaders, [publication revisions](publication-revisions.md), pages, and exports. Publication revisions and material activity remain framework-independent; the foundation provides their dependency boundary and test environment but does not own their behavior.
 
 The repository also reserves separate locations for canonical records, publication snapshots, generated release data, and static output. Storage and generation behavior remain separate from the application foundation.
 
@@ -49,7 +49,7 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 
 ## Internal Edge Cases
 
-- The domain entry now exports real canonical-record and validation contracts alongside boundaries reserved for later tickets. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
+- The domain entry exports canonical records, cross-record validation, publication revisions, and material activity alongside boundaries reserved for later tickets. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
 - The application base path is `/`, but no `site` or `PUBLIC_SITE_ORIGIN` value exists yet.
 - Vitest runs both foundation architecture tests and domain validation tests in a Node environment.
