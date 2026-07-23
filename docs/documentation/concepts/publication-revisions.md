@@ -1,6 +1,6 @@
 ---
 label: Publication Revisions
-order: 200
+order: 300
 ---
 
 # Publication Revisions
@@ -90,7 +90,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format th
 - Every historical snapshot must resolve to the exact supplied Methodology ID and public version that it records. Older revisions may reference older Methodology records.
 - Aggregate canonical validation can validate repository-wide identities and relationships. The publication operation validates only the complete referenced Methodology set supplied for one Entry history.
 - Repository persistence remains separate. A successful return does not mean a snapshot file exists or that a release includes it.
-- [Release Construction](release-construction.md) validates complete stored histories, selects the newest snapshot, and derives public routes, Changelog events, and export records.
+- [Release Construction](release-construction.md) validates complete stored histories, selects the newest snapshot, and derives public routes and Changelog events. [Dataset Generation](dataset-generation.md) projects the selected current snapshots into the public export contract.
 - Historical public browsing remains future Stage 3 work; retained snapshots have no public revision route yet.
 
 ## Invariants

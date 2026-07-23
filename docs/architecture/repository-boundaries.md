@@ -28,9 +28,13 @@ The publication domain returns new immutable snapshots to its caller, but it doe
 
 ## Release Metadata and Generated Output
 
-`ReleaseMetadata` is an explicit release-constructor input. The canonical loader does not read, create, or persist a release descriptor, and the constructor does not generate a release ID or timestamp. A later atomic release command will own descriptor creation, reuse, and persistence.
+`ReleaseMetadata` is an explicit release-constructor input. The canonical loader does not read, create, or persist a release descriptor, and neither the constructor nor the dataset generator creates a release ID or timestamp. A later atomic release command will own descriptor creation, reuse, and persistence.
 
-`generated/release-data/` remains reserved for generated release output. The current release constructor builds an in-memory release model and export-ready dataset value; it does not serialize the dataset, write route files, or emit deployment redirects.
+The release constructor returns one validated in-memory release model. [Dataset Generation](../documentation/concepts/dataset-generation.md) consumes that model, validates the public Dataset `1.0.0` projection against its Schema, and returns deterministic JSON plus immutable and stable-latest descriptors.
+
+The dataset artifact writer accepts an explicit output root and writes only the immutable release-specific dataset file beneath it. It creates missing parent directories, treats identical existing bytes as idempotent success, and refuses to overwrite different bytes. The writer does not choose `generated/release-data/`, `dist/`, or another repository location on its own.
+
+`generated/release-data/` remains reserved for a future atomic release command to use as generated release output. That command will also own stable-latest deployment redirect emission and verification. The current writer does not create a mutable latest copy or a Cloudflare `_redirects` file.
 
 `dist/` contains generated Astro output. It must not be used as canonical, historical, or release-descriptor storage.
 
@@ -41,6 +45,7 @@ The publication domain returns new immutable snapshots to its caller, but it doe
 - Missing directories behave as empty collections; syntax and path failures return structured diagnostics with filenames.
 - Current public Entry content comes from the newest valid immutable snapshot, not unpublished canonical Entry edits.
 - Generated output must not be written into canonical-record or snapshot directories.
+- Dataset output must remain under the injected writer root, and immutable paths must never overwrite different bytes.
 - Storage paths and filenames must not replace durable IDs as relationship keys.
 - Filesystem adapters call framework-independent validators rather than reproducing record rules.
 

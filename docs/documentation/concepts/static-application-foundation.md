@@ -1,6 +1,6 @@
 ---
 label: Static Application Foundation
-order: 400
+order: 500
 ---
 
 # Static Application Foundation
@@ -19,6 +19,8 @@ It owns:
 - Native global CSS, project-owned design tokens, and locally bundled fonts.
 - Unit, responsive browser, and accessibility test harnesses.
 - The local application launcher and production build command.
+- Static publication of the versioned Dataset Schema and its Cloudflare response metadata.
+- The root validation workflow and frozen dependency installation used by CI.
 
 It does not own:
 
@@ -33,14 +35,16 @@ It does not own:
 1. `npm ci` installs the exact root dependency tree from `package-lock.json`.
 2. Astro pages and layouts may import the public domain entry at `src/domain/index.ts`.
 3. Domain modules remain framework-independent and cannot import Astro or UI modules.
-4. `npm run build` type-checks the project, runs Vitest, and generates static files in `dist/`.
+4. `npm run build` type-checks the project, runs Vitest, and generates static files in `dist/`. `PUBLIC_SITE_ORIGIN` must contain a root-only HTTPS origin so the Dataset Schema receives its absolute canonical `$id`.
 5. `npm run test:browser` rebuilds the site, serves the generated output locally, and runs the Playwright and Axe checks.
 
 The current `/` page is a build fixture, not the Stage 1 homepage or a product interface.
 
 ## Interactions With Other Project Areas
 
-The canonical-record domain module defines the data contracts consumed by loaders, [publication revisions](publication-revisions.md), [release construction](release-construction.md), pages, and exports. Publication revisions, material activity, routing, export projection, and release construction remain framework-independent; the foundation provides their dependency boundary and test environment but does not own their behavior.
+The canonical-record domain module defines the data contracts consumed by loaders, [publication revisions](publication-revisions.md), [release construction](release-construction.md), pages, and exports. Publication revisions, material activity, routing, [dataset generation](dataset-generation.md), and release construction remain framework-independent; the foundation provides their dependency boundary and test environment but does not own their behavior.
+
+The Dataset Schema route is a thin Astro endpoint over the shared Schema generator. Astro prerenders the JSON file, while `public/_headers` supplies its `application/schema+json` media type and immutable cache policy on Cloudflare Pages. The endpoint reads `PUBLIC_SITE_ORIGIN`; the domain Schema generator receives the origin explicitly and never reads the environment.
 
 The application release adapter composes the read-only canonical loader with the framework-independent constructor. It reads `PUBLIC_SITE_ORIGIN` at the application boundary and defaults private preview to `http://localhost:4321`. Astro pages and components must use this shared release entry point rather than parse authoring files directly.
 
@@ -52,11 +56,12 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 
 ## Internal Edge Cases
 
-- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, export projection, and release construction. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
+- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
-- The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. No production hostname is hardcoded or selected yet.
-- The current fixture does not call strict release construction because the repository has no production canonical content or persisted release descriptor.
+- The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. Production code does not hardcode a hostname; tests and CI use the reserved `https://vydex.example` origin.
+- The current fixture does not call strict release construction because the repository has no production canonical content or persisted release descriptor. It does publish the Dataset Schema because Schema generation needs an origin rather than public Entry content.
 - Vitest runs both foundation architecture tests and domain validation tests in a Node environment.
+- Ajv validates generated datasets against the exact draft 2020-12 Schema. The pinned `fast-uri` override keeps Ajv's URI parser on its patched compatible release.
 
 ## Cross-System Edge Cases
 
@@ -82,7 +87,9 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 - `astro.config.ts` — Static application configuration.
 - `src/domain/` — Framework-independent domain boundary.
 - `src/adapters/` — Read-only filesystem loading and application configuration boundaries.
+- `src/adapters/dataset-artifact-writer/` — Injected immutable dataset filesystem emission.
 - `src/pages/` and `src/layouts/` — Astro-owned rendering boundary.
+- `src/pages/schemas/` and `public/_headers` — Static Dataset Schema publication and hosting metadata.
 - `src/styles/` — Design tokens and global native CSS.
 - `tests/foundation/` — Architecture checks.
 - `tests/domain/` — Canonical record and validation checks.
@@ -97,6 +104,7 @@ Check:
 - Whether a domain import points toward Astro or another presentation module.
 - Whether new browser JavaScript is genuine progressive enhancement.
 - Whether a data location mixes canonical, immutable, generated-release, or static-build concerns.
+- Whether Schema publication still uses the shared generator and a validated configured origin.
 - Whether root tooling changes also require launcher, lockfile, Vitest, or Playwright updates.
 - Whether the Retype project is being changed intentionally rather than as a side effect of application work.
 

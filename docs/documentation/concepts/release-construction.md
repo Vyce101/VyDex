@@ -1,6 +1,6 @@
 ---
 label: Release Construction
-order: 300
+order: 400
 ---
 
 # Release Construction
@@ -17,7 +17,7 @@ The system prevents pages, components, and exports from assembling their own int
 - Resolution of Topic Trail membership, Methodology references, About links, dates, activity, and counts.
 - Construction of canonical paths, absolute URLs, and permanent alias-redirect descriptors.
 - Derivation of material public Changelog events.
-- Projection of current public Entries into the versioned dataset contract.
+- Registration of the Schema, stable-latest dataset, and immutable release-specific artifact routes.
 - Strict production failure and diagnostic-rich private preview results.
 
 It does not own:
@@ -26,7 +26,7 @@ It does not own:
 - Creating or persisting Entry snapshots.
 - Generating release IDs or timestamps.
 - Reading or writing a persisted release descriptor.
-- Serializing the dataset, writing static routes, or emitting deployment redirect files.
+- Projecting or serializing the dataset, writing generated artifacts, or emitting deployment redirect files.
 - Rendering the Stage 1 pages or a private preview interface.
 - Terminal logging, persistent logs, process exit behavior, or the current clock.
 
@@ -41,7 +41,7 @@ The canonical loader receives an injectable repository root and reads the approv
 - An explicit public site origin.
 - Either `production` or `preview` mode.
 
-A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, route and redirect descriptors, and export-ready data. A failed production call returns diagnostics and no release.
+A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
@@ -53,8 +53,8 @@ Preview always returns a `PreviewReleaseModel`. Valid sections remain available 
 4. Snapshots are grouped by Entry ID. Each history is ordered by validated revision number and checked for numbering, chronology, materiality, Methodology references, and retained historical slugs.
 5. The newest valid snapshot becomes the public Entry. Editable canonical Entry differences remain unpublished and cannot affect public content, routes, membership, activity, Changelog events, or exports.
 6. The constructor resolves routes, Topic Trail membership, Methodology and About links, derived dates, latest meaningful activity, trail counts, and trail Last Activity.
-7. Material snapshots and the Methodology publication event form the public Changelog. Current Entries are projected into the dataset contract.
-8. Production returns the release only when no blocking diagnostic remains. Preview returns trustworthy partial results, invalid source records, and all diagnostics.
+7. Material snapshots and the Methodology publication event form the public Changelog.
+8. Production returns the release only when no blocking diagnostic remains. Preview returns trustworthy partial results, invalid source records, and all diagnostics. Dataset projection happens only after a successful production result.
 
 The operation is deterministic. Identical records, snapshots, release metadata, and site origin produce the same result because the constructor does not generate IDs, read the clock, or inspect filesystem timestamps.
 
@@ -62,7 +62,7 @@ The operation is deterministic. Identical records, snapshots, release metadata, 
 
 Production requires a root-only HTTPS origin, valid release metadata, one complete About record, Methodology `1.0.0`, its publication event, at least one public Entry, and no empty Topic Trail. A missing or invalid requirement blocks the complete release.
 
-Preview may use an explicitly supplied HTTPS origin or HTTP localhost. The application adapter defaults an omitted preview origin to `http://localhost:4321`. Missing release metadata keeps release-independent information available, but the preview is non-promotable and cannot expose a release-specific dataset artifact path.
+Preview may use an explicitly supplied HTTPS origin or HTTP localhost. The application adapter defaults an omitted preview origin to `http://localhost:4321`, even when a production origin exists in the environment. Missing release metadata keeps release-independent information available, but the preview is non-promotable and cannot expose a release-specific dataset artifact path or enter dataset generation.
 
 Invalid preview records are not repaired. The preview keeps their record type, recoverable ID, filename, raw or partial value, field diagnostics, and unresolved relationship diagnostics. `Missing Required Field` is a future presentation fallback, not canonical data, and the constructor never inserts it into records, routes, Changelog events, or exports.
 
@@ -78,13 +78,15 @@ Stage 1 production rejects `removed` on either the editable canonical Entry or t
 
 ## Routes and Redirects
 
-Route collision checks operate on normalized root-relative pathnames before the constructor creates absolute URLs. The registry owns the homepage and `#latest` anchor, current Entry and Topic Trail routes, current and versioned Methodology routes, About, Changelog, export landing, dataset schema, and the release-specific dataset artifact path.
+Route collision checks operate on normalized root-relative pathnames before the constructor creates absolute URLs. The registry owns the homepage and `#latest` anchor, current Entry and Topic Trail routes, current and versioned Methodology routes, About, Changelog, export landing, dataset Schema, stable-latest dataset, and release-specific dataset artifact paths.
+
+Entry and Topic Trail aliases produce permanent `301` redirects. The stable-latest dataset path is not an alias and does not use that contract; [Dataset Generation](dataset-generation.md) returns a separate `302` descriptor whose destination changes with each release.
 
 Current slugs create canonical routes. Historical aliases create `301` redirect descriptors that point directly to the current route. Redirect sources must be unique, cannot collide with current routes, and cannot form loops or chains. This system returns descriptors only; a later static-site integration will translate them into a deployment artifact.
 
 About content authors provide titles and descriptions for its related links, while the route registry supplies the destinations. Authored About data therefore cannot drift from the canonical Methodology, Changelog, or export routes.
 
-## Changelog and Export Projection
+## Changelog and Dataset Input
 
 Entry Changelog events come only from material snapshots:
 
@@ -94,15 +96,15 @@ Entry Changelog events come only from material snapshots:
 
 The separately authored Methodology publication event becomes `methodology_change`. Events sort by calendar date, exact timestamp when both events have one, the approved event-type order, public title, and stable source identity. Exact timestamps and tie-breakers are internal ordering data rather than public display fields.
 
-The export projection contains current public Entry versions rather than raw snapshot objects. It adds revision metadata, canonical URLs, Evidence Strength scores, derived dates and Evidence Types, resolved Topic Trail references, and the exact Methodology version reference. Source order remains the immutable authored order. The top-level dataset includes release metadata, represented Methodology versions, and Entry count; it does not include separate Topic Trail, Methodology, About, Changelog, snapshot-history, or Removed Entry collections.
+Release construction retains the selected snapshot, derived revision activity, canonical URL, and resolved Topic Trail and Methodology references for every current Entry. It does not create public export records. The separate dataset generator uses this resolved state so pages and exports cannot disagree about which revision or relationship is current.
 
-The constructor builds the dataset value in memory. Serialization and immutable artifact writing belong to a later release command.
+Sources and Domains remain in their validated release-model form at this boundary. Dataset generation applies the public Dataset `1.0.0` ordering rules, derives labels and Evidence Types, validates the serialized result against its Schema, and returns immutable artifact metadata. The filesystem writer remains a separate adapter.
 
 ## Failure Behavior
 
 Diagnostics identify the record type, field or rule, recoverable record ID, filename, invalid value, and related record when those values exist. Production does not return a partial release when any blocking error remains.
 
-Blocking conditions include malformed JSON, invalid snapshot paths, invalid records, missing or orphan histories, broken relationships, duplicate or colliding routes, incomplete required content, wrong Methodology references, removed current Entries, empty Topic Trails, invalid origins or release metadata, redirect failures, and inconsistent export projection.
+Blocking conditions include malformed JSON, invalid snapshot paths, invalid records, missing or orphan histories, broken relationships, duplicate or colliding routes, incomplete required content, wrong Methodology references, removed current Entries, empty Topic Trails, invalid origins or release metadata, and permanent-alias redirect failures.
 
 The loader and constructor return diagnostics without writing to standard output or standard error. A later atomic release command may format those diagnostics and choose a nonzero process exit code.
 
@@ -120,13 +122,14 @@ The loader and constructor return diagnostics without writing to standard output
 
 - [Canonical Records](canonical-records.md) owns stored shapes and record-local rules. Release construction consumes those schemas rather than widening or repairing them.
 - [Publication Revisions](publication-revisions.md) owns snapshot creation, history semantics, and material activity. Release construction validates complete stored histories and selects their current state.
+- [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader. Rebuilding the same release with the same explicit metadata preserves its ID and generation timestamp.
-- The current Astro fixture does not invoke strict production construction. Real content, public pages, dataset serialization, and deployment redirects remain future work.
+- The current Astro fixture does not invoke strict production construction. Real content, public pages, genuine dataset emission, and deployment redirects remain future work, although the versioned Schema is already published statically.
 
 ## Invariants
 
-- One release model is the source for homepage, Entry, Topic Trail, Methodology, About, Changelog, route, redirect, and export consumers.
+- One release model is the source for homepage, Entry, Topic Trail, Methodology, About, Changelog, route, redirect, and dataset consumers.
 - Invalid records are never silently omitted, repaired, or promoted into authoritative derived values.
 - Public Entry state and relationships come from immutable snapshots; editable differences remain unpublished.
 - Non-material revisions do not change material activity ordering or public Changelog events.
@@ -142,8 +145,8 @@ The loader and constructor return diagnostics without writing to standard output
 - `src/adapters/application-release/` — Environment-facing origin configuration and the single application release call.
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
 - `src/domain/route-generation/` — Origin, route-registry, canonical URL, and redirect contracts.
-- `src/domain/json-export-generation/` — Export Entry projection and dataset envelope construction.
-- `tests/adapters/` and `tests/domain/` — Loader, production, preview, routing, Changelog, and export coverage.
+- `src/domain/json-export-generation/` — Post-release Dataset `1.0.0` projection, Schema, validation, and serialization.
+- `tests/adapters/` and `tests/domain/` — Loader, production, preview, routing, Changelog, dataset, and writer coverage.
 
 ## Before Changing Release Construction
 
@@ -155,5 +158,6 @@ Check:
 - Whether material activity remains separate from the current revision after a non-material update.
 - Whether route and alias checks run before absolute URL generation.
 - Whether every page-facing value still comes from the shared release model.
+- Whether dataset behavior belongs in [Dataset Generation](dataset-generation.md) rather than the release constructor.
 - Whether a proposed filesystem, environment, clock, logging, or output side effect belongs in an adapter or later release command instead of the domain constructor.
 - Whether tests cover both strict production rejection and diagnostic preview behavior.

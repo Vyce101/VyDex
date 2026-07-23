@@ -96,7 +96,7 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - A snapshot’s outer Entry and Methodology IDs must match its embedded Entry, and its stored Methodology public version must match the referenced Methodology record.
 - The schema recognizes `removed` for durable compatibility. Stage 1 production validation rejects it only for current public Entries, not for historical snapshot payloads.
 - The canonical loader retains filenames and raw invalid JSON for preview diagnostics, but filesystem access stays in the adapter boundary.
-- Release construction may combine valid canonical records into derived public data, but it must not repair or widen the stored contracts.
+- Release construction may combine valid canonical records into resolved public data, but it must not repair or widen the stored contracts. [Dataset Generation](dataset-generation.md) narrows that resolved state into the separate public Dataset `1.0.0` contract.
 
 ## Invariants
 
@@ -107,7 +107,7 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - Caveats remain separate from status, strength, Frontier Delta, and Significance.
 - Sources remain embedded in Entries during Stage 1.
 - Structured relationships use durable IDs, while slugs remain public routing identifiers.
-- Every Domain attached to an Entry remains ordered authored data for later pages and exports.
+- Every Domain attached to an Entry remains ordered authored data. Dataset generation applies its controlled public ordering without changing the canonical record.
 - Domain validation does not depend on Astro, filesystem access, or logging.
 
 ## Implementation Landmarks
