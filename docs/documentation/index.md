@@ -1,6 +1,5 @@
 ---
 label: Home
-layout: central
 ---
 
 # VyDex Documentation
