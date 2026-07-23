@@ -17,8 +17,9 @@ export async function loadApplicationRelease(
   input: LoadApplicationReleaseInput,
 ): Promise<ConstructReleaseModelResult> {
   const records = await loadCanonicalRecords({ filesystem_root: input.filesystem_root });
-  const configuredOrigin = input.site_origin ?? import.meta.env.PUBLIC_SITE_ORIGIN;
-  const siteOrigin = configuredOrigin ?? (input.mode === "preview" ? "http://localhost:4321" : undefined);
+  const siteOrigin =
+    input.site_origin ??
+    (input.mode === "preview" ? "http://localhost:4321" : import.meta.env.PUBLIC_SITE_ORIGIN);
   return constructReleaseModel({
     records,
     release_metadata: input.release_metadata,

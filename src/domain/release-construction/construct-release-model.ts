@@ -1,6 +1,5 @@
 // Orchestrates deterministic production and preview release construction.
 import type { ValidationDiagnostic } from "../cross-record-validation";
-import { buildVyDexDatasetV1 } from "../json-export-generation";
 import {
   buildPermanentRedirects,
   buildPublicRouteRegistry,
@@ -90,7 +89,6 @@ export function constructReleaseModel(input: ConstructReleaseModelInput): Constr
     });
     if (resolvedEntries) {
       resolved.current_entries = resolvedEntries;
-      resolved.export_entries = resolvedEntries.map(({ export_record }) => export_record);
       resolvedTrails = resolveTopicTrails({
         trails: state.parsed.topicTrails.map(({ data }) => data),
         entries: resolvedEntries,
@@ -133,25 +131,6 @@ export function constructReleaseModel(input: ConstructReleaseModelInput): Constr
     if (changelogEvents) resolved.changelog_events = changelogEvents;
   }
 
-  if (
-    state.releaseMetadata &&
-    routes?.dataset_artifact &&
-    state.originResult.success &&
-    resolvedEntries
-  ) {
-    const datasetResult = buildVyDexDatasetV1({
-      release_metadata: state.releaseMetadata,
-      schema_url: toCanonicalUrl(state.originResult.data, routes.dataset_schema),
-      entries: resolvedEntries.map(({ export_record }) => export_record),
-    });
-    if (!datasetResult.success) diagnostics.push(...datasetResult.diagnostics);
-    else {
-      resolved.export_dataset = datasetResult.data;
-      resolved.export_artifact_path = routes.dataset_artifact;
-      resolved.export_artifact_url = toCanonicalUrl(state.originResult.data, routes.dataset_artifact);
-    }
-  }
-
   const finalDiagnostics = deduplicateDiagnostics(diagnostics);
   if (input.mode === "preview") {
     const sources = [
@@ -186,9 +165,7 @@ export function constructReleaseModel(input: ConstructReleaseModelInput): Constr
     resolvedAbout === undefined ||
     changelogEvents === undefined ||
     resolved.redirects === undefined ||
-    resolved.export_dataset === undefined ||
-    resolved.export_artifact_path === undefined ||
-    resolved.export_artifact_url === undefined
+    routes.dataset_artifact === undefined
   ) {
     return { mode: "production", success: false, release: null, diagnostics: finalDiagnostics };
   }
@@ -204,13 +181,6 @@ export function constructReleaseModel(input: ConstructReleaseModelInput): Constr
     about: resolvedAbout,
     changelog_events: changelogEvents,
     redirects: resolved.redirects,
-    export: {
-      schema_url: toCanonicalUrl(state.originResult.data, routes.dataset_schema),
-      artifact_path: resolved.export_artifact_path,
-      artifact_url: resolved.export_artifact_url,
-      entries: resolvedEntries.map(({ export_record }) => export_record),
-      dataset: resolved.export_dataset,
-    },
   };
   return { mode: "production", success: true, release: deepFreeze(release), diagnostics: [] };
 }

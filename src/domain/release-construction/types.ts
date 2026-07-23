@@ -12,12 +12,10 @@ import type {
   UUIDv7,
 } from "../canonical-records";
 import type { ValidationDiagnostic } from "../cross-record-validation";
-import type { ExportEntryV1, VyDexDatasetV1 } from "../json-export-generation";
 import type { DerivedEntryRevisionActivity, LatestMeaningfulActivity } from "../material-activity";
 import type {
   AbsoluteCanonicalUrl,
   PermanentRedirect,
-  PublicPath,
   PublicRouteRegistry,
   SiteOrigin,
 } from "../route-generation";
@@ -67,7 +65,6 @@ export type ResolvedPublicEntry = {
   primary_topic_trail: ResolvedTopicTrailReference;
   secondary_topic_trails: ResolvedTopicTrailReference[];
   methodology: ResolvedMethodologyReference;
-  export_record: ExportEntryV1;
 };
 
 export type TopicTrailLastActivity = LatestMeaningfulActivity & {
@@ -126,14 +123,6 @@ export type MethodologyChangelogEvent = {
 
 export type PublicChangelogEvent = EntryChangelogEvent | MethodologyChangelogEvent;
 
-export type ReleaseExportModel = {
-  schema_url: AbsoluteCanonicalUrl;
-  artifact_path: PublicPath;
-  artifact_url: AbsoluteCanonicalUrl;
-  entries: ExportEntryV1[];
-  dataset: VyDexDatasetV1;
-};
-
 export type ReleaseModel = {
   mode: "production";
   release_metadata: ReleaseMetadata;
@@ -145,7 +134,6 @@ export type ReleaseModel = {
   about: ResolvedAboutRecord;
   changelog_events: PublicChangelogEvent[];
   redirects: PermanentRedirect[];
-  export: ReleaseExportModel;
 };
 
 export type InvalidPreviewRecord = {
@@ -167,10 +155,6 @@ export type PartialResolvedRelease = {
   about?: ResolvedAboutRecord;
   changelog_events?: PublicChangelogEvent[];
   redirects?: PermanentRedirect[];
-  export_entries?: ExportEntryV1[];
-  export_dataset?: VyDexDatasetV1;
-  export_artifact_path?: PublicPath;
-  export_artifact_url?: AbsoluteCanonicalUrl;
 };
 
 export type PreviewReleaseModel = {

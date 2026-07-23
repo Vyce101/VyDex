@@ -1,11 +1,6 @@
-// Resolves validated records into public Entries, trails, About links, changelog events, and exports.
+// Resolves validated records into public Entries, trails, About links, and changelog events.
 import type { AboutRecord, Methodology, MethodologyPublicationEvent, TopicTrail } from "../canonical-records";
 import type { ValidationDiagnostic } from "../cross-record-validation";
-import {
-  projectExportEntry,
-  type ExportMethodologyReferenceV1,
-  type ExportTopicTrailReferenceV1,
-} from "../json-export-generation";
 import { toCanonicalUrl, type PublicRouteRegistry, type SiteOrigin } from "../route-generation";
 import { createReleaseDiagnostic } from "./release-diagnostics";
 import type { ValidatedHistory, ValidatedInputs } from "./release-input-validation";
@@ -60,17 +55,8 @@ export function resolveEntries(input: {
       public_version: input.methodology.public_version,
       title: input.methodology.title,
       canonical_url: toCanonicalUrl(input.origin, input.routes.methodology_version),
-    } satisfies ExportMethodologyReferenceV1;
+    };
     const canonicalUrl = toCanonicalUrl(input.origin, entryPath);
-    const exportRecord = projectExportEntry({
-      entry,
-      snapshot,
-      activity: history.activity,
-      canonical_url: canonicalUrl,
-      primary_topic_trail: primaryReference satisfies ExportTopicTrailReferenceV1,
-      secondary_topic_trails: secondaryReferences satisfies ExportTopicTrailReferenceV1[],
-      methodology: methodologyReference,
-    });
     resolved.push({
       entry,
       snapshot,
@@ -79,7 +65,6 @@ export function resolveEntries(input: {
       primary_topic_trail: primaryReference,
       secondary_topic_trails: secondaryReferences,
       methodology: methodologyReference,
-      export_record: exportRecord,
     });
   }
   return resolved.sort(compareResolvedEntries);
