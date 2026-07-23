@@ -43,6 +43,38 @@ test("has no automatically detectable accessibility violations", async ({ page }
   expect(scan.violations).toEqual([]);
 });
 
+test("publishes the immutable Dataset 1.0.0 Schema", async ({ request }) => {
+  const response = await request.get("/schemas/vydex-dataset/1.0.0.json");
+  expect(response.ok()).toBe(true);
+  expect(response.headers()["content-type"]).toContain("application/json");
+
+  const text = await response.text();
+  const schema = JSON.parse(text) as {
+    $schema: string;
+    $id: string;
+    $defs: {
+      dates: { properties: Record<string, { description?: string }> };
+      entry: { properties: Record<string, { description?: string }> };
+    };
+  };
+  expect(text.endsWith("\n")).toBe(true);
+  expect(text.endsWith("\n\n")).toBe(false);
+  expect(schema.$schema).toBe("https://json-schema.org/draft/2020-12/schema");
+  expect(schema.$id).toBe("https://vydex.example/schemas/vydex-dataset/1.0.0.json");
+  expect(schema.$defs.dates.properties.date_happened?.description).toContain("null means unknown");
+  expect(schema.$defs.dates.properties.date_disclosed?.description).toContain("null means unknown");
+  expect(schema.$defs.dates.properties.next_check_date?.description).toContain("no check is scheduled");
+  expect(schema.$defs.entry.properties.potential_significance_if_confirmed?.description).toContain(
+    "null means not applicable",
+  );
+
+  const hostingHeaders = await request.get("/_headers");
+  expect(hostingHeaders.ok()).toBe(true);
+  const hostingHeadersText = await hostingHeaders.text();
+  expect(hostingHeadersText).toContain("Content-Type: application/schema+json; charset=utf-8");
+  expect(hostingHeadersText).toContain("Cache-Control: public, max-age=31536000, immutable");
+});
+
 test.describe("without browser JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 

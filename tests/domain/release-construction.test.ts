@@ -88,10 +88,9 @@ describe("constructReleaseModel production", () => {
         status: 301,
       }),
     );
-    expect(result.release.export.artifact_path).toBe(
+    expect(result.release.routes.dataset_artifact).toBe(
       `/datasets/releases/${IDS.release}/vydex-latest-entry-versions-v1-0-0.json`,
     );
-    expect(result.release.export.dataset.entry_count).toBe(result.release.export.entries.length);
     expect(Object.isFrozen(result.release)).toBe(true);
   });
 
@@ -288,35 +287,6 @@ describe("constructReleaseModel production", () => {
     expect(result.release.changelog_events.map(({ type }) => type)).toEqual(["methodology_change", "added"]);
   });
 
-  test("builds the accepted export projection without unrelated top-level collections", () => {
-    const result = constructProduction();
-    expect(result.success).toBe(true);
-    if (!result.success || result.mode !== "production") return;
-    const dataset = result.release.export.dataset;
-    const entry = dataset.entries[0]!;
-    expect(dataset).toMatchObject({
-      dataset_name: "VyDex",
-      dataset_schema_version: "1.0.0",
-      release_id: IDS.release,
-      scope: "latest_entry_versions",
-      methodology_versions: ["1.0.0"],
-    });
-    expect(entry).toMatchObject({
-      id: IDS.entry,
-      evidence_strength_score: 3,
-      evidence_types: ["peer_reviewed_paper", "technical_artifact"],
-      primary_topic_trail: { id: IDS.topicTrail },
-      methodology: {
-        id: IDS.methodology,
-        canonical_url: "https://vydex.example/methodology/1.0.0/",
-      },
-    });
-    expect(entry.sources.map(({ citation_id }) => citation_id)).toEqual(["evaluation-paper"]);
-    expect(dataset).not.toHaveProperty("topic_trails");
-    expect(dataset).not.toHaveProperty("about");
-    expect(dataset).not.toHaveProperty("changelog_events");
-  });
-
   test("is deterministic and has no logging side effects", () => {
     const info = vi.spyOn(console, "info").mockImplementation(() => undefined);
     const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
@@ -331,7 +301,7 @@ describe("constructReleaseModel production", () => {
 });
 
 describe("constructReleaseModel preview", () => {
-  test("keeps trustworthy resolved data but withholds release-specific export paths without metadata", () => {
+  test("keeps trustworthy resolved data but withholds release-specific routes without metadata", () => {
     const result = constructReleaseModel({
       records: createLoadedCanonicalRecords(),
       site_origin: "http://localhost:4321",
@@ -341,8 +311,7 @@ describe("constructReleaseModel preview", () => {
     if (result.mode !== "preview") return;
     expect(result.preview.promotable).toBe(false);
     expect(result.preview.resolved.current_entries).toHaveLength(1);
-    expect(result.preview.resolved.export_entries).toHaveLength(1);
-    expect(result.preview.resolved.export_artifact_path).toBeUndefined();
+    expect(result.preview.resolved.routes?.dataset_artifact).toBeUndefined();
     expect(result.preview.diagnostics.map(({ code }) => code)).toContain("release_metadata_required");
   });
 
