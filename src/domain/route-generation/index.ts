@@ -6,6 +6,10 @@ export type PublicPath = string & { readonly __brand: "PublicPath" };
 export type AbsoluteCanonicalUrl = string & { readonly __brand: "AbsoluteCanonicalUrl" };
 export type SiteOrigin = string & { readonly __brand: "SiteOrigin" };
 
+export const DATASET_SCHEMA_PUBLIC_PATH = "/schemas/vydex-dataset/1.0.0.json" as const;
+export const DATASET_LATEST_PUBLIC_PATH = "/datasets/vydex-latest-entry-versions-v1-0-0.json" as const;
+export const DATASET_ARTIFACT_FILENAME = "vydex-latest-entry-versions-v1-0-0.json" as const;
+
 export type PermanentRedirect = {
   source: PublicPath;
   destination: PublicPath;
@@ -23,6 +27,7 @@ export type PublicRouteRegistry = {
   changelog: PublicPath;
   export: PublicPath;
   dataset_schema: PublicPath;
+  dataset_latest: PublicPath;
   dataset_artifact?: PublicPath;
   entries: Readonly<Record<string, PublicPath>>;
   topic_trails: Readonly<Record<string, PublicPath>>;
@@ -177,11 +182,12 @@ export function buildPublicRouteRegistry(input: {
     about: publicPath("/about/"),
     changelog: publicPath("/changelog/"),
     export: publicPath("/export/"),
-    dataset_schema: publicPath("/schemas/vydex-dataset/1.0.0.json"),
+    dataset_schema: publicPath(DATASET_SCHEMA_PUBLIC_PATH),
+    dataset_latest: publicPath(DATASET_LATEST_PUBLIC_PATH),
     ...(input.release_metadata
       ? {
           dataset_artifact: publicPath(
-            `/datasets/releases/${input.release_metadata.release_id}/vydex-latest-entry-versions-v1-0-0.json`,
+            `/datasets/releases/${input.release_metadata.release_id}/${DATASET_ARTIFACT_FILENAME}`,
           ),
         }
       : {}),
@@ -196,6 +202,7 @@ export function buildPublicRouteRegistry(input: {
     { path: registry.changelog, recordType: "route" },
     { path: registry.export, recordType: "route" },
     { path: registry.dataset_schema, recordType: "route" },
+    { path: registry.dataset_latest, recordType: "route" },
     ...(registry.dataset_artifact ? [{ path: registry.dataset_artifact, recordType: "route" }] : []),
   ];
   const currentRoutes = [
@@ -231,6 +238,7 @@ export function buildPermanentRedirects(input: {
     routePathname(input.routes.changelog),
     routePathname(input.routes.export),
     routePathname(input.routes.dataset_schema),
+    routePathname(input.routes.dataset_latest),
     ...(input.routes.dataset_artifact ? [routePathname(input.routes.dataset_artifact)] : []),
     ...Object.values(input.routes.entries).map(routePathname),
     ...Object.values(input.routes.topic_trails).map(routePathname),

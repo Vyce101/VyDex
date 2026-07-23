@@ -75,6 +75,7 @@ export type MethodologyVersion = z.infer<typeof methodologyVersionSchema>;
 export const sourceUrlSchema = trimmedStringSchema.pipe(
   z.url({ protocol: /^https?$/, error: "Must be an absolute HTTP or HTTPS URL." }),
 );
+export type HttpUrl = z.infer<typeof sourceUrlSchema>;
 
 export const httpsUrlSchema = trimmedStringSchema.pipe(
   z.url({ protocol: /^https$/, error: "Must be an absolute HTTPS URL." }),
