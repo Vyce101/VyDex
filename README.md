@@ -4,8 +4,6 @@
   <img src="docs/assets/Social%20Preview%20(186KB).jpg" alt="VyDex — versioned evidence for frontier claims" width="900" />
 </p>
 
----
-
 <p align="center">
   VyDex helps people follow important claims in AI, science, and technology by keeping the supporting evidence, limits, and later updates together.
 </p>
@@ -15,11 +13,10 @@
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest and Playwright configured" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
+  <a href="https://vydex.vyce.workers.dev"><img alt="Website: VyDex" src="https://img.shields.io/badge/site-vydex.vyce.workers.dev-0892D0" /></a>
   <a href="https://vyce101.github.io/VyDex/"><img alt="Documentation: Retype" src="https://img.shields.io/badge/docs-Retype-0892D0" /></a>
   <a href="docs/CHANGELOG.md"><img alt="Release status: unreleased" src="https://img.shields.io/badge/release-unreleased-7A90A4" /></a>
 </p>
-
----
 
 ## Table of Contents
 
@@ -30,8 +27,6 @@
 - [Major Milestones Roadmap](#major-milestones-roadmap)
 - [Links](#links)
 - [License And Notices](#license-and-notices)
-
----
 
 ## What It Solves
 
@@ -61,8 +56,6 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 **The public output stays portable.** Static pages and exports are designed to remain useful without a proprietary content service or runtime backend.
 
----
-
 ## Current Status
 
 VyDex is at the dataset-generation foundation stage. The repository installs pinned dependencies, type-checks, runs domain and foundation tests, produces a static Astro build, and checks responsive browser and accessibility behavior. Its framework-independent domain layer defines strict contracts for Entries, Topic Trails, Methodologies, About content, Entry publication snapshots, Methodology publication events, release metadata, and the public Dataset `1.0.0` format.
@@ -71,7 +64,7 @@ The read-only canonical loader and deterministic release constructor validate re
 
 Dataset generation now consumes only a validated production release. It projects current public Entries into deterministic JSON, validates the result against the origin-specific immutable Schema, derives the release artifact and stable-latest redirect descriptors, and can write the immutable file beneath an injected output root without overwriting different bytes. Astro publishes the versioned Schema at `/schemas/vydex-dataset/1.0.0.json`, and CI verifies the static output with a frozen dependency install.
 
-The current `/` route is still a technical fixture, not the Stage 1 homepage. No production content or genuine dataset artifact has been published. Publication commands, snapshot persistence, public pages, persisted release descriptors, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The final public origin and genuine launch dataset will be supplied by those later release and content workflows.
+The current `/` route is still a technical fixture, not the Stage 1 homepage. No production content or genuine dataset artifact has been published. Publication commands, snapshot persistence, public pages, persisted release descriptors, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is now configured; the genuine launch dataset will be supplied by later release and content workflows.
 
 ## Major Milestones Roadmap
 
@@ -81,10 +74,9 @@ The current `/` route is still a technical fixture, not the Stage 1 homepage. No
 
 Roadmap wording describes direction, not released functionality. See the [changelog](docs/CHANGELOG.md) for what has actually changed.
 
----
-
 ## Links
 
+- [VyDex website](https://vydex.vyce.workers.dev) — The current public site; the Stage 1 interface remains under development.
 - [Documentation](https://vyce101.github.io/VyDex/) — These docs track the latest `main` branch. Released app builds may not include every documented feature yet.
 - [Quickstart](docs/QUICKSTART.md)
 - [Changelog](docs/CHANGELOG.md) — Includes unreleased changes that are available only in the latest commits.

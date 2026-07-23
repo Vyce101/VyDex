@@ -8,6 +8,8 @@ branding:
   label: Docs
 
 links:
+  - text: Website
+    link: https://vydex.vyce.workers.dev
   - text: Repository
     link: https://github.com/Vyce101/VyDex
     icon: mark-github
