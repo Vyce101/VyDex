@@ -1,0 +1,92 @@
+{
+  "id": "019f95f1-29e5-7ea2-a96e-03b7e9d296cb",
+  "slug": "dreamer-4-offline-minecraft-diamonds",
+  "aliases": [],
+  "title": "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data",
+  "claim": "Google DeepMind researchers report that Dreamer 4 obtained diamonds in 0.7% of 1,000 one-hour Minecraft evaluations after learning from a fixed 2,541-hour gameplay dataset and improving its policy through reinforcement learning entirely inside a learned world model, without online environment interaction during training.",
+  "claim_status": "supported",
+  "evidence_strength": "strong",
+  "review_status": "follow_up_needed",
+  "review_reason": "The work remains an arXiv v1 preprint, the original Minecraft implementation and weights are not publicly linked, and no independent replication of the diamond result is attached to this entry. Review should be triggered by peer review, an official code or weights release, independent reproduction, a revised paper, or a material challenge to the evaluation. The arXiv record still lists only the original 29 September 2025 submission.",
+  "entry_state": "main_entry",
+  "domains": [
+    "ai_capabilities",
+    "ai_evaluation"
+  ],
+  "primary_topic_trail_id": "019f95f1-29e6-73e2-8d15-188f7e0593bf",
+  "secondary_topic_trail_ids": [],
+  "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+  "date_happened": null,
+  "date_disclosed": "2025-09-29",
+  "date_last_checked": "2026-07-24",
+  "next_check_date": null,
+  "frontier_delta": {
+    "previous_frontier": "Dreamer 3 had learned from online interaction to collect Minecraft diamonds from sparse rewards, reaching its first diamond after 30 million environment steps, while OpenAI’s VPT used large-scale video pretraining followed by online reinforcement learning to craft diamond tools. Dreamer 3 also received inventory information and abstract crafting actions rather than relying exclusively on the native visual interface.",
+    "new_claim_result": "Dreamer 4 obtained diamonds after training only on a fixed offline dataset, using raw pixel observations and low-level mouse and keyboard actions. Its policy was first initialized from the recorded dataset and then improved through reinforcement learning on trajectories generated inside its learned world model, without collecting additional experience from Minecraft during learning.",
+    "delta": "The reported frontier moved from Minecraft diamond acquisition requiring online trial and error to rare but measurable diamond acquisition after fully offline policy training, with learned imagined experience replacing environment interaction during reinforcement learning."
+  },
+  "details": {
+    "what_happened": "Dreamer 4 is a two-billion-parameter world-model agent developed by Google DeepMind researchers Danijar Hafner, Wilson Yan, and Timothy Lillicrap. Its training has three broad stages: world-model pretraining on recorded video and actions, task-conditioned policy and reward-model training from the dataset, and reinforcement learning on trajectories generated inside the frozen world model. The final policy is then evaluated in the actual Minecraft engine, but the evaluation environment does not supply new training experience.\n\nFor the Offline Diamond Challenge, the researchers used 2,541 hours of contractor gameplay containing 360p video, mouse and keyboard actions, and event annotations. Evaluations began in randomly generated worlds with empty inventories, lasted up to 60 minutes, and used raw pixels with the native low-level control interface. The paper estimates that an experienced human needs about 20 minutes, corresponding to approximately 24,000 mouse and keyboard actions, to obtain a diamond.",
+    "what_evidence_shows": "Dreamer 4 obtained diamonds in 0.7% of 1,000 evaluation episodes—equivalent to seven successful episodes. Every evaluated offline baseline recorded zero diamond successes. Dreamer 4 also obtained iron pickaxes in 29.0% of episodes, compared with 16.9% for the same world-model representation followed only by behavioral cloning and 11.2% for the Gemma 3-based vision-language-action baseline. This ablation supports the narrower claim that imagination training improved the policy beyond imitation from the offline dataset.\n\nPerformance was much higher on earlier milestones: Dreamer 4 obtained stone pickaxes in 90.1% of episodes, iron ore in 66.7%, furnaces in 58.1%, iron ingots in 39.5%, and iron pickaxes in 29.0%. The increasing advantage over behavioral-cloning systems on later milestones is consistent with imagination training helping most as the required behavior becomes longer and less common in the dataset.\n\nThe world model was also evaluated as an interactive Minecraft simulator. A human operator completed 14 of 16 selected interaction tasks inside Dreamer 4, compared with 5 of 16 in the large Oasis model and none in Lucid-v1. Dreamer 4 generated at 21 frames per second on one H100 GPU with 9.6 seconds of context, allowing real-time interaction while preserving a substantially longer context than the compared models.",
+    "context_changes_interpretation": "“Offline” describes the learning process, not the final evaluation. Dreamer 4 was evaluated in the actual Minecraft engine after training; it did not learn solely by executing inside an imagined game from random initialization. The world model, initial policy, and reward model first learned from recorded gameplay containing video, actions, and event annotations. Reinforcement learning inside the world model was the final improvement stage.\n\nThe system also did not receive one unrestricted instruction—such as “find a diamond”—and independently invent the entire plan. It was trained as a 20-task agent and guided during evaluation by a manually specified linear prompt sequence covering gathering wood, crafting successive tools, mining iron, building and using a furnace, and finally mining diamonds. This still requires executing the subtasks under changing procedural conditions, but it limits claims about autonomous task decomposition and open-ended planning.\n\nThe diamond success rate was only 0.7%. That is enough to establish a non-zero reported capability across a large evaluation, but it is not reliable task mastery. The result should therefore be interpreted as crossing the offline-training threshold, not as producing a dependable Minecraft agent.",
+    "reader_takeaway": "Dreamer 4 provides strong initial evidence that a learned world model can become accurate enough for reinforcement learning inside generated experience to improve a policy on a difficult, long-horizon task and transfer that improvement back into the real evaluation environment. Its key contribution is not that another agent can play Minecraft; earlier systems had already reached diamonds or diamond tools. The frontier change is that the policy reached the final milestone without online trial-and-error learning.\n\nThe result remains narrow. It establishes this capability in Minecraft under an authored task hierarchy, using a large action-labelled dataset, substantial training compute, and a low final success rate. It does not establish that the method can yet train reliable general-purpose agents or physical robots entirely through imagination."
+  },
+  "confirmed_significance": "Within the reported Minecraft experiment, Dreamer 4 moved the demonstrated frontier from online world-model reinforcement learning to offline world-model reinforcement learning for the complete diamond progression. Its imagination-trained policy was the only evaluated offline system to obtain diamonds and materially outperformed its behavioral-cloning counterpart on later milestones. This is direct evidence that the learned simulator was useful for policy improvement rather than only for generating visually plausible video.\n\nThe accompanying simulator evaluation also shows a substantial increase in the range of Minecraft mechanics that a real-time world model can preserve. Dreamer 4 supported 14 of 16 tested interactions while running faster than the game’s 20-Hz update rate on one H100, although its usable temporal context remained limited.",
+  "potential_significance_if_confirmed": "If independently reproduced and generalized beyond Minecraft, the result would support training agents from fixed records plus imagined rollouts in domains where online exploration is expensive, slow, difficult to reset, or unsafe. Possible applications include robotics, autonomous systems, and other physical-control settings where partially trained agents cannot be allowed to learn through unrestricted trial and error.\n\nDreamer 4 does not itself demonstrate this complete robotics pipeline. The paper separately shows that its world model can generate counterfactual robot interactions from a robotics dataset, but it does not show a physical robot policy trained entirely through imagined reinforcement learning and then deployed successfully in the real world. Robotics should therefore remain prospective significance rather than part of the confirmed milestone.",
+  "caveats": [
+    "**Developer-controlled evidence:** The paper, benchmark runs, evaluation procedure, project page, and released videos originate from Dreamer 4’s developers. The work remains a preprint and the exact Minecraft result has not been independently reproduced in the evidence attached here.",
+    "**Low final success rate:** Dreamer 4 obtained diamonds in 0.7% of episodes. The result demonstrates capability, not reliability or mastery.",
+    "**Authored subtask sequence:** Evaluation used a manually defined sequence of intermediate prompts rather than requiring the agent to infer the complete plan from one high-level objective.",
+    "**Not video-only training:** The diamond agent used gameplay video paired with low-level actions and event annotations. Separate experiments showed that action conditioning could benefit from large amounts of unlabelled video, but the diamond result was not obtained from action-free video alone.",
+    "**No demonstrated physical-world policy transfer:** Evaluation transferred the policy from a learned Minecraft model into the actual Minecraft engine. The robotics experiment evaluated generated counterfactual interactions, not deployment of an imagination-trained policy on a physical robot.",
+    "**Large training resources:** The reported models contained two billion parameters and were trained across 256 to 1,024 TPU-v5p accelerators. The paper does not provide everything necessary for an independent group to reproduce the complete Minecraft result from the public materials alone.",
+    "**World-model limitations:** Dreamer 4’s generated Minecraft state used 9.6 seconds of context, and the authors report that inventory items could become unclear or change over time. This constrains how literally the simulator should be treated as a persistent, exact internal copy of the environment."
+  ],
+  "sources": [
+    {
+      "citation_id": "dreamer-4-paper",
+      "title": "Training Agents Inside of Scalable World Models",
+      "publisher_or_domain": "arXiv / Google DeepMind researchers",
+      "url": "https://arxiv.org/abs/2509.24527",
+      "evidence_types": ["preprint", "developer_vendor_claim", "benchmark_result"],
+      "source_role": "primary_evidence",
+      "used_for": "Main Dreamer 4 claim, training procedure, dataset and evaluation setup, milestone success rates, behavioral-cloning ablations, world-model comparison, task prompt sequence, compute details, and disclosed limitations. Because the authors are reporting a result about their own system, this is a Developer / Vendor Claim rather than an Official Claim."
+    },
+    {
+      "citation_id": "dreamer-4-project-page",
+      "title": "Dreamer 4 project page and uncut evaluations",
+      "publisher_or_domain": "Dreamer 4 research team",
+      "url": "https://danijar.com/project/dreamer4/",
+      "evidence_types": ["developer_vendor_claim", "technical_artifact"],
+      "source_role": "strong_artifact",
+      "used_for": "Public project description, uncut successful evaluation videos, decoded imagination-training sequences, interactive world-model comparisons, and robotics-world-model demonstrations."
+    },
+    {
+      "citation_id": "dreamer-3-nature-paper",
+      "title": "Mastering diverse control tasks through world models",
+      "publisher_or_domain": "Nature",
+      "url": "https://www.nature.com/articles/s41586-025-08744-2",
+      "evidence_types": ["peer_reviewed_paper", "benchmark_result"],
+      "source_role": "context_source",
+      "used_for": "Previous frontier established by Dreamer 3, including online reinforcement learning from sparse rewards, Minecraft input and action accommodations, and diamond acquisition after environment interaction."
+    },
+    {
+      "citation_id": "openai-vpt-paper",
+      "title": "Video PreTraining: Learning to Act by Watching Unlabeled Online Videos",
+      "publisher_or_domain": "NeurIPS 2022",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/9c7008aff45b5d8f0973b23e1a22ada0-Abstract-Conference.html",
+      "evidence_types": ["peer_reviewed_paper", "benchmark_result"],
+      "source_role": "context_source",
+      "used_for": "Earlier native-interface Minecraft frontier, the estimated 24,000-action task horizon, large-scale video pretraining, and diamond-tool performance after online reinforcement-learning fine-tuning."
+    },
+    {
+      "citation_id": "unofficial-dreamer-4-pytorch",
+      "title": "Unofficial Dreamer 4 PyTorch implementation",
+      "publisher_or_domain": "Nicklas Hansen",
+      "url": "https://github.com/nicklashansen/dreamer4",
+      "evidence_types": ["technical_artifact"],
+      "source_role": "context_source",
+      "used_for": "Reproducibility context. The repository explicitly describes itself as an unofficial and incomplete implementation applied to continuous-control tasks rather than a reproduction of the original Minecraft result. It must not be labelled Independent Replication."
+    }
+  ]
+}
