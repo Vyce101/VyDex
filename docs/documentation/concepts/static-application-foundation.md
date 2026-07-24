@@ -16,6 +16,7 @@ It owns:
 - The root Node and npm project.
 - Static Astro configuration and strict TypeScript checking.
 - The allowed dependency direction between Astro and `src/domain`.
+- The `FoundationLayout.astro` document boundary that renders the [Stage 1 Site Shell](stage-1-site-shell.md) around page content.
 - The global stylesheet entry point and locally bundled fonts used by the [Frontier Atlas Design System](frontier-atlas-design-system.md).
 - Unit, responsive browser, and accessibility test harnesses.
 - The local application launcher and production build command.
@@ -35,8 +36,9 @@ It does not own:
 1. `npm ci` installs the exact root dependency tree from `package-lock.json`.
 2. Astro pages and layouts may import the public domain entry at `src/domain/index.ts`.
 3. Domain modules remain framework-independent and cannot import Astro or UI modules.
-4. `npm run build` type-checks the project, runs Vitest, and generates static files in `dist/`. `PUBLIC_SITE_ORIGIN` must contain a root-only HTTPS origin so the Dataset Schema receives its absolute canonical `$id`.
-5. `npm run test:browser` rebuilds the site, serves the generated output locally, and runs the Playwright and Axe checks.
+4. Public HTML pages render their main content through `FoundationLayout.astro`, which supplies the skip link, Header, single Main region, and Footer.
+5. `npm run build` type-checks the project, runs Vitest, and generates static files in `dist/`. `PUBLIC_SITE_ORIGIN` must contain a root-only HTTPS origin so the Dataset Schema receives its absolute canonical `$id`.
+6. `npm run test:browser` rebuilds the site, serves the generated output locally, and runs the Playwright and Axe checks.
 
 The current `/` page is the Frontier Atlas conformance fixture, not the Stage 1 homepage or a product interface.
 
@@ -54,7 +56,7 @@ Retype is an independent npm project under `docs/documentation/`. It publishes d
 
 Framework-independent domain modules import Zod from `zod`, never from `astro/zod`.
 
-Frontier Atlas owns presentation tokens, typography roles, shared components, and responsive behavior. The foundation owns the Astro shell that loads it, the build process, and the test harness. Page modules consume the design system but must not move presentation rules into the framework-independent domain layer.
+Frontier Atlas owns presentation tokens, typography roles, shared components, and responsive behavior. The foundation owns the Astro document boundary that loads those styles, the build process, and the test harness. The [Stage 1 Site Shell](stage-1-site-shell.md) owns the Header, Footer, navigation, skip-link behavior, and required page order rendered through that boundary. Page modules provide main content and must not move presentation rules into the framework-independent domain layer.
 
 ## Internal Edge Cases
 
@@ -72,11 +74,13 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - A failed browser test can occur after `dist/` has been generated. The presence of that directory does not mean a release is ready.
 - Domain code may use framework-independent packages such as Zod and Markdown parsers, but it must not depend on Astro pages, layouts, or components.
 - Environment access belongs to the application adapter. The release constructor accepts an explicit site origin and never reads `process.env` or `import.meta.env`.
+- Site-shell navigation may consume the public route contract from the domain entry, but route-generation code must not import presentation components or Astro modules.
 
 ## Invariants
 
 - Public application output remains static HTML with no runtime backend.
 - Core content must remain readable without browser JavaScript.
+- Public HTML pages use the layout-owned Header, Main, and Footer structure instead of composing their own shell.
 - UI code may depend on the domain entry; domain code must not depend on presentation modules.
 - Product contracts must come from approved tickets rather than permissive placeholders or inferred fields.
 - Source Serif 4 and Source Sans 3 remain build-owned assets with system fallbacks and the role assignments defined by Frontier Atlas.
@@ -91,7 +95,8 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - `src/domain/` — Framework-independent domain boundary.
 - `src/adapters/` — Read-only filesystem loading and application configuration boundaries.
 - `src/adapters/dataset-artifact-writer/` — Injected immutable dataset filesystem emission.
-- `src/pages/` and `src/layouts/` — Astro-owned rendering boundary.
+- `src/pages/` and `src/layouts/` — Astro-owned page and document rendering boundary.
+- `src/components/site-shell/` — Shared Header, Footer, navigation model, and progressive enhancement.
 - `src/pages/schemas/` and `public/_headers` — Static Dataset Schema publication and hosting metadata.
 - `src/styles/` — Frontier Atlas tokens, base styles, type roles, layouts, components, and the global stylesheet entry point.
 - `tests/foundation/` — Architecture checks.
@@ -105,6 +110,7 @@ Check:
 
 - Whether a dependency would introduce a UI framework, runtime service, or external content dependency.
 - Whether a presentation change preserves the [Frontier Atlas](frontier-atlas-design-system.md) ownership boundary and accessibility invariants.
+- Whether a page or layout change preserves the [Stage 1 Site Shell](stage-1-site-shell.md) order, navigation, and no-JavaScript behavior.
 - Whether a domain import points toward Astro or another presentation module.
 - Whether new browser JavaScript is genuine progressive enhancement.
 - Whether a data location mixes canonical, immutable, generated-release, or static-build concerns.

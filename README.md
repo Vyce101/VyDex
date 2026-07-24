@@ -44,7 +44,7 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **Versioned structured releases.** Each dataset release has an immutable Schema, release-specific path, fixed release metadata, and deterministic JSON. A stable convenience URL can point to the newest immutable artifact without replacing it.
 
-These product capabilities describe the intended VyDex system. The repository now includes the static application foundation, the Frontier Atlas design system, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, and the first three real evidence records. It does not yet provide the Stage 1 public interface.
+These product capabilities describe the intended VyDex system. The repository now includes the static application foundation, the Frontier Atlas design system, the shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, and the first three real evidence records. It does not yet provide the complete Stage 1 public interface.
 
 ## Why It Is Different
 
@@ -62,15 +62,17 @@ VyDex has completed the Stage 1 data and interface foundations. The repository c
 
 The light-only Frontier Atlas design system now provides the shared colors, typography, responsive grid, record layouts, controls, status treatments, tables, focus behavior, and reduced-motion rules for later public pages. Automated checks protect the token contract, responsive breakpoints, grayscale-readable states, contrast, and horizontal-overflow boundary.
 
+The shared Stage 1 site shell now gives later public pages one Header, Main, and Footer structure. Its desktop navigation and native mobile disclosure use the canonical Stage 1 destinations, remain usable without JavaScript, and include skip navigation, route-derived active states, Escape closing, and focus return. The current technical fixture exercises this shell while the destination pages remain under development.
+
 The read-only canonical loader and deterministic release constructor validate the repository records, select current published snapshots, resolve Topic Trail membership, construct canonical URLs and redirect descriptors, and derive the public Changelog. An integration test proves that the seed ledger can construct a complete production release using fixed test-only metadata and the approved site origin. Strict production still returns no release when a blocking diagnostic exists; private preview retains invalid source records without treating them as public data.
 
 Dataset generation now consumes only a validated production release. It projects current public Entries into deterministic JSON, validates the result against the origin-specific immutable Schema, derives the release artifact and stable-latest redirect descriptors, and can write the immutable file beneath an injected output root without overwriting different bytes. Astro publishes the versioned Schema at `/schemas/vydex-dataset/1.0.0.json`, and CI verifies the static output with a frozen dependency install.
 
-The current `/` route is still a technical fixture, not the Stage 1 homepage. It demonstrates Frontier Atlas without rendering the seed ledger as a public product. No genuine release descriptor or dataset artifact has been published, and reusable publication persistence, public pages, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is configured for the later launch release.
+The current `/` route is still a technical fixture, not the Stage 1 homepage. It demonstrates Frontier Atlas and the shared site shell without rendering the seed ledger as a public product. No genuine release descriptor or dataset artifact has been published, and reusable publication persistence, public pages, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is configured for the later launch release.
 
 ## Major Milestones Roadmap
 
-- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, revision-1 snapshots, and Frontier Atlas interface foundation are complete. Public pages, the genuine dataset release, and deployment integration remain to be completed.
+- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, revision-1 snapshots, Frontier Atlas interface foundation, and shared site shell are complete. Public pages, the genuine dataset release, and deployment integration remain to be completed.
 - **Stage 2 — Searchable Evidence Database.** Users can search real entries, filter by the evidence fields that matter, and understand why results are ordered as they are.
 - **Stage 3 — Versioned Ledger and Citation.** Users can inspect entry history, open older versions, understand what changed, see which methodology version applied, and cite an exact version.
 

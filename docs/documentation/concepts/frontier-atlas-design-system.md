@@ -30,16 +30,16 @@ It does not own:
 ## Normal Flow
 
 1. `FoundationLayout.astro` loads the project-owned Source Sans 3 and Source Serif 4 files, then imports `src/styles/global.css`.
-2. `global.css` imports the token, base, typography, layout, and component stylesheets in a stable order.
+2. `global.css` imports the token, base, typography, layout, component, and site-shell stylesheets in a stable order.
 3. Mobile tokens apply by default. Media queries change the grid and approved type roles at 768px, 1024px, and 1312px; viewports below 400px use the smaller mobile page margin.
-4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components.
+4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](stage-1-site-shell.md) composes those primitives for shared navigation and page structure.
 5. Vitest checks the token and source contract. Playwright checks representative computed styles, responsive layouts, interaction states, reduced motion, grayscale-readable states, accessibility, and horizontal overflow.
 
 The current `/` route is a technical conformance fixture. It demonstrates the primitives but is not the Stage 1 homepage or a public evidence record.
 
 ## Presentation Contracts
 
-`atlas-page`, `atlas-grid`, and `atlas-prose` provide the page measure, responsive columns, and long-form reading measure. Rail, metadata, annotation, registration-cue, and Frontier Delta classes provide the approved responsive transformations without requiring page-specific breakpoint logic.
+`atlas-page`, `atlas-page-boundary`, `atlas-grid`, and `atlas-prose` provide the page measure, shared outer alignment, responsive columns, and long-form reading measure. The site shell uses `atlas-page-boundary` to align the Header and Footer with Main content. Rail, metadata, annotation, registration-cue, and Frontier Delta classes provide the approved responsive transformations without requiring page-specific breakpoint logic.
 
 Typography classes assign both the font family and the complete size, line-height, weight, and tracking role. Editorial titles, claims, evidence prose, and significant interpretation use Source Serif 4. Navigation, controls, headings, metadata, dates, tables, labels, errors, and compact annotations use Source Sans 3.
 
@@ -75,6 +75,7 @@ Under `prefers-reduced-motion: reduce`, non-essential transitions and disclosure
 ## Cross-System Edge Cases
 
 - [Canonical Records](canonical-records.md) owns claim-status machine values and public labels. Frontier Atlas only maps those machine values to presentation treatments.
+- The [Stage 1 Site Shell](stage-1-site-shell.md) owns shared navigation behavior and page structure. Frontier Atlas supplies its tokens, focus treatment, responsive breakpoint, and page alignment primitive.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro shell, local font loading, static build, and validation commands. Frontier Atlas owns the presentation contract loaded by that shell.
 - Later page modules may choose which real record information to show, but annotations may only repeat or emphasize that information. A page cannot move an essential value exclusively into an annotation.
 - Page-specific CSS may arrange content within an approved primitive, but it must not introduce substitute colors, shadows, large radii, gradients, or a competing responsive scale.
@@ -102,6 +103,7 @@ Design-system review fails when presentation code introduces a local color, larg
 - `src/styles/global.css` — Ordered public stylesheet entry point.
 - `src/styles/base.css` and `src/styles/typography.css` — Document defaults, interaction behavior, and type roles.
 - `src/styles/layout.css` and `src/styles/components.css` — Responsive layouts and shared presentation primitives.
+- `src/styles/site-shell.css` — Frontier Atlas presentation for the shared Stage 1 Header, Footer, mobile disclosure, and skip link.
 - `src/pages/index.astro` — Non-product conformance fixture.
 - `tests/foundation/frontier-atlas-contract.test.ts` — Source and token safeguards.
 - `tests/browser/frontier-atlas.spec.ts` — Computed-style, responsive, motion, grayscale, and accessibility checks.
@@ -116,6 +118,6 @@ Check:
 - Whether mobile tables retain visible definition labels and desktop table semantics.
 - Whether reduced-motion and dark operating-system preferences preserve the approved static states and light palette.
 - Whether a page ticket predates the compact-metadata accessibility adjustment. If it conflicts, preserve the Secondary Ink rule unless the project owner explicitly approves a tested accessible replacement.
-- Whether the change belongs to Frontier Atlas or is content and behavior owned by a later page module.
+- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](stage-1-site-shell.md), or a page-owned content module.
 
-Read [Static Application Foundation](static-application-foundation.md) before changing global imports, font loading, test commands, or the Astro presentation boundary.
+Read [Stage 1 Site Shell](stage-1-site-shell.md) before changing shared navigation or page structure, and read [Static Application Foundation](static-application-foundation.md) before changing global imports, font loading, test commands, or the Astro presentation boundary.
