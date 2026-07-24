@@ -6,6 +6,20 @@ export type PublicPath = string & { readonly __brand: "PublicPath" };
 export type AbsoluteCanonicalUrl = string & { readonly __brand: "AbsoluteCanonicalUrl" };
 export type SiteOrigin = string & { readonly __brand: "SiteOrigin" };
 
+function publicPath(value: string): PublicPath {
+  return value as PublicPath;
+}
+
+export const STAGE_ONE_FIXED_PUBLIC_PATHS = Object.freeze({
+  home: publicPath("/"),
+  latest: publicPath("/#latest"),
+  methodology_current: publicPath("/methodology/"),
+  methodology_version: publicPath("/methodology/1.0.0/"),
+  about: publicPath("/about/"),
+  changelog: publicPath("/changelog/"),
+  export: publicPath("/export/"),
+});
+
 export const DATASET_SCHEMA_PUBLIC_PATH = "/schemas/vydex-dataset/1.0.0.json" as const;
 export const DATASET_LATEST_PUBLIC_PATH = "/datasets/vydex-latest-entry-versions-v1-0-0.json" as const;
 export const DATASET_ARTIFACT_FILENAME = "vydex-latest-entry-versions-v1-0-0.json" as const;
@@ -130,10 +144,6 @@ export function validateSiteOrigin(
   return { success: true, data: url.origin as SiteOrigin, diagnostics: [] };
 }
 
-function publicPath(value: string): PublicPath {
-  return value as PublicPath;
-}
-
 function routePathname(path: PublicPath): string {
   return new URL(path, "https://route.invalid").pathname;
 }
@@ -175,13 +185,7 @@ export function buildPublicRouteRegistry(input: {
     input.topic_trails.map((trail) => [trail.id, publicPath(`/topic-trails/${trail.slug}/`)]),
   );
   const registry: PublicRouteRegistry = {
-    home: publicPath("/"),
-    latest: publicPath("/#latest"),
-    methodology_current: publicPath("/methodology/"),
-    methodology_version: publicPath("/methodology/1.0.0/"),
-    about: publicPath("/about/"),
-    changelog: publicPath("/changelog/"),
-    export: publicPath("/export/"),
+    ...STAGE_ONE_FIXED_PUBLIC_PATHS,
     dataset_schema: publicPath(DATASET_SCHEMA_PUBLIC_PATH),
     dataset_latest: publicPath(DATASET_LATEST_PUBLIC_PATH),
     ...(input.release_metadata
