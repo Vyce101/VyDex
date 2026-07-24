@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the light-only Frontier Atlas design system with shared responsive typography, layouts, controls, claim statuses, tables, and accessibility checks.
 - Added the real Stage 1 seed ledger with three Entries, Topic Trails, and immutable initial publication snapshots.
 - Added the complete canonical About record with approved maintainer profile links and release-blocking validation coverage.
 - Added the complete canonical Methodology `1.0.0` record and its Stage 1 publication event.
