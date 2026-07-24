@@ -13,6 +13,7 @@ export default defineConfig({
   reporter: "list",
   use: {
     baseURL: BROWSER_TEST_URL,
+    screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },
   projects: [
@@ -29,7 +30,7 @@ export default defineConfig({
         browserName: "chromium",
         hasTouch: true,
         isMobile: true,
-        viewport: { width: 390, height: 844 },
+        viewport: { width: 375, height: 812 },
       },
     },
   ],

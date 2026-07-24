@@ -1,4 +1,4 @@
-// Verifies the responsive, semantic, and accessible static fixture page.
+// Verifies the semantic, accessible, and static application foundation.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
@@ -6,7 +6,7 @@ test("renders semantic content without horizontal overflow", async ({ page }) =>
   await page.goto("/");
 
   await expect(page.getByRole("main")).toBeVisible();
-  await expect(page.getByRole("heading", { level: 1, name: "Static foundation fixture" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Frontier Atlas design system" })).toBeVisible();
 
   const viewportFitsContent = await page.evaluate(
     () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
@@ -80,7 +80,7 @@ test.describe("without browser JavaScript", () => {
 
   test("keeps the core fixture readable", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("main")).toContainText("project build and browser-test harness");
+    await expect(page.getByRole("main")).toContainText("Disclosure content remains available");
     await expect(page.locator("script")).toHaveCount(0);
   });
 });
