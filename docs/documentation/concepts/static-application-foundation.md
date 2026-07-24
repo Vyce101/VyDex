@@ -1,6 +1,6 @@
 ---
 label: Static Application Foundation
-order: 500
+order: 600
 ---
 
 # Static Application Foundation
@@ -16,7 +16,7 @@ It owns:
 - The root Node and npm project.
 - Static Astro configuration and strict TypeScript checking.
 - The allowed dependency direction between Astro and `src/domain`.
-- Native global CSS, project-owned design tokens, and locally bundled fonts.
+- The global stylesheet entry point and locally bundled fonts used by the [Frontier Atlas Design System](frontier-atlas-design-system.md).
 - Unit, responsive browser, and accessibility test harnesses.
 - The local application launcher and production build command.
 - Static publication of the versioned Dataset Schema and its Cloudflare response metadata.
@@ -38,7 +38,7 @@ It does not own:
 4. `npm run build` type-checks the project, runs Vitest, and generates static files in `dist/`. `PUBLIC_SITE_ORIGIN` must contain a root-only HTTPS origin so the Dataset Schema receives its absolute canonical `$id`.
 5. `npm run test:browser` rebuilds the site, serves the generated output locally, and runs the Playwright and Axe checks.
 
-The current `/` page is a build fixture, not the Stage 1 homepage or a product interface.
+The current `/` page is the Frontier Atlas conformance fixture, not the Stage 1 homepage or a product interface.
 
 ## Interactions With Other Project Areas
 
@@ -54,9 +54,11 @@ Retype is an independent npm project under `docs/documentation/`. It publishes d
 
 Framework-independent domain modules import Zod from `zod`, never from `astro/zod`.
 
+Frontier Atlas owns presentation tokens, typography roles, shared components, and responsive behavior. The foundation owns the Astro shell that loads it, the build process, and the test harness. Page modules consume the design system but must not move presentation rules into the framework-independent domain layer.
+
 ## Internal Edge Cases
 
-- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
+- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. A placeholder import in the Frontier Atlas fixture still verifies the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
 - The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. Production code does not hardcode a hostname; tests and CI use the reserved `https://vydex.example` origin.
 - The repository now has a complete validated Stage 1 seed record set, and an integration test constructs a successful production release from it using fixed test-only metadata. The current fixture still does not call strict release construction because no genuine release descriptor is persisted and the public rendering flow is not connected to the release model. It does publish the Dataset Schema because Schema generation needs an origin rather than public Entry content.
@@ -77,7 +79,8 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 - Core content must remain readable without browser JavaScript.
 - UI code may depend on the domain entry; domain code must not depend on presentation modules.
 - Product contracts must come from approved tickets rather than permissive placeholders or inferred fields.
-- Source Serif 4 and Source Sans 3 remain build-owned assets with system fallbacks.
+- Source Serif 4 and Source Sans 3 remain build-owned assets with system fallbacks and the role assignments defined by Frontier Atlas.
+- The application remains light-only until a separate ticket supplies a complete approved dark palette and component-state contract.
 - Project commands keep Astro CLI telemetry disabled; the browser has no telemetry, analytics, or persistent client logging.
 - Type-checking, tests, and builds preserve non-zero failure results.
 - Retype deployment remains separate from the application hosting target.
@@ -90,7 +93,7 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 - `src/adapters/dataset-artifact-writer/` — Injected immutable dataset filesystem emission.
 - `src/pages/` and `src/layouts/` — Astro-owned rendering boundary.
 - `src/pages/schemas/` and `public/_headers` — Static Dataset Schema publication and hosting metadata.
-- `src/styles/` — Design tokens and global native CSS.
+- `src/styles/` — Frontier Atlas tokens, base styles, type roles, layouts, components, and the global stylesheet entry point.
 - `tests/foundation/` — Architecture checks.
 - `tests/domain/` — Canonical record and validation checks.
 - `tests/browser/` — Responsive and accessibility journeys.
@@ -101,6 +104,7 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 Check:
 
 - Whether a dependency would introduce a UI framework, runtime service, or external content dependency.
+- Whether a presentation change preserves the [Frontier Atlas](frontier-atlas-design-system.md) ownership boundary and accessibility invariants.
 - Whether a domain import points toward Astro or another presentation module.
 - Whether new browser JavaScript is genuine progressive enhancement.
 - Whether a data location mixes canonical, immutable, generated-release, or static-build concerns.
