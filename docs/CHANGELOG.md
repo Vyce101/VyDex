@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the complete canonical Methodology `1.0.0` record and its Stage 1 publication event.
 - Added the immutable Dataset `1.0.0` JSON Schema, deterministic release projection, strict Schema validation, stable-latest redirect descriptor, and collision-safe artifact writer.
 - Added static Schema publication with Cloudflare response metadata and a frozen-install application validation workflow.
 - Added a read-only canonical record loader and deterministic production and preview release models with resolved routes, redirects, and Changelog activity.
