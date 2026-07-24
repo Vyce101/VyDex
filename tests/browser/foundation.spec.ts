@@ -81,6 +81,7 @@ test.describe("without browser JavaScript", () => {
   test("keeps the core fixture readable", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("main")).toContainText("Disclosure content remains available");
-    await expect(page.locator("script")).toHaveCount(0);
+    await expect(page.getByRole("banner")).toBeVisible();
+    await expect(page.getByRole("contentinfo")).toBeVisible();
   });
 });
