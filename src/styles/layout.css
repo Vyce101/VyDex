@@ -1,9 +1,13 @@
 /* Provides the Frontier Atlas page grid and responsive record layouts. */
-.atlas-page {
+.atlas-page,
+.atlas-page-boundary {
   inline-size: 100%;
   margin-inline: auto;
-  padding-block: var(--atlas-space-48) var(--atlas-space-80);
   padding-inline: var(--atlas-page-margin);
+}
+
+.atlas-page {
+  padding-block: var(--atlas-space-48) var(--atlas-space-80);
 }
 
 .atlas-grid {
@@ -131,7 +135,8 @@
 }
 
 @media (min-width: 1312px) {
-  .atlas-page {
+  .atlas-page,
+  .atlas-page-boundary {
     max-inline-size: calc(var(--atlas-content-max) + (2 * var(--atlas-page-margin)));
   }
 }
