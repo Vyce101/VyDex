@@ -1,35 +1,131 @@
-/* Defines project-owned visual tokens for the static application. */
+/* Defines the complete project-owned Frontier Atlas design tokens. */
 :root {
-  color-scheme: light dark;
-  --color-action: #0892d0;
-  --color-background: #f4f7f9;
-  --color-surface: #ffffff;
-  --color-text-primary: #1b2430;
-  --color-text-secondary: #4a5568;
-  --color-accent: #1b2430;
-  --color-border: #d1d9e0;
-  --color-success: #22c55e;
-  --color-error: #ef4444;
-  --font-family-body: "Source Sans 3 Variable", "Segoe UI", Arial, sans-serif;
-  --font-family-heading: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
-  --font-size-body: 1rem;
-  --line-height-body: 1.6;
-  --space-2: 0.5rem;
-  --space-4: 1rem;
-  --space-8: 2rem;
-  --content-width: 48rem;
-  --border-radius: 0.5rem;
-  --focus-outline: 0.1875rem solid var(--color-action);
-  --focus-offset: 0.1875rem;
+  color-scheme: light;
+
+  --atlas-color-canvas: #f2f4f3;
+  --atlas-color-sheet: #fcfcfa;
+  --atlas-color-ink-primary: #17212b;
+  --atlas-color-ink-secondary: #50606f;
+  --atlas-color-ink-muted: #667581;
+  --atlas-color-rule-record: #c7d0d6;
+  --atlas-color-rule-strong: #7c8c97;
+  --atlas-color-grid-faint: #e3e8eb;
+  --atlas-color-route: #006d9c;
+  --atlas-color-route-hover: #005a83;
+  --atlas-color-focus: #0892d0;
+  --atlas-color-route-wash: #e8f3f8;
+  --atlas-color-control-text: #ffffff;
+  --atlas-color-status-neutral-text: #35434e;
+  --atlas-color-status-neutral-background: #f5f6f4;
+  --atlas-color-status-neutral-border: #b9c4cb;
+  --atlas-color-status-unverified-text: #7a5a00;
+  --atlas-color-status-unverified-background: #fff8e1;
+  --atlas-color-status-unverified-border: #d7b85a;
+  --atlas-color-status-disputed-text: #5c4a76;
+  --atlas-color-status-disputed-background: #f4f0f8;
+  --atlas-color-status-disputed-border: #b7a6c7;
+  --atlas-color-status-failed-text: #b42318;
+  --atlas-color-status-failed-background: #fff1ef;
+  --atlas-color-status-failed-border: #e0a39d;
+
+  --atlas-font-serif: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
+  --atlas-font-sans: "Source Sans 3 Variable", "Segoe UI", Arial, sans-serif;
+
+  --atlas-type-homepage-size: 2.375rem;
+  --atlas-type-homepage-line: 2.625rem;
+  --atlas-type-homepage-tracking: 0.018em;
+  --atlas-type-entry-size: 2.125rem;
+  --atlas-type-entry-line: 2.5rem;
+  --atlas-type-entry-tracking: 0.012em;
+  --atlas-type-major-size: 1.5rem;
+  --atlas-type-major-line: 1.875rem;
+  --atlas-type-subsection-size: 1.25rem;
+  --atlas-type-subsection-line: 1.6875rem;
+  --atlas-type-card-size: 1.3125rem;
+  --atlas-type-card-line: 1.6875rem;
+  --atlas-type-editorial-size: 1.1875rem;
+  --atlas-type-editorial-line: 1.875rem;
+  --atlas-type-evidence-size: 1.0625rem;
+  --atlas-type-evidence-line: 1.6875rem;
+  --atlas-type-interface-size: 1rem;
+  --atlas-type-interface-line: 1.5rem;
+  --atlas-type-supporting-size: 0.875rem;
+  --atlas-type-supporting-line: 1.25rem;
+  --atlas-type-metadata-size: 0.75rem;
+  --atlas-type-metadata-line: 1rem;
+  --atlas-type-control-size: 0.9375rem;
+  --atlas-type-control-line: 1.25rem;
+
+  --atlas-space-4: 0.25rem;
+  --atlas-space-8: 0.5rem;
+  --atlas-space-12: 0.75rem;
+  --atlas-space-16: 1rem;
+  --atlas-space-20: 1.25rem;
+  --atlas-space-24: 1.5rem;
+  --atlas-space-32: 2rem;
+  --atlas-space-48: 3rem;
+  --atlas-space-56: 3.5rem;
+  --atlas-space-64: 4rem;
+  --atlas-space-80: 5rem;
+  --atlas-space-96: 6rem;
+  --atlas-space-128: 8rem;
+
+  --atlas-grid-columns: 4;
+  --atlas-grid-gutter: 1rem;
+  --atlas-page-margin: 1.25rem;
+  --atlas-content-max: 78rem;
+  --atlas-reading-measure: 68ch;
+  --atlas-radius: 0.125rem;
+  --atlas-focus-outline: 0.1875rem solid var(--atlas-color-focus);
+  --atlas-focus-offset: 0.1875rem;
+  --atlas-motion-interface: 120ms ease-out;
+  --atlas-motion-disclosure: 160ms ease-out;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (max-width: 399px) {
   :root {
-    --color-background: #1b2430;
-    --color-surface: #142030;
-    --color-text-primary: #e8f7fc;
-    --color-text-secondary: #7a90a4;
-    --color-accent: #e8f7fc;
-    --color-border: #243447;
+    --atlas-page-margin: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --atlas-grid-columns: 8;
+    --atlas-grid-gutter: 1.25rem;
+    --atlas-page-margin: 1.5rem;
+    --atlas-type-homepage-size: 2.875rem;
+    --atlas-type-homepage-line: 3.125rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --atlas-grid-columns: 12;
+    --atlas-type-homepage-size: 3.5rem;
+    --atlas-type-homepage-line: 3.75rem;
+    --atlas-type-homepage-tracking: 0.025em;
+    --atlas-type-entry-size: 2.75rem;
+    --atlas-type-entry-line: 3.125rem;
+    --atlas-type-entry-tracking: 0.018em;
+    --atlas-type-major-size: 1.75rem;
+    --atlas-type-major-line: 2.125rem;
+    --atlas-type-card-size: 1.5rem;
+    --atlas-type-card-line: 1.875rem;
+    --atlas-type-evidence-size: 1.125rem;
+    --atlas-type-evidence-line: 1.8125rem;
+  }
+}
+
+@media (min-width: 1312px) {
+  :root {
+    --atlas-grid-gutter: 1.5rem;
+    --atlas-page-margin: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --atlas-motion-interface: 0ms;
+    --atlas-motion-disclosure: 0ms;
   }
 }

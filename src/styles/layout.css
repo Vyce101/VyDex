@@ -1,0 +1,137 @@
+/* Provides the Frontier Atlas page grid and responsive record layouts. */
+.atlas-page {
+  inline-size: 100%;
+  margin-inline: auto;
+  padding-block: var(--atlas-space-48) var(--atlas-space-80);
+  padding-inline: var(--atlas-page-margin);
+}
+
+.atlas-grid {
+  display: grid;
+  gap: var(--atlas-grid-gutter);
+  grid-template-columns: repeat(var(--atlas-grid-columns), minmax(0, 1fr));
+  min-inline-size: 0;
+}
+
+.atlas-prose {
+  max-inline-size: var(--atlas-reading-measure);
+}
+
+.atlas-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-32);
+  min-inline-size: 0;
+}
+
+.atlas-stack--tight {
+  gap: var(--atlas-space-16);
+}
+
+.atlas-cluster {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--atlas-space-12);
+}
+
+.atlas-inset {
+  padding: var(--atlas-space-20);
+}
+
+.atlas-rail-layout,
+.atlas-annotation-layout {
+  display: grid;
+  gap: var(--atlas-space-20);
+  min-inline-size: 0;
+}
+
+.atlas-heading-rail {
+  border-block-end: 1px solid var(--atlas-color-rule-record);
+  padding-block-end: var(--atlas-space-12);
+}
+
+.atlas-metadata-band {
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-8);
+}
+
+.atlas-margin-annotation {
+  border-inline-start: 1px solid var(--atlas-color-rule-strong);
+  color: var(--atlas-color-ink-secondary);
+  padding-inline-start: var(--atlas-space-12);
+}
+
+.atlas-frontier-delta {
+  display: grid;
+  gap: var(--atlas-space-16);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.atlas-frontier-delta > * {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  min-inline-size: 0;
+  padding-block-start: var(--atlas-space-12);
+}
+
+.atlas-registration-cue {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .atlas-page {
+    padding-block-start: var(--atlas-space-64);
+  }
+
+  .atlas-inset {
+    padding: var(--atlas-space-24);
+  }
+
+  .atlas-metadata-band {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--atlas-space-8) var(--atlas-space-20);
+  }
+
+  .atlas-frontier-delta {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .atlas-rail-layout {
+    gap: var(--atlas-grid-gutter);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .atlas-heading-rail {
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--atlas-color-rule-record);
+    grid-column: span 3;
+    padding-block-end: 0;
+    padding-inline-end: var(--atlas-space-20);
+  }
+
+  .atlas-rail-layout > :not(.atlas-heading-rail) {
+    grid-column: span 9;
+  }
+
+  .atlas-annotation-layout {
+    gap: var(--atlas-grid-gutter);
+    grid-template-columns: minmax(0, 9fr) minmax(0, 3fr);
+  }
+
+  .atlas-registration-cue {
+    border-block-start: 1px solid var(--atlas-color-grid-faint);
+    display: block;
+    inline-size: var(--atlas-space-32);
+  }
+}
+
+@media (min-width: 1312px) {
+  .atlas-page {
+    max-inline-size: calc(var(--atlas-content-max) + (2 * var(--atlas-page-margin)));
+  }
+}

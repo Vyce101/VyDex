@@ -1,0 +1,95 @@
+/* Defines reusable Frontier Atlas editorial and interface type roles. */
+.atlas-type-homepage-title,
+.atlas-type-entry-title,
+.atlas-type-entry-card-title,
+.atlas-type-editorial-lead,
+.atlas-type-claim,
+.atlas-type-evidence-body,
+.atlas-type-interpretive {
+  color: var(--atlas-color-ink-primary);
+  font-family: var(--atlas-font-serif);
+}
+
+.atlas-type-homepage-title {
+  font-size: var(--atlas-type-homepage-size);
+  font-weight: 650;
+  letter-spacing: var(--atlas-type-homepage-tracking);
+  line-height: var(--atlas-type-homepage-line);
+}
+
+.atlas-type-entry-title {
+  font-size: var(--atlas-type-entry-size);
+  font-weight: 650;
+  letter-spacing: var(--atlas-type-entry-tracking);
+  line-height: var(--atlas-type-entry-line);
+}
+
+.atlas-type-major-heading,
+.atlas-type-subsection-heading,
+.atlas-type-interface,
+.atlas-type-supporting,
+.atlas-type-metadata,
+.atlas-type-control {
+  font-family: var(--atlas-font-sans);
+}
+
+.atlas-type-major-heading {
+  color: var(--atlas-color-ink-primary);
+  font-size: var(--atlas-type-major-size);
+  font-weight: 700;
+  line-height: var(--atlas-type-major-line);
+}
+
+.atlas-type-subsection-heading {
+  color: var(--atlas-color-ink-primary);
+  font-size: var(--atlas-type-subsection-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-subsection-line);
+}
+
+.atlas-type-entry-card-title {
+  font-size: var(--atlas-type-card-size);
+  font-weight: 600;
+  line-height: var(--atlas-type-card-line);
+}
+
+.atlas-type-editorial-lead,
+.atlas-type-claim,
+.atlas-type-interpretive {
+  font-size: var(--atlas-type-editorial-size);
+  font-weight: 450;
+  line-height: var(--atlas-type-editorial-line);
+}
+
+.atlas-type-evidence-body {
+  font-size: var(--atlas-type-evidence-size);
+  font-weight: 400;
+  line-height: var(--atlas-type-evidence-line);
+}
+
+.atlas-type-interface {
+  color: var(--atlas-color-ink-primary);
+  font-size: var(--atlas-type-interface-size);
+  line-height: var(--atlas-type-interface-line);
+}
+
+.atlas-type-supporting {
+  color: var(--atlas-color-ink-secondary);
+  font-size: var(--atlas-type-supporting-size);
+  line-height: var(--atlas-type-supporting-line);
+}
+
+.atlas-type-metadata {
+  color: var(--atlas-color-ink-secondary);
+  font-size: var(--atlas-type-metadata-size);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  line-height: var(--atlas-type-metadata-line);
+}
+
+.atlas-type-control {
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-control-line);
+}

@@ -1,0 +1,243 @@
+/* Styles Frontier Atlas sheets, controls, statuses, tables, and disclosures. */
+.atlas-sheet {
+  background: var(--atlas-color-sheet);
+  border: 1px solid var(--atlas-color-rule-record);
+  border-radius: var(--atlas-radius);
+  box-shadow: none;
+}
+
+.atlas-rule {
+  border: 0;
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  inline-size: 100%;
+  margin: 0;
+}
+
+.atlas-rule--strong {
+  border-block-start-color: var(--atlas-color-rule-strong);
+}
+
+.atlas-button {
+  align-items: center;
+  border-radius: var(--atlas-radius);
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  justify-content: center;
+  line-height: var(--atlas-type-control-line);
+  min-block-size: 3rem;
+  padding-inline: var(--atlas-space-20);
+  text-decoration: none;
+  transition:
+    background-color var(--atlas-motion-interface),
+    border-color var(--atlas-motion-interface),
+    color var(--atlas-motion-interface);
+}
+
+.atlas-button--primary {
+  background: var(--atlas-color-route);
+  border-color: var(--atlas-color-route);
+  color: var(--atlas-color-control-text);
+}
+
+.atlas-button--primary:hover,
+.atlas-button--primary:active {
+  background: var(--atlas-color-route-hover);
+  border-color: var(--atlas-color-route-hover);
+  color: var(--atlas-color-control-text);
+}
+
+.atlas-button--secondary {
+  background: var(--atlas-color-sheet);
+  border-color: var(--atlas-color-rule-strong);
+  color: var(--atlas-color-ink-primary);
+}
+
+.atlas-button--secondary:hover,
+.atlas-button--secondary:active {
+  border-color: var(--atlas-color-route);
+  color: var(--atlas-color-route);
+}
+
+.atlas-status-tab {
+  align-items: center;
+  background: var(--atlas-color-status-neutral-background);
+  border: 1px solid var(--atlas-color-status-neutral-border);
+  border-radius: var(--atlas-radius);
+  color: var(--atlas-color-status-neutral-text);
+  display: inline-flex;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-metadata-size);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  line-height: var(--atlas-type-metadata-line);
+  min-block-size: 1.75rem;
+  padding: 0.3125rem 0.5625rem;
+}
+
+.atlas-status-tab[data-status="reported_but_unverified"] {
+  background: var(--atlas-color-status-unverified-background);
+  border-color: var(--atlas-color-status-unverified-border);
+  color: var(--atlas-color-status-unverified-text);
+}
+
+.atlas-status-tab[data-status="disputed"] {
+  background: var(--atlas-color-status-disputed-background);
+  border-color: var(--atlas-color-status-disputed-border);
+  color: var(--atlas-color-status-disputed-text);
+}
+
+.atlas-status-tab[data-status="failed_retracted"] {
+  background: var(--atlas-color-status-failed-background);
+  border-color: var(--atlas-color-status-failed-border);
+  color: var(--atlas-color-status-failed-text);
+}
+
+.atlas-table {
+  border-collapse: collapse;
+  color: var(--atlas-color-ink-primary);
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-supporting-size);
+  inline-size: 100%;
+  line-height: var(--atlas-type-supporting-line);
+  table-layout: fixed;
+}
+
+.atlas-table caption {
+  color: var(--atlas-color-ink-primary);
+  font-size: var(--atlas-type-subsection-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-subsection-line);
+  padding-block-end: var(--atlas-space-12);
+  text-align: start;
+}
+
+.atlas-table thead {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.atlas-table tbody,
+.atlas-table tr,
+.atlas-table td {
+  display: block;
+}
+
+.atlas-table tr {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  padding-block: var(--atlas-space-4);
+}
+
+.atlas-table td {
+  display: grid;
+  gap: var(--atlas-space-16);
+  grid-template-columns: minmax(7.5rem, 2fr) minmax(0, 3fr);
+  padding-block: var(--atlas-space-8);
+  text-align: start;
+}
+
+.atlas-table td::before {
+  color: var(--atlas-color-ink-primary);
+  content: attr(data-label);
+  font-weight: 700;
+}
+
+.atlas-disclosure {
+  border-block: 1px solid var(--atlas-color-rule-record);
+}
+
+.atlas-disclosure > summary {
+  color: var(--atlas-color-route);
+  cursor: pointer;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-control-line);
+  padding-block: var(--atlas-space-12);
+  transition: color var(--atlas-motion-interface);
+}
+
+.atlas-disclosure > summary:hover {
+  color: var(--atlas-color-route-hover);
+}
+
+.atlas-disclosure > .atlas-disclosure__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows var(--atlas-motion-disclosure),
+    visibility var(--atlas-motion-disclosure);
+  visibility: hidden;
+}
+
+.atlas-disclosure[open] > .atlas-disclosure__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.atlas-disclosure__content {
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.atlas-disclosure__content > * {
+  padding-block-end: var(--atlas-space-16);
+}
+
+@media (min-width: 768px) {
+  .atlas-table thead {
+    block-size: auto;
+    clip-path: none;
+    inline-size: auto;
+    overflow: visible;
+    position: static;
+    white-space: normal;
+  }
+
+  .atlas-table tbody {
+    display: table-row-group;
+  }
+
+  .atlas-table thead {
+    display: table-header-group;
+  }
+
+  .atlas-table tr {
+    border: 0;
+    display: table-row;
+    padding: 0;
+  }
+
+  .atlas-table th,
+  .atlas-table td {
+    border-block-end: 1px solid var(--atlas-color-rule-record);
+    display: table-cell;
+    padding: var(--atlas-space-12) var(--atlas-space-16);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  .atlas-table th {
+    border-block-end-color: var(--atlas-color-rule-strong);
+    font-weight: 700;
+  }
+
+  .atlas-table td::before {
+    content: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-disclosure > .atlas-disclosure__panel {
+    transition: none;
+  }
+}
