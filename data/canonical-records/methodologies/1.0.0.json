@@ -1,0 +1,226 @@
+{
+  "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+  "public_version": "1.0.0",
+  "version_type": "major",
+  "effective_date": "2026-07-24",
+  "title": "Methodology",
+  "intro": "How VyDex decides what enters the ledger, how claims are judged, and what each public label means.",
+  "content": {
+    "inclusion_rule": {
+      "paragraphs": [
+        "VyDex includes claims that appear to cross, challenge, weaken, verify, or materially change a frontier threshold.",
+        "Ordinary product launches, funding rounds, routine trials, cool demos, and general news are excluded unless they change the frontier evidence picture."
+      ]
+    },
+    "inclusion_standard": {
+      "opening": "A claim belongs in VyDex when it meaningfully changes the frontier evidence picture.",
+      "checks": [
+        "Does the claim cross, challenge, weaken, verify, or materially change a frontier threshold?",
+        "Is there enough source material to explain what is being claimed?",
+        "Can VyDex state what the evidence supports without repeating a headline uncritically?",
+        "Would tracking this help users understand how a frontier area is changing over time?"
+      ],
+      "included_example": "A new evaluation shows agents reaching a clearly longer software-task horizon, with enough methodology detail to judge the scope.",
+      "excluded_example": "A company announces a new model, product, or funding round without evidence that a frontier threshold changed."
+    },
+    "claim_appraisal": {
+      "opening": "Every serious entry asks what is claimed, what evidence exists, what the evidence measures, what conditions shaped it, what uncertainty remains, and what conclusion is warranted.",
+      "questions": [
+        "What exactly is being claimed?",
+        "What source material supports it?",
+        "What does the evidence actually measure?",
+        "What setup, baseline, comparison, or constraint changes interpretation?",
+        "What uncertainty remains?",
+        "What can VyDex responsibly conclude?"
+      ]
+    },
+    "public_labels": {
+      "intro": "These labels appear on entry cards and Entry Pages. They help users interpret the record; they are not popularity signals or importance scores.",
+      "claim_status_definitions": {
+        "confirmed": "The stated claim is strongly supported within its stated scope by durable evidence, such as replication, external verification, official records, strong artifacts, or multiple converging sources.",
+        "supported": "The claim is reasonably supported by current evidence, but not strong enough to call confirmed.",
+        "provisional": "The claim is plausible and worth documenting, but early, limited, narrow, source-dependent, or not yet well verified.",
+        "reported_but_unverified": "The claim has been reported by a source worth tracking, but VyDex does not yet have enough primary evidence, technical detail, or independent confirmation to treat it as supported.",
+        "disputed": "Credible disagreement, conflicting evidence, failed replication attempts, methodology concerns, or strong caveats materially challenge the claim.",
+        "failed_retracted": "The claim has failed, been retracted, been corrected in a way that breaks the original claim, or no longer supports the frontier interpretation."
+      },
+      "evidence_strength": {
+        "intro": "Evidence Strength describes how strong the current support is for the entry’s stated claim within its stated scope. It is not probability, confidence, importance, or ranking.",
+        "definitions": {
+          "thin": {
+            "meaning": "Limited support, unclear evidence, narrow detail, or heavy dependence on one source.",
+            "typical_evidence": "Early developer/vendor claim, unclear demo, weak artifact, rumor/leak worth tracking, or media report without strong technical detail."
+          },
+          "moderate": {
+            "meaning": "Enough evidence to document responsibly, but still with meaningful limits.",
+            "typical_evidence": "Primary source with technical detail, clear preprint, credible independent coverage, public demo with artifacts, or official claim that supports the basic event."
+          },
+          "strong": {
+            "meaning": "Solid evidence beyond a bare assertion.",
+            "typical_evidence": "Primary evidence plus independent analysis, public logs, released artifacts, credible replication attempts, official filings, deployment evidence, or detailed benchmark methodology."
+          },
+          "very_strong": {
+            "meaning": "Unusually strong support and low ambiguity within the stated scope.",
+            "typical_evidence": "Independent replication, peer review plus strong artifacts, external audit, formal verification, legal/government confirmation, durable public records, or multiple independent confirmations."
+          }
+        }
+      },
+      "review_status": {
+        "intro": "Review Status describes whether the entry needs active follow-up.",
+        "definitions": {
+          "stable": {
+            "meaning": "No active follow-up is currently scheduled.",
+            "used_when": "Durable evidence, settled scope, or no known fast-moving uncertainty."
+          },
+          "follow_up_needed": {
+            "meaning": "The entry should be checked again because the evidence may change or the claim is still volatile.",
+            "used_when": "Disputed claims, preprints, vendor/developer claims, reported-but-unverified claims, missing replication, recently changed evidence, unclear artifacts, or scheduled review triggers."
+          }
+        },
+        "review_reason_definition": "Review Reason explains why an Entry is marked Follow-Up Needed and identifies the evidence, uncertainty, or review trigger that warrants another review."
+      },
+      "entry_state_definitions": {
+        "main_entry": "The entry is part of the current public evidence ledger.",
+        "removed": "The entry no longer meets criteria or no longer supports the frontier interpretation, but may remain explainable through Changelog or later version history behavior."
+      }
+    },
+    "entry_fields": {
+      "frontier_delta": {
+        "definition": "Frontier Delta explains what changed from the previous relevant frontier state.",
+        "previous_frontier": "The previous relevant frontier state.",
+        "new_claim_result": "What the new claim or result says.",
+        "delta": "The meaningful change from the previous frontier to the new claim or result."
+      },
+      "significance": {
+        "confirmed_significance": "What the current evidence actually supports within the entry’s stated scope. Required for every main entry.",
+        "potential_significance_if_confirmed": "Why the claim would matter if later evidence strengthens, verifies, replicates, audits, or confirms it. Used for early, disputed, preprint-only, vendor/developer-led, reported-but-unverified, low-evidence, or easy-to-overread claims."
+      },
+      "caveats": {
+        "definition": "Caveats explain what could make an entry easy to overread.",
+        "examples": [
+          "Narrow scope.",
+          "Weak generalization.",
+          "Unclear baseline.",
+          "Special setup.",
+          "Missing replication.",
+          "Vendor-controlled evidence.",
+          "Disputed methodology.",
+          "Limited deployment evidence.",
+          "Source uncertainty."
+        ]
+      }
+    },
+    "sources_and_evidence_types": {
+      "intro": "Sources must show what they are and what VyDex used them for. Raw unexplained links are not enough.",
+      "evidence_type_definitions": {
+        "preprint": "A research paper or working paper made public before completing formal peer review.",
+        "peer_reviewed_paper": "A research paper published by a journal or conference after formal peer review.",
+        "independent_replication": "A study or test by a separate party that attempts to reproduce or verify a reported result.",
+        "official_claim": "A formal claim made by a government body, regulator, court, public institution, or other authority acting in an official capacity.",
+        "developer_vendor_claim": "A claim made by the people or organization that developed, operates, or sells the system, product, or service being discussed.",
+        "benchmark_result": "A reported score or outcome from a defined benchmark, test suite, or evaluation procedure.",
+        "technical_artifact": "Code, datasets, model weights, logs, executables, or other technical material that can be directly inspected.",
+        "government_report": "A report published by a government body or agency.",
+        "court_filing": "A document filed in a court or other formal legal proceeding.",
+        "audit": "A documented audit or formal assessment of a system, process, claim, or set of controls.",
+        "media_report": "A report published by a journalistic or news organization.",
+        "leaked_internal_claim": "A claim or document originating from non-public internal material or an unauthorized disclosure."
+      },
+      "used_for": {
+        "definition": "Used For explains what information VyDex took from a source.",
+        "public_statement": "Each source says what VyDex used it for.",
+        "example": "Used For: Benchmark setup, measured task horizon, and stated limitations."
+      },
+      "source_ordering": "Sources are ordered by evidence role. Primary evidence, replication, official records, and strong artifacts appear before weaker context sources or media reports.",
+      "source_role_definitions": {
+        "primary_evidence": "The main direct evidence for the Entry’s stated claim.",
+        "independent_replication": "Evidence from a separate party attempting to reproduce or verify the result.",
+        "official_record": "A durable official document, filing, ruling, government publication, or equivalent record.",
+        "strong_artifact": "A substantive artifact such as logs, code, benchmark records, datasets, recordings, or technical documentation.",
+        "context_source": "A source used primarily for background, comparison, scope, or interpretation.",
+        "media_report": "Journalism or reporting used to establish or contextualize facts when stronger direct evidence is unavailable or incomplete."
+      },
+      "source_role_vs_evidence_type": "Source Role and Evidence Type must not be confused. A government report is an Evidence Type, while Official Record may be its role in a particular Entry. A technical artifact may be Primary Evidence in one Entry and supporting context in another."
+    },
+    "dates_and_evidence_monitoring": {
+      "date_definitions": {
+        "date_happened": "When the event, result, deployment, incident, benchmark run, law, publication, or frontier change actually happened, if known.",
+        "date_disclosed": "When it became public, was announced, reported, published, filed, or otherwise disclosed.",
+        "date_added": "When VyDex added the entry.",
+        "date_updated": "When VyDex last materially changed the entry.",
+        "date_last_checked": "When VyDex last checked the entry’s evidence state.",
+        "next_check_date": "When VyDex plans to check the entry again, if follow-up is needed or scheduled."
+      },
+      "evidence_monitoring": "VyDex uses evidence monitoring so unstable or fast-moving claims are not forgotten, while stable entries are not rechecked without a reason.",
+      "review_triggers": [
+        "New evidence.",
+        "Independent replication.",
+        "Peer review.",
+        "Failed replication.",
+        "Source changes.",
+        "User correction reports.",
+        "Related Topic Trail movement.",
+        "Scheduled light audit."
+      ]
+    },
+    "topic_trails_and_domains": {
+      "topic_trails": {
+        "definition": "A Topic Trail is a controlled ongoing frontier storyline that entries belong to.",
+        "rules": [
+          "Each entry has a Topic Trail.",
+          "Most entries have one primary Topic Trail.",
+          "Secondary Topic Trails are added only when they materially improve interpretation."
+        ],
+        "naming_rule": "Topic Trail names should be specific enough to understand, broad enough to hold multiple entries, neutral enough not to assume the outcome, stable enough to last, and searchable enough for normal users.",
+        "good_examples": [
+          "AI agents in software engineering.",
+          "AI in research mathematics.",
+          "AI cyber capability.",
+          "Inference cost and efficiency collapse.",
+          "Medical AI moving toward clinical authority.",
+          "AI systems in scientific discovery.",
+          "AI governance and state control."
+        ],
+        "bad_examples": [
+          "AI is taking over coding.",
+          "GPT-5.",
+          "Benchmarks.",
+          "Robotics.",
+          "FireRed completion, unless it becomes a repeated evaluation storyline."
+        ]
+      },
+      "domain_definitions": {
+        "ai_capabilities": "Models, agents, reasoning, coding, multimodal systems, autonomy, AI tool use, and general AI capability claims.",
+        "ai_evaluation": "Benchmarks, eval failures, benchmark saturation, new evaluation methods, measurement problems, audit results, and claims about what current systems can or cannot do.",
+        "robotics": "Humanoid robots, manipulation, locomotion, drones, embodied agents, physical-world autonomy, factories, and field deployment.",
+        "biology": "Biology research, drug discovery, medical AI, clinical deployment, diagnostics, trials, wet-lab automation, and health-related frontier claims.",
+        "mathematics": "Mathematical proof, formal verification, theorem proving, logic, symbolic reasoning, and research-level math progress.",
+        "physical_sciences": "Physics, chemistry, materials science, superconductors, batteries, energy materials, nanotech, and non-biomedical lab science.",
+        "cybersecurity": "Vulnerability discovery, exploit generation, cyber ranges, autonomous cyber agents, defensive systems, offensive capability claims, and cyber-risk evaluations.",
+        "hardware": "Chips, GPUs, accelerators, datacenters, training compute, inference infrastructure, memory systems, networking, and hardware efficiency.",
+        "economics": "Inference cost, training cost, cost collapse, labor productivity, automation economics, business deployment, and economic-scale effects.",
+        "governance": "Regulation, export controls, court rulings, safety institutes, state review, standards, liability, legal authority, and public-sector policy.",
+        "national_security": "Military AI, autonomous weapons, intelligence use, battlefield deployment, national-security claims, defense procurement, and strategic-security implications.",
+        "space": "Space systems, launch, satellites, and large physical frontier space-related projects."
+      }
+    },
+    "entry_titles": {
+      "rule": "Entry titles must be specific, evidence-bounded, and non-clickbait.",
+      "pattern": "actor/system + crossed/failed/approached/similar verb + concrete threshold + scope/constraint",
+      "hype_word_rule": "Titles avoid vague hype words such as revolutionary, insane, game-changing, stunning, massive, breakthrough, and unprecedented unless the entry immediately defines and justifies the term.",
+      "examples": [
+        "Fable 5 completes Pokémon FireRed using screenshots only",
+        "METR finds frontier agents reaching ~50-minute software-task horizons"
+      ]
+    },
+    "versioning": {
+      "introduction": "VyDex uses versioned methodology so users can see which rules applied to an entry record.",
+      "definitions": {
+        "major": "A methodology change could alter how entries are judged, such as changing inclusion standards, redefining statuses, changing Evidence Strength, changing ranking logic meaningfully, or changing the main entry vs watchlist boundary.",
+        "minor": "A new category, label, clarification, source role, evidence example, or review rule improves the methodology without overturning previous judgments.",
+        "patch": "Wording fixes, typo corrections, clarified examples, repaired links, or changes that do not materially affect judgment."
+      },
+      "closing_line": "Current Stage 1 methodology version: v1.0.0"
+    }
+  }
+}
