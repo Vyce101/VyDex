@@ -125,7 +125,7 @@ The loader and constructor return diagnostics without writing to standard output
 - [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader. Rebuilding the same release with the same explicit metadata preserves its ID and generation timestamp.
-- The current Astro fixture does not invoke strict production construction. The repository now contains the canonical About record, canonical Methodology `1.0.0`, and its publication event, but complete Stage 1 Entry content, public pages, genuine dataset emission, and deployment redirects remain future work. The versioned Schema is already published statically.
+- The repository contains the complete Stage 1 seed record set: About content, Methodology `1.0.0`, its publication event, three Entries, three non-empty Topic Trails, and three initial publication snapshots. An integration test supplies fixed test-only release metadata and the approved site origin to prove that these records construct one valid production release with three derived Added events. This does not create or persist a genuine release. The current Astro fixture still does not invoke strict production construction, and public pages, genuine dataset emission, release-descriptor persistence, and deployment redirects remain future work. The versioned Schema is already published statically.
 
 ## Invariants
 

@@ -59,7 +59,7 @@ Framework-independent domain modules import Zod from `zod`, never from `astro/zo
 - The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. A placeholder import in the Astro fixture still verifies the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
 - The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. Production code does not hardcode a hostname; tests and CI use the reserved `https://vydex.example` origin.
-- The current fixture does not call strict release construction because the repository does not yet have the complete production canonical record set or a persisted release descriptor. It does publish the Dataset Schema because Schema generation needs an origin rather than public Entry content.
+- The repository now has a complete validated Stage 1 seed record set, and an integration test constructs a successful production release from it using fixed test-only metadata. The current fixture still does not call strict release construction because no genuine release descriptor is persisted and the public rendering flow is not connected to the release model. It does publish the Dataset Schema because Schema generation needs an origin rather than public Entry content.
 - Vitest runs both foundation architecture tests and domain validation tests in a Node environment.
 - Ajv validates generated datasets against the exact draft 2020-12 Schema. The pinned `fast-uri` override keeps Ajv's URI parser on its patched compatible release.
 

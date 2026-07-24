@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the real Stage 1 seed ledger with three Entries, Topic Trails, and immutable initial publication snapshots.
 - Added the complete canonical About record with approved maintainer profile links and release-blocking validation coverage.
 - Added the complete canonical Methodology `1.0.0` record and its Stage 1 publication event.
 - Added the immutable Dataset `1.0.0` JSON Schema, deterministic release projection, strict Schema validation, stable-latest redirect descriptor, and collision-safe artifact writer.

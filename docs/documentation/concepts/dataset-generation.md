@@ -45,7 +45,7 @@ The generator returns:
 - The Dataset Schema public path.
 - A `302` stable-latest redirect descriptor targeting the immutable artifact.
 
-`generateVyDexDatasetSchemaV1` accepts a production site origin and returns the origin-specific Schema value and deterministic Schema bytes. No genuine dataset file is currently committed because the repository does not yet contain the Stage 1 seed records or a persisted production release descriptor.
+`generateVyDexDatasetSchemaV1` accepts a production site origin and returns the origin-specific Schema value and deterministic Schema bytes. The repository now contains the validated Stage 1 seed records and their initial snapshots, but it does not contain genuine persisted release metadata. Tests use fixed metadata to prove that the records can form a production release. That input is not persisted and does not represent a genuine release, so no dataset artifact is currently committed.
 
 ## Normal Flow
 
