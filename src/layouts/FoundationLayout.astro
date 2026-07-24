@@ -1,7 +1,10 @@
 ---
-// Provides the semantic document shell for the static foundation fixture.
+// Provides the shared semantic document and site shell for every Stage 1 page.
 import "@fontsource-variable/source-sans-3/wght.css";
 import "@fontsource-variable/source-serif-4/wght.css";
+import SiteFooter from "../components/site-shell/SiteFooter.astro";
+import SiteHeader from "../components/site-shell/SiteHeader.astro";
+import { getActiveNavigationKey } from "../components/site-shell/navigation";
 import "../styles/global.css";
 
 interface Props {
@@ -9,6 +12,7 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const activeNavigationKey = getActiveNavigationKey(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -20,6 +24,11 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <a class="site-skip-link" href="#main-content">Skip to main content</a>
+    <SiteHeader activeNavigationKey={activeNavigationKey} />
+    <main id="main-content" class="atlas-page" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
   </body>
 </html>

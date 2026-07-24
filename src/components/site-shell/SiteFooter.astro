@@ -1,0 +1,23 @@
+---
+// Renders the shared Stage 1 footer and its contextual navigation links.
+import { FOOTER_NAVIGATION_ITEMS } from "./navigation";
+---
+
+<footer class="site-footer">
+  <div class="atlas-page-boundary site-footer__inner">
+    <p class="site-footer__statement">VyDex is a curated evidence ledger for frontier claims.</p>
+    <nav aria-label="Footer navigation">
+      <ul class="site-footer__links">
+        {
+          FOOTER_NAVIGATION_ITEMS.map((item) => (
+            <li>
+              <a href={item.href} aria-label={`${item.label} in footer navigation`}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</footer>

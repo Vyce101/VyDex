@@ -1,0 +1,82 @@
+---
+// Renders the shared Stage 1 desktop header and native mobile navigation disclosure.
+import { STAGE_ONE_FIXED_PUBLIC_PATHS } from "../../domain";
+import { HEADER_NAVIGATION_ITEMS, type ActiveNavigationKey } from "./navigation";
+
+interface Props {
+  activeNavigationKey?: ActiveNavigationKey;
+}
+
+const { activeNavigationKey } = Astro.props;
+---
+
+<header class="site-header" data-site-header>
+  <div class="atlas-page-boundary site-header__boundary">
+    <div class="site-header__desktop">
+      <a class="site-header__wordmark" href={STAGE_ONE_FIXED_PUBLIC_PATHS.home} aria-label="VyDex home">
+        VyDex
+      </a>
+      <nav aria-label="Primary navigation">
+        <ul class="site-header__desktop-links">
+          {
+            HEADER_NAVIGATION_ITEMS.map((item) => (
+              <li>
+                <a
+                  class="site-header__navigation-link"
+                  href={item.href}
+                  aria-current={item.key === activeNavigationKey ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="site-header__mobile">
+      <a
+        class="site-header__wordmark site-header__mobile-wordmark"
+        href={STAGE_ONE_FIXED_PUBLIC_PATHS.home}
+        aria-label="VyDex home"
+      >
+        VyDex
+      </a>
+      <details class="site-header__mobile-disclosure" data-site-navigation-disclosure>
+        <summary>Menu</summary>
+        <nav class="site-header__mobile-navigation" aria-label="Mobile primary navigation">
+          <ul>
+            {
+              HEADER_NAVIGATION_ITEMS.map((item) => (
+                <li>
+                  <a
+                    class="site-header__navigation-link"
+                    href={item.href}
+                    aria-current={item.key === activeNavigationKey ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "[data-site-navigation-disclosure][open]",
+    );
+    if (!disclosure) return;
+
+    disclosure.open = false;
+    disclosure.querySelector<HTMLElement>("summary")?.focus();
+  });
+</script>
