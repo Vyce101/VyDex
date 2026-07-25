@@ -1,0 +1,208 @@
+/* Composes Frontier Atlas primitives into the responsive Stage 1 Homepage. */
+.homepage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-80);
+  min-inline-size: 0;
+}
+
+.homepage-empty-preview {
+  color: var(--atlas-color-ink-secondary);
+}
+
+.homepage-hero,
+.homepage-hero__identity,
+.homepage-hero__copy,
+.homepage-hero__latest,
+.homepage-recent,
+.homepage-reading,
+.homepage-reading__cell {
+  min-inline-size: 0;
+}
+
+.homepage-hero,
+.homepage-hero__identity,
+.homepage-hero__copy,
+.homepage-hero__latest,
+.homepage-recent,
+.homepage-reading,
+.homepage-reading__cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.homepage-hero {
+  gap: var(--atlas-space-64);
+}
+
+.homepage-hero__identity {
+  gap: var(--atlas-space-32);
+}
+
+.homepage-hero__copy {
+  gap: 0;
+}
+
+.homepage-hero__description {
+  margin-block-start: var(--atlas-space-20);
+  max-inline-size: 40rem;
+}
+
+.homepage-hero__boundary {
+  align-items: center;
+  color: var(--atlas-color-ink-secondary);
+  display: flex;
+  font-family: var(--atlas-font-sans);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  gap: var(--atlas-space-12);
+  line-height: 1.375rem;
+  margin-block-start: var(--atlas-space-20);
+}
+
+.homepage-hero__boundary::before {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  content: "";
+  flex: 0 0 1.75rem;
+}
+
+.homepage-hero__actions {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-12);
+}
+
+.homepage-hero__actions .atlas-button {
+  inline-size: 100%;
+}
+
+.homepage-hero__about-link {
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-control-line);
+  margin-block-start: var(--atlas-space-4);
+}
+
+.homepage-hero__latest {
+  gap: var(--atlas-space-16);
+}
+
+.homepage-hero__latest .homepage-hero__latest-label {
+  align-items: center;
+  color: var(--atlas-color-ink-primary);
+  display: flex;
+  gap: var(--atlas-space-12);
+}
+
+.homepage-hero__latest-label::after {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  content: "";
+  inline-size: var(--atlas-space-24);
+}
+
+.homepage-recent {
+  gap: var(--atlas-space-32);
+  scroll-margin-block-start: var(--atlas-space-24);
+}
+
+.homepage-recent__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-24);
+  list-style: none;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+}
+
+.homepage-recent__list > li {
+  min-inline-size: 0;
+}
+
+.homepage-reading {
+  gap: var(--atlas-space-24);
+}
+
+.homepage-reading__band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.homepage-reading__cell {
+  gap: var(--atlas-space-12);
+  padding: 1.75rem;
+}
+
+.homepage-reading__cell + .homepage-reading__cell {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+}
+
+.homepage-reading__link {
+  align-self: flex-start;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-control-line);
+}
+
+@media (min-width: 768px) {
+  .homepage {
+    gap: var(--atlas-space-96);
+  }
+
+  .homepage-hero__actions {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .homepage-hero__actions .atlas-button {
+    inline-size: auto;
+  }
+
+  .homepage-hero__about-link {
+    margin-block-start: 0;
+    margin-inline-start: var(--atlas-space-4);
+  }
+
+  .homepage-reading__band {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .homepage-reading__cell + .homepage-reading__cell {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--atlas-color-rule-record);
+  }
+}
+
+@media (min-width: 68.75rem) {
+  .homepage-hero,
+  .homepage-recent {
+    display: grid;
+    gap: var(--atlas-grid-gutter);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .homepage-hero__identity {
+    grid-column: span 7;
+    padding-inline-end: var(--atlas-space-24);
+  }
+
+  .homepage-hero__latest {
+    border-inline-start: 1px solid var(--atlas-color-grid-faint);
+    grid-column: span 5;
+    padding-inline-start: var(--atlas-space-24);
+  }
+
+  .homepage-recent > h2 {
+    grid-column: span 3;
+    padding-inline-end: var(--atlas-space-20);
+  }
+
+  .homepage-recent__list {
+    grid-column: span 9;
+  }
+}

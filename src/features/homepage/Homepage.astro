@@ -1,0 +1,96 @@
+---
+// Renders the complete static Stage 1 Homepage from its selected release Entries.
+import { STAGE_ONE_FIXED_PUBLIC_PATHS } from "../../domain";
+import EntryPreview from "../../components/entry-preview/EntryPreview.astro";
+import type { HomepagePresentationModel } from "./select-homepage-entries";
+import "./homepage.css";
+
+interface Props {
+  model: HomepagePresentationModel;
+}
+
+const { model } = Astro.props;
+---
+
+{
+  model.kind === "private_preview_empty" ? (
+    <p class="homepage-empty-preview atlas-type-interface">{model.message}</p>
+  ) : (
+    <div class="homepage">
+      <section class="homepage-hero" aria-labelledby="homepage-title">
+        <div class="homepage-hero__identity">
+          <div class="homepage-hero__copy">
+            <h1 id="homepage-title" class="atlas-type-homepage-title">
+              Versioned Evidence for Frontier Claims
+            </h1>
+            <p class="homepage-hero__description atlas-type-editorial-lead">
+              VyDex tracks important frontier claims with evidence, caveats, sources, and updates.
+            </p>
+            <p class="homepage-hero__boundary">Not AI news. Not a hype feed.</p>
+          </div>
+
+          <div class="homepage-hero__actions">
+            <a
+              class="atlas-button atlas-button--primary"
+              href={STAGE_ONE_FIXED_PUBLIC_PATHS.latest}
+            >
+              Read Latest Entries
+            </a>
+            <a
+              class="atlas-button atlas-button--secondary"
+              href={STAGE_ONE_FIXED_PUBLIC_PATHS.methodology_current}
+            >
+              View Methodology
+            </a>
+            <a class="homepage-hero__about-link" href={STAGE_ONE_FIXED_PUBLIC_PATHS.about}>
+              About VyDex
+            </a>
+          </div>
+        </div>
+
+        <div class="homepage-hero__latest" data-homepage-latest>
+          <p class="homepage-hero__latest-label atlas-type-metadata">Latest Update</p>
+          <EntryPreview entry={model.selection.latest_update} />
+        </div>
+      </section>
+
+      <section id="latest" class="homepage-recent" aria-labelledby="recent-entries-heading">
+        <h2 id="recent-entries-heading" class="atlas-type-major-heading">
+          Recent Entries and Evidence Updates
+        </h2>
+        <ol class="homepage-recent__list" data-homepage-recent-list>
+          {
+            model.selection.recent_entries.map((entry) => (
+              <li>
+                <EntryPreview entry={entry} />
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="homepage-reading" aria-labelledby="homepage-reading-heading">
+        <h2 id="homepage-reading-heading" class="atlas-type-major-heading">
+          How VyDex Reads Claims
+        </h2>
+        <div class="homepage-reading__band atlas-sheet">
+          <article class="homepage-reading__cell">
+            <h3 class="atlas-type-subsection-heading">Claim</h3>
+            <p class="atlas-type-interface">What exactly is being claimed?</p>
+          </article>
+          <article class="homepage-reading__cell">
+            <h3 class="atlas-type-subsection-heading">Evidence</h3>
+            <p class="atlas-type-interface">What does the source material actually support?</p>
+          </article>
+          <article class="homepage-reading__cell">
+            <h3 class="atlas-type-subsection-heading">Caveat</h3>
+            <p class="atlas-type-interface">What would make the claim easy to overread?</p>
+          </article>
+        </div>
+        <a class="homepage-reading__link" href={STAGE_ONE_FIXED_PUBLIC_PATHS.methodology_current}>
+          Read the Methodology →
+        </a>
+      </section>
+    </div>
+  )
+}
