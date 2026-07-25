@@ -1,0 +1,18 @@
+---
+// Renders the current Methodology route from the configured application release.
+import {
+  loadFixedMetadataDevelopmentApplicationRelease,
+  loadPersistedProductionApplicationRelease,
+} from "../../adapters/application-release";
+import MethodologyPage from "../../features/methodology-page/MethodologyPage.astro";
+import FoundationLayout from "../../layouts/FoundationLayout.astro";
+
+const usesFixedNonProductionMetadata = import.meta.env.DEV || import.meta.env.MODE === "test";
+const release = usesFixedNonProductionMetadata
+  ? await loadFixedMetadataDevelopmentApplicationRelease({ filesystem_root: process.cwd() })
+  : await loadPersistedProductionApplicationRelease({ filesystem_root: process.cwd() });
+---
+
+<FoundationLayout title="Methodology — VyDex" canonicalUrl={release.methodology.current_url}>
+  <MethodologyPage methodology={release.methodology} />
+</FoundationLayout>

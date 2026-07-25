@@ -1,0 +1,33 @@
+---
+// Generates the immutable route for the resolved canonical Methodology version.
+import type { GetStaticPaths } from "astro";
+import {
+  loadFixedMetadataDevelopmentApplicationRelease,
+  loadPersistedProductionApplicationRelease,
+} from "../../adapters/application-release";
+import type { ResolvedMethodology } from "../../domain";
+import MethodologyPage from "../../features/methodology-page/MethodologyPage.astro";
+import FoundationLayout from "../../layouts/FoundationLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const usesFixedNonProductionMetadata = import.meta.env.DEV || import.meta.env.MODE === "test";
+  const release = usesFixedNonProductionMetadata
+    ? await loadFixedMetadataDevelopmentApplicationRelease({ filesystem_root: process.cwd() })
+    : await loadPersistedProductionApplicationRelease({ filesystem_root: process.cwd() });
+
+  return [{
+    params: { version: release.methodology.methodology.public_version },
+    props: { methodology: release.methodology },
+  }];
+}) satisfies GetStaticPaths;
+
+interface Props {
+  methodology: ResolvedMethodology;
+}
+
+const { methodology } = Astro.props;
+---
+
+<FoundationLayout title="Methodology — VyDex" canonicalUrl={methodology.version_url}>
+  <MethodologyPage methodology={methodology} />
+</FoundationLayout>
