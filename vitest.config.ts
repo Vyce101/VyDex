@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "node",
     include: [
       "tests/adapters/**/*.test.ts",
+      "tests/components/**/*.test.ts",
       "tests/foundation/**/*.test.ts",
       "tests/domain/**/*.test.ts",
     ],

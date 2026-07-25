@@ -109,7 +109,7 @@ describe("domain module boundaries", () => {
 
   test("has the Astro fixture consume the domain public entry point", () => {
     const pageSource = readFileSync(FOUNDATION_PAGE, "utf8");
-    expect(pageSource).toContain('import type {} from "@domain";');
+    expect(pageSource).toContain('import { entrySchema } from "@domain";');
   });
 
   test("keeps authoring-file parsing behind the canonical loader", () => {

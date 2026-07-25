@@ -1,12 +1,14 @@
 // Verifies stable values, primitives, and complete canonical record schemas.
 import { describe, expect, expectTypeOf, test } from "vitest";
 import {
+  CLAIM_STATUS_LABELS,
   CLAIM_STATUSES,
   DOMAIN_LABELS,
   DOMAINS,
   ENTRY_REVISION_CATEGORIES,
   ENTRY_STATES,
   EVIDENCE_STRENGTHS,
+  EVIDENCE_STRENGTH_LABELS,
   EVIDENCE_STRENGTH_SCORES,
   EVIDENCE_TYPE_LABELS,
   EVIDENCE_TYPES,
@@ -15,6 +17,7 @@ import {
   PUBLIC_CHANGELOG_TYPES,
   REVISION_CATEGORIES,
   REVIEW_STATUSES,
+  REVIEW_STATUS_LABELS,
   SOURCE_ROLES,
   SOURCE_ROLE_LABELS,
   calendarDateSchema,
@@ -79,10 +82,16 @@ describe("stable controlled values", () => {
   });
 
   test("keeps public label maps exhaustive and authoritative", () => {
+    expect(Object.keys(CLAIM_STATUS_LABELS)).toEqual([...CLAIM_STATUSES]);
+    expect(Object.keys(EVIDENCE_STRENGTH_LABELS)).toEqual([...EVIDENCE_STRENGTHS]);
+    expect(Object.keys(REVIEW_STATUS_LABELS)).toEqual([...REVIEW_STATUSES]);
     expect(Object.keys(DOMAIN_LABELS)).toEqual([...DOMAINS]);
     expect(Object.keys(EVIDENCE_TYPE_LABELS)).toEqual([...EVIDENCE_TYPES]);
     expect(Object.keys(SOURCE_ROLE_LABELS)).toEqual([...SOURCE_ROLES]);
     expect(DOMAIN_LABELS.ai_evaluation).toBe("AI Evaluation");
+    expect(CLAIM_STATUS_LABELS.failed_retracted).toBe("Failed / Retracted");
+    expect(EVIDENCE_STRENGTH_LABELS.very_strong).toBe("Very Strong");
+    expect(REVIEW_STATUS_LABELS.follow_up_needed).toBe("Follow-Up Needed");
     expect(EVIDENCE_TYPE_LABELS.developer_vendor_claim).toBe("Developer / Vendor Claim");
     expect(SOURCE_ROLE_LABELS.primary_evidence).toBe("Primary Evidence");
   });
