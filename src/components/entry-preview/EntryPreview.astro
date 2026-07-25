@@ -1,0 +1,64 @@
+---
+// Renders the reusable text-first Atlas Entry preview.
+import "./entry-preview.css";
+import { projectEntryPreview, type EntryPreviewSource } from "./project-entry-preview";
+
+interface Props {
+  entry: EntryPreviewSource;
+}
+
+const preview = projectEntryPreview(Astro.props.entry);
+---
+
+<article class="entry-preview atlas-sheet" data-entry-preview>
+  <div class="entry-preview__metadata atlas-type-metadata" data-entry-preview-section="metadata">
+    <span data-entry-preview-field="domain">{preview.domain_label}</span>
+    <time datetime={preview.date_updated} data-entry-preview-field="date-updated">
+      Date Updated: {preview.date_updated}
+    </time>
+  </div>
+
+  <div class="entry-preview__body" data-entry-preview-section="body">
+    <h3 class="entry-preview__title atlas-type-entry-card-title" data-entry-preview-field="title">
+      <a href={preview.canonical_url}>{preview.title}</a>
+    </h3>
+    <p
+      class="entry-preview__claim atlas-type-editorial-lead"
+      data-entry-preview-field="claim"
+      set:html={preview.claim_html}
+    ></p>
+    <div class="entry-preview__statuses" aria-label="Entry status summary">
+      <span
+        class="atlas-status-tab"
+        data-entry-preview-field="claim-status"
+        data-status={preview.claim_status.value}
+      >
+        Claim: {preview.claim_status.label}
+      </span>
+      <span class="atlas-status-tab" data-entry-preview-field="evidence-strength">
+        Evidence: {preview.evidence_strength.label}
+      </span>
+      <span class="atlas-status-tab" data-entry-preview-field="review-status">
+        Review: {preview.review_status.label}
+      </span>
+    </div>
+  </div>
+
+  <footer class="entry-preview__footer atlas-type-control" data-entry-preview-section="footer">
+    <a
+      class="entry-preview__trail-link"
+      href={preview.primary_topic_trail.canonical_url}
+      data-entry-preview-field="topic-trail"
+    >
+      Topic Trail: {preview.primary_topic_trail.name}
+    </a>
+    <a
+      class="entry-preview__read-link"
+      href={preview.canonical_url}
+      aria-label={`Read Entry: ${preview.title}`}
+      data-entry-preview-field="read-entry"
+    >
+      Read Entry →
+    </a>
+  </footer>
+</article>

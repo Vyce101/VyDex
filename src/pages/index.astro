@@ -1,7 +1,39 @@
 ---
 // Renders the non-product fixture used to verify Frontier Atlas primitives.
-import type {} from "@domain";
+import { entrySchema } from "@domain";
+import { loadApplicationRelease } from "../adapters/application-release";
+import EntryPreview from "../components/entry-preview/EntryPreview.astro";
 import FoundationLayout from "../layouts/FoundationLayout.astro";
+
+const fixtureRelease = await loadApplicationRelease({
+  filesystem_root: process.cwd(),
+  mode: "preview",
+  site_origin: import.meta.env.PUBLIC_SITE_ORIGIN ?? "http://localhost:4321",
+});
+if (fixtureRelease.mode !== "preview") {
+  throw new Error("Entry preview fixture requires a preview release.");
+}
+
+const seedEntry = fixtureRelease.preview.resolved.current_entries?.find(
+  ({ entry }) => entry.slug === "dreamer-4-offline-minecraft-diamonds",
+);
+if (!seedEntry) {
+  throw new Error("Entry preview fixture requires the validated Dreamer 4 seed Entry.");
+}
+
+const primarySourceUrl = seedEntry.entry.sources[0]?.url;
+if (!primarySourceUrl) {
+  throw new Error("Entry preview fixture requires the seed Entry's primary source URL.");
+}
+
+const fixtureEntry = entrySchema.parse({
+  ...seedEntry.entry,
+  claim: seedEntry.entry.claim
+    .replace("Dreamer 4", `[Dreamer 4](${primarySourceUrl})`)
+    .replace("entirely", "**entirely**"),
+  claim_status: "reported_but_unverified",
+});
+const entryPreviewFixture = { ...seedEntry, entry: fixtureEntry };
 ---
 
 <FoundationLayout title="Frontier Atlas design-system fixture">
@@ -148,6 +180,35 @@ import FoundationLayout from "../layouts/FoundationLayout.astro";
       <p class="atlas-type-metadata">ENTRY CARD</p>
       <h2 id="card-heading" class="atlas-type-entry-card-title">A representative entry-card title</h2>
       <p class="atlas-type-supporting">Compact supporting copy for a later listing interface.</p>
+    </section>
+
+    <section
+      class="atlas-stack atlas-stack--tight"
+      aria-labelledby="latest-update-preview-heading"
+      data-entry-preview-host="latest-update"
+    >
+      <h2 id="latest-update-preview-heading" class="atlas-type-major-heading">Latest Update</h2>
+      <EntryPreview entry={entryPreviewFixture} />
+    </section>
+
+    <section
+      class="atlas-stack atlas-stack--tight"
+      aria-labelledby="recent-entries-preview-heading"
+      data-entry-preview-host="recent-entries"
+    >
+      <h2 id="recent-entries-preview-heading" class="atlas-type-major-heading">
+        Recent Entries and Evidence Updates
+      </h2>
+      <EntryPreview entry={entryPreviewFixture} />
+    </section>
+
+    <section
+      class="atlas-stack atlas-stack--tight"
+      aria-labelledby="topic-trail-preview-heading"
+      data-entry-preview-host="topic-trail"
+    >
+      <h2 id="topic-trail-preview-heading" class="atlas-type-major-heading">Topic Trail list</h2>
+      <EntryPreview entry={entryPreviewFixture} />
     </section>
   </div>
 </FoundationLayout>
