@@ -1,5 +1,8 @@
 # Files excluded from the public repository.
 AGENTS.md
+.env
+.env.*
+!.env.example
 node_modules/
 .astro/
 .wrangler/

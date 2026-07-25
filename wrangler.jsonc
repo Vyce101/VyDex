@@ -1,9 +1,7 @@
-// Configures the static Cloudflare Workers deployment.
+// Configures the portable static output for Cloudflare Pages.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "vydex",
   "compatibility_date": "2026-07-24",
-  "assets": {
-    "directory": "./dist"
-  }
+  "pages_build_output_dir": "./dist"
 }

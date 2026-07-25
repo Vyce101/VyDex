@@ -14,13 +14,17 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "npm run typecheck && npm test && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build:pages-preview": "npm run build && tsx scripts/deployment/prepare-cloudflare-pages-preview.ts",
     "build:test": "npm run typecheck && npm test && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build --mode test",
     "preview": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "preview:browser": "wrangler pages dev dist --ip 127.0.0.1 --port 4322 --persist-to runtime/wrangler-state --log-level error --show-interactive-dev-session=false",
     "release:stage-1": "cross-env ASTRO_TELEMETRY_DISABLED=1 tsx scripts/release/stage-one-release.ts",
+    "release:stage-1:ci": "cross-env ASTRO_TELEMETRY_DISABLED=1 tsx scripts/release/stage-one-release.ts --require-existing-release-state",
     "test:browser:install": "playwright install chromium",
     "test:browser": "cross-env PUBLIC_SITE_ORIGIN=https://vydex.example npm run test:browser:configured",
-    "test:browser:configured": "npm run build:test && tsx scripts/test/prepare-browser-output.ts && playwright test"
+    "test:browser:configured": "npm run build:test && npm run test:browser:run",
+    "test:browser:run": "tsx scripts/test/prepare-browser-output.ts && playwright test",
+    "verify:pages-deployment": "tsx scripts/deployment/verify-cloudflare-pages-deployment.ts dist"
   },
   "dependencies": {
     "@fontsource-variable/source-sans-3": "5.2.9",

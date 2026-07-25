@@ -1,7 +1,8 @@
-# Validates the pinned static application, Dataset Schema, and browser contract.
-name: Validate application
+# Validates one complete static release and deploys only that artifact to Pages.
+name: Validate and deploy application
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -12,11 +13,11 @@ permissions:
 
 jobs:
   validate:
-    name: Type-check, test, build, and verify static output
+    name: Validate complete Stage 1 release
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
-      PUBLIC_SITE_ORIGIN: https://vydex.example
+      PUBLIC_SITE_ORIGIN: ${{ vars.PUBLIC_SITE_ORIGIN }}
 
     steps:
       - name: Check out repository
@@ -32,11 +33,65 @@ jobs:
       - name: Install immutable dependency tree
         run: npm ci
 
-      - name: Build and run domain checks
-        run: npm run build:test
-
       - name: Install pinned Chromium runtime
-        run: npx playwright install --with-deps chromium
+        run: npx --no-install playwright install --with-deps chromium
 
-      - name: Verify static browser output
-        run: npx playwright test
+      - name: Type-check, test, validate, build, and verify release
+        run: npm run release:stage-1:ci
+
+      - name: Upload complete validated static release
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: vydex-stage-1-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  deploy:
+    name: Deploy validated release to Cloudflare Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: vydex-cloudflare-pages-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: ${{ vars.PUBLIC_SITE_ORIGIN }}
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+      PUBLIC_SITE_ORIGIN: ${{ vars.PUBLIC_SITE_ORIGIN }}
+
+    steps:
+      - name: Check out validated repository state
+        uses: actions/checkout@v6
+
+      - name: Set up exact Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install immutable deployment toolchain
+        run: npm ci
+
+      - name: Download validated static release
+        uses: actions/download-artifact@v7
+        with:
+          name: vydex-stage-1-${{ github.sha }}
+          path: dist
+
+      - name: Verify deployment environment and artifact inventory
+        run: npm run verify:pages-deployment
+
+      - name: Deploy complete static release to Cloudflare Pages
+        run: >-
+          npx --no-install wrangler pages deploy dist
+          --project-name "${CLOUDFLARE_PAGES_PROJECT_NAME}"
+          --branch main
+          --commit-hash "${GITHUB_SHA}"
