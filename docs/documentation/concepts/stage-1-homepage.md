@@ -88,7 +88,7 @@ The separate private-preview state may render only `No entries have been added y
 
 - Latest means latest material activity, not importance, popularity, or title order.
 - The Homepage consumes validated `current_entries` and never creates a parallel source of public Entry truth.
-- Exactly one H1 describes the product. Recent Entries and How VyDex Reads Claims use H2 headings.
+- Exactly one H1 describes the product. Latest Update, Recent Entries and Evidence Updates, and How VyDex Reads Claims use H2 headings; Entry Preview titles sit beneath them at H3.
 - The Latest Update Entry remains present in the recent list.
 - Production cannot render with zero valid public Entries or substitute fixed non-production metadata.
 - Ordinary builds, development starts, page renders, and tests never generate a release ID or timestamp.

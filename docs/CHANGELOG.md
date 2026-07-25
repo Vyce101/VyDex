@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Expanded the atomic Stage 1 release gate to run the complete Playwright suite against the exact staged Cloudflare Pages output before manifest creation or promotion, with complete ignored browser output and rollback-safe failure handling.
 - Included release descriptor UUIDv7 values in the global durable-ID collision check used by production release validation.
 - Derived immutable dataset filenames from each release descriptor's UTC generation date while retaining the Release ID directory and stable convenience path.
 - Required exact RFC 3339 UTC timestamps for Methodology publication events, separated publication ordering from Methodology effective dates, and unified all public Changelog events on timestamp, type, title, and immutable-identity ordering.
@@ -46,6 +47,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed the Homepage heading hierarchy by making Latest Update an H2 parent for Entry Preview headings.
 - Fixed the Frontier Delta directional connector and aligned public Entry sections to one full-width maintained-record layout across supported viewports.
 
 ### Removed

@@ -93,7 +93,7 @@ npm run test:browser:install
 npm run test:browser
 ```
 
-The browser-test command supplies `https://vydex.example` and uses the explicit test-mode build, so it does not use a production hostname or descriptor.
+The browser-test command supplies `https://vydex.example` and uses the explicit test-mode build, so it does not use a production hostname or descriptor. It writes validated test-release redirects into disposable `dist/`, serves that output through the pinned Wrangler Pages server, and exercises the complete desktop and mobile Playwright suite. Generated Wrangler state and test output remain ignored runtime data.
 
 ## Create or rebuild the Stage 1 release
 
@@ -103,13 +103,13 @@ Run the sole Stage 1 production release command from the repository root:
 npm run release:stage-1
 ```
 
-The command uses the approved origin `https://vydex.vyce.workers.dev`. It type-checks the application, runs the complete Vitest suite, validates the canonical records and snapshots, prepares the Schema and export, builds into an isolated `runtime/` directory, and verifies every Stage 1 public surface. A successful run promotes the complete static site to `dist/` and writes the internal manifest to `generated/release-data/release-manifest.json`.
+The command uses the approved origin `https://vydex.vyce.workers.dev`. It type-checks the application, runs the complete Vitest suite, validates the canonical records and snapshots, prepares the Schema and export, builds into an isolated `runtime/` directory, and verifies every Stage 1 public surface. It then serves that exact staged directory through the pinned Wrangler Pages server and runs the complete Playwright suite before creating the manifest or promoting output. Full browser output is written to ignored `runtime/browser-test-output.txt`. A successful run promotes the complete static site to `dist/` and writes the internal manifest to `generated/release-data/release-manifest.json`.
 
 The first run that reaches descriptor creation writes `generated/release-data/release.json`. That UUIDv7 and UTC generation timestamp are permanent for the initial Stage 1 release, even if a later build or verification step fails. Every retry loads the same descriptor; the command has no rotation option.
 
 Use `npm run build:test` when you only want disposable validation output. Do not run the release command to test a possible descriptor value, and do not edit or delete an existing descriptor to begin another release.
 
-A failed release returns a non-zero result, leaves the previous successful `dist/` and manifest in place, and writes private diagnostics to the terminal and ignored rotating files under `user/logs/`. The command does not invoke Wrangler, publish to Cloudflare Pages, or replace the hosted deployment.
+A failed release returns a non-zero result, leaves the previous successful `dist/` and manifest in place, and writes private diagnostics to the terminal and ignored rotating files under `user/logs/`. Browser failures also retain their complete ignored output under `runtime/`. Wrangler is used only as a local staged-output server; the command does not publish to Cloudflare Pages or replace the hosted deployment.
 
 ## Downloading the latest installation
 

@@ -5,7 +5,7 @@ order: 1300
 
 # Stage 1 Release Gate
 
-The Stage 1 release gate turns one validated VyDex release into verified static output. It is the only workflow allowed to create the initial production descriptor, and it promotes output only after the website, Schema, export, redirects, and manifest agree. This page is for maintainers and coding agents changing release orchestration, generated output, validation, or persistence behavior.
+The Stage 1 release gate turns one validated VyDex release into verified static output. It is the only workflow allowed to create the initial production descriptor, and it promotes output only after the website, Schema, export, redirects, browser checks, and manifest agree. This page is for maintainers and coding agents changing release orchestration, generated output, validation, or persistence behavior.
 
 ## Purpose and Ownership
 
@@ -19,9 +19,10 @@ It owns:
 - Type-check and complete Vitest execution before production generation.
 - Isolated Astro staging under ignored `runtime/` storage.
 - Static-output, link, count, Schema, export, redirect, and navigation verification.
+- Playwright journeys and accessibility checks against the exact staged output through a local Wrangler Pages server.
 - The internal release manifest and promoted-file inventory.
 - Rollback-aware promotion of the verified static output and manifest.
-- Human-readable terminal diagnostics and private rotating release logs.
+- Human-readable terminal diagnostics, complete browser-test output, and private rotating release logs.
 
 It does not own:
 
@@ -29,7 +30,7 @@ It does not own:
 - Deciding whether a record or relationship is valid. [Release Construction](release-construction.md) owns those rules.
 - Defining the Dataset `1.0.0` contract or JSON Schema. [Dataset Generation](dataset-generation.md) owns those contracts.
 - Creating a later release descriptor or rotating the Stage 1 descriptor.
-- Deploying to Cloudflare Pages, invoking Wrangler, or changing the hosted production site.
+- Deploying to Cloudflare Pages or changing the hosted production site. Wrangler is used only to serve staged assets locally for verification.
 - Rendering a public preview, manifest route, diagnostics page, or client-side recovery state.
 
 ## Inputs and Outputs
@@ -42,6 +43,7 @@ A successful run produces:
 - A complete verified static site at `dist/`.
 - An internal manifest at `generated/release-data/release-manifest.json`.
 - A Cloudflare `_redirects` file inside `dist/` containing every permanent slug alias and the stable-latest dataset redirect.
+- Complete Playwright output at ignored `runtime/browser-test-output.txt`.
 - Private terminal and rotating file logs under `user/logs/`.
 
 The manifest records the persisted release identity and timestamp, site origin, Entry and Topic Trail counts, represented Methodology versions, generated public routes, export filename, absolute Schema URL, redirects, and a sorted byte-length and SHA-256 inventory of every promoted static file. It is not exposed through a public route.
@@ -55,9 +57,11 @@ The manifest records the persisted release identity and timestamp, site origin, 
 5. If the descriptor is absent, the gate validates a candidate UUIDv7 and UTC timestamp with the release and export before creating the descriptor exclusively. If another process creates it first, the gate loads the winning descriptor and reconstructs the release when its values differ from the candidate.
 6. Astro builds into a unique staging directory under `runtime/`. During this build, every page receives the same cached production release model.
 7. The gate confirms that canonical records and snapshots remained byte-identical during the build, writes or compares the immutable dataset artifact, and emits `_redirects`.
-8. Static verification compares the staged files with the single in-memory release. The manifest is built in memory only after verification succeeds.
-9. If a previous manifest uses the same Stage 1 release ID, the immutable dataset hash must match. A different hash at the same immutable path blocks promotion.
-10. The gate replaces `dist/` and the internal manifest through one promotion transaction with temporary backups. It removes those backups after both replacements succeed.
+8. Static verification compares the staged files with the single in-memory release.
+9. The gate serves that exact staging directory with the pinned Wrangler Pages server and runs the shared Playwright journeys, route checks, responsive assertions, keyboard interactions, no-JavaScript paths, reduced-motion checks, downloads, and Axe scans. Complete output is written to `runtime/browser-test-output.txt`.
+10. The manifest is built in memory only after static and browser verification succeed.
+11. If a previous manifest uses the same Stage 1 release ID, the immutable dataset hash must match. A different hash at the same immutable path blocks promotion.
+12. The gate replaces `dist/` and the internal manifest through one promotion transaction with temporary backups. It removes those backups after both replacements succeed.
 
 The command stops after local promotion. Deployment is a separate workflow.
 
@@ -92,9 +96,9 @@ The manifest route list excludes fragments, redirects, `404.html`, assets, and t
 
 Any blocking condition returns a non-zero command result. Diagnostics identify the record or filename, field, rule, related relationship, and affected generated surfaces. When release construction or export preparation fails, the private report also states that Schema and export output are unavailable for that attempted release.
 
-Failures before descriptor creation leave no genuine release metadata. Failures after creation preserve the descriptor for the next retry. Failures before promotion leave the previous `dist/` and manifest unchanged. If either resource replacement fails during promotion, the gate removes partially promoted output where possible and restores the validated backups.
+Failures before descriptor creation leave no genuine release metadata. Failures after creation preserve the descriptor for the next retry. A Wrangler startup failure or non-zero Playwright result emits a blocking browser diagnostic and leaves the previous `dist/` and manifest unchanged. If either resource replacement fails during promotion, the gate removes partially promoted output where possible and restores the validated backups.
 
-The staging directory is removed after success or failure. Release diagnostics remain private in the terminal and ignored log files; they are never copied into public output.
+The staging directory is removed after success or failure. Browser output, Wrangler state, and release diagnostics remain private in ignored runtime or log locations; they are never copied into public output.
 
 ## Interactions With Other VyDex Systems
 
@@ -141,9 +145,12 @@ The staging directory is removed after success or failure. Release diagnostics r
 - `src/adapters/stage-one-release-descriptor/` — Exclusive descriptor creation and immutable reuse.
 - `src/adapters/persisted-release-descriptor/` — Read-only production descriptor loading used by page builds.
 - `src/shared/release-logger/` — Release-only terminal and rotating file logging.
+- `scripts/test/run-stage-one-browser-checks.ts` — Release-owned Wrangler lifecycle and Playwright invocation against an explicit staged directory.
+- `playwright.config.ts`, `playwright.release.config.ts`, and `tests/browser/playwright-config.ts` — Ordinary and release-specific entry points over one shared browser-test configuration.
 - `src/adapters/application-release/` — One production release model shared across an atomic Astro build.
 - `src/adapters/dataset-artifact-writer/` — Collision-safe immutable dataset emission.
 - `tests/features/stage-one-release-*.test.ts` — Gate, manifest, redirect, verifier, and promotion integration coverage.
+- `tests/browser/stage-one-*.spec.ts` — Cross-page journeys, Stage 1 route boundaries, semantics, accessibility, responsive behavior, no-JavaScript operation, and reduced motion.
 - `tests/adapters/stage-one-release-descriptor.test.ts` and `tests/adapters/release-logger.test.ts` — Persistence and logging coverage.
 
 ## Before Changing the Release Gate
@@ -155,6 +162,7 @@ Check:
 - Whether a new public route belongs to Stage 1 or must remain blocked as a future feature.
 - Whether every new generated surface is included in verification and the manifest inventory.
 - Whether failure at each new write boundary preserves the previous promotable output.
+- Whether browser checks still target the exact staged directory, retain complete ignored output, and run before manifest creation or promotion.
 - Whether an adapter still owns filesystem, process, clock, UUID, and logging behavior rather than the domain constructor or UI.
 - Whether tests cover first creation, reuse, retries, malformed persisted state, deliberate data failures, and rollback.
 - Whether documentation clearly separates local promotion from deployment and later descriptor rotation.

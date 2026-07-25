@@ -46,11 +46,11 @@ Astro's release-specific dataset endpoint is a separate static-publication bound
 
 `generated/release-data/` is reserved for durable release state owned by the Stage 1 release gate. The descriptor and internal `release-manifest.json` are not ignored as disposable cache. Once the gate creates a genuine descriptor, that exact file must remain available to clean clones, CI jobs, and later rebuilds. The manifest records only successfully verified output and is replaced only as part of promotion.
 
-The gate builds into a unique ignored directory under `runtime/`, calls the artifact writer with that explicit staging root, and writes a Cloudflare `_redirects` file beside the staged site. It verifies the permanent slug aliases and stable-latest dataset redirect but does not create a mutable dataset copy or invoke a deployment tool.
+The gate builds into a unique ignored directory under `runtime/`, calls the artifact writer with that explicit staging root, and writes a Cloudflare `_redirects` file beside the staged site. It verifies the permanent slug aliases and stable-latest dataset redirect, then serves that same directory through a local Wrangler Pages process for browser checks. This local server does not create a mutable dataset copy or invoke a deployment workflow.
 
 `dist/` contains generated Astro output, including the test-mode Export JSON artifact. The release gate may replace it only after the complete staged output passes verification. It must not be used as canonical, historical, durable release-artifact, or release-descriptor storage. Promotion temporarily backs up `dist/` and the internal manifest so a failure while replacing either resource can restore the previous successful pair.
 
-Release logs are private runtime data under ignored `user/logs/`. They may contain validation diagnostics and must never be copied into `dist/` or exposed through a public route.
+Release logs are private runtime data under ignored `user/logs/`. Complete browser output is stored at ignored `runtime/browser-test-output.txt`, and Wrangler local state remains under ignored runtime storage or `.wrangler/`. These files may contain validation diagnostics and must never be copied into `dist/` or exposed through a public route.
 
 ## Invariants
 
@@ -65,7 +65,7 @@ Release logs are private runtime data under ignored `user/logs/`. They may conta
 - Dataset output must remain under the injected writer root, and immutable paths must never overwrite different bytes.
 - The Export JSON page and static artifact endpoint must consume one prepared application export from the selected release rather than reconstructing metadata independently.
 - The internal manifest must describe the exact verified `dist/` inventory and must not be replaced after a failed release attempt.
-- Release staging and logs remain ignored private data, while descriptor and manifest state remain separate from `dist/`.
+- Release staging, browser output, Wrangler state, and logs remain ignored private data, while descriptor and manifest state remain separate from `dist/`.
 - Storage paths and filenames must not replace durable IDs as relationship keys.
 - Filesystem adapters call framework-independent validators rather than reproducing record rules.
 
