@@ -3,11 +3,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
-const RELEASE_ID = "01900000-0000-7000-8000-000000000099";
-const GENERATED_DATE = "2026-07-24";
-const DOWNLOAD_FILENAME = `vydex-latest-entry-versions-v1-0-0-${GENERATED_DATE}.json`;
-const DOWNLOAD_PATH = `/datasets/releases/${RELEASE_ID}/${DOWNLOAD_FILENAME}`;
+const DOWNLOAD_PATH_PATTERN = /^\/datasets\/releases\/[0-9a-f-]+\/vydex-latest-entry-versions-v1-0-0-\d{4}-\d{2}-\d{2}\.json$/;
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/export/");
@@ -16,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 test("renders the exact hierarchy through the active shared shell", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    "https://vydex.example/export/",
+    `${EXPECTED_SITE_ORIGIN}/export/`,
   );
   await expect(page.locator('header [aria-current="page"]')).toHaveText([
     "Export JSON",
@@ -44,9 +42,11 @@ test("renders the exact hierarchy through the active shared shell", async ({ pag
 
 test("links directly to the dated immutable artifact and downloads with its generated filename", async ({ page }) => {
   const downloadLink = page.locator("[data-export-download]");
-  await expect(downloadLink).toHaveAttribute("href", DOWNLOAD_PATH);
-  await expect(downloadLink).toHaveAttribute("download", DOWNLOAD_FILENAME);
-  expect(await downloadLink.getAttribute("href")).not.toBe(
+  const downloadPath = await downloadLink.getAttribute("href");
+  const downloadFilename = await downloadLink.getAttribute("download");
+  expect(downloadPath).toMatch(DOWNLOAD_PATH_PATTERN);
+  expect(downloadFilename).toMatch(/^vydex-latest-entry-versions-v1-0-0-\d{4}-\d{2}-\d{2}\.json$/);
+  expect(downloadPath).not.toBe(
     "/datasets/vydex-latest-entry-versions-v1-0-0.json",
   );
 
@@ -54,11 +54,13 @@ test("links directly to the dated immutable artifact and downloads with its gene
     page.waitForEvent("download"),
     downloadLink.click(),
   ]);
-  expect(download.suggestedFilename()).toBe(DOWNLOAD_FILENAME);
+  expect(download.suggestedFilename()).toBe(downloadFilename);
 });
 
 test("publishes Schema-valid JSON matching the page count and UTC generation date", async ({ page, request }) => {
-  const artifactResponse = await request.get(DOWNLOAD_PATH);
+  const downloadPath = await page.locator("[data-export-download]").getAttribute("href");
+  expect(downloadPath).toMatch(DOWNLOAD_PATH_PATTERN);
+  const artifactResponse = await request.get(downloadPath!);
   expect(artifactResponse.ok()).toBe(true);
   expect(artifactResponse.headers()["content-type"]).toContain("application/json");
   const dataset = await artifactResponse.json();
@@ -75,7 +77,9 @@ test("publishes Schema-valid JSON matching the page count and UTC generation dat
   await expect(page.locator("[data-export-generated-date]")).toHaveText(
     dataset.generated_at.slice(0, 10),
   );
-  expect(dataset.release_id).toBe(RELEASE_ID);
+  expect(downloadPath).toBe(
+    `/datasets/releases/${dataset.release_id}/vydex-latest-entry-versions-v1-0-0-${dataset.generated_at.slice(0, 10)}.json`,
+  );
   expect(dataset.scope).toBe("latest_entry_versions");
 });
 
@@ -131,7 +135,7 @@ test.describe("without browser JavaScript", () => {
   test("keeps the complete export record and download available", async ({ page }) => {
     await page.goto("/export/");
     await expect(page.getByRole("heading", { name: "Current Export" })).toBeVisible();
-    await expect(page.locator("[data-export-download]")).toHaveAttribute("href", DOWNLOAD_PATH);
+    await expect(page.locator("[data-export-download]")).toHaveAttribute("href", DOWNLOAD_PATH_PATTERN);
     await expect(page.getByRole("heading", { name: "Use Notes" })).toBeVisible();
   });
 });

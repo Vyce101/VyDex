@@ -15,6 +15,7 @@ import {
   STAGE_ONE_RELEASE_MANIFEST_PATH,
   type RunStageOneCommand,
 } from "../../src/release/stage-one-release";
+import type { ReleaseLogger } from "../../src/shared/release-logger";
 
 const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const FIXED_DESCRIPTOR = {
@@ -155,11 +156,24 @@ async function createRepositoryRoot(): Promise<string> {
   return root;
 }
 
-function successfulCommandRunner(): RunStageOneCommand {
+function successfulCommandRunner() {
   return vi.fn(async ({ command, working_directory: root, output_directory }) => {
     if (command === "build") await materializeVerifiedOutput(root, output_directory!);
     return { exit_code: 0, output: `${command} passed` };
   });
+}
+
+function capturingLogger(): ReleaseLogger {
+  const log = vi.fn(async () => undefined);
+  return {
+    log,
+    debug: vi.fn(async () => undefined),
+    info: vi.fn(async () => undefined),
+    warning: vi.fn(async () => undefined),
+    error: vi.fn(async () => undefined),
+    critical: vi.fn(async () => undefined),
+    filename: "",
+  };
 }
 
 afterEach(async () => {
@@ -169,12 +183,13 @@ afterEach(async () => {
 describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
   test("creates one descriptor and promotes one coherent manifest and static output", async () => {
     const root = await createRepositoryRoot();
+    const runCommand = successfulCommandRunner();
     const result = await runStageOneRelease({
       filesystem_root: root,
       dependencies: {
         now: () => new Date(FIXED_DESCRIPTOR.generated_at),
         create_release_id: () => FIXED_DESCRIPTOR.release_id,
-        run_command: successfulCommandRunner(),
+        run_command: runCommand,
       },
     });
 
@@ -184,6 +199,18 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
     expect(result.manifest.release_id).toBe(FIXED_DESCRIPTOR.release_id);
     expect(await readFile(resolve(root, "dist/index.html"), "utf8")).toContain("data-homepage-latest");
     expect(JSON.parse(await readFile(resolve(root, STAGE_ONE_RELEASE_MANIFEST_PATH), "utf8"))).toEqual(result.manifest);
+    expect(runCommand.mock.calls.map(([input]) => input.command)).toEqual([
+      "typecheck",
+      "test",
+      "build",
+      "browser",
+    ]);
+    const browserInput = runCommand.mock.calls.find(([input]) => input.command === "browser")?.[0];
+    expect(browserInput?.output_directory).toContain("stage-one-release-");
+    expect(browserInput?.environment.PUBLIC_SITE_ORIGIN).toBe(STAGE_ONE_PUBLIC_SITE_ORIGIN);
+    expect(await readFile(resolve(root, "runtime/browser-test-output.txt"), "utf8")).toBe(
+      "browser passed",
+    );
   });
 
   test("rebuilds with the exact persisted descriptor without rewriting it", async () => {
@@ -290,6 +317,44 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
     if (result.success) return;
     expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "build_failed" }));
     expect(await readFile(resolve(root, "dist/index.html"), "utf8")).toBe("previous successful output");
+  });
+
+  test("blocks browser failures and preserves previous promoted resources", async () => {
+    const root = await createRepositoryRoot();
+    await createStageOneReleaseDescriptor(root, FIXED_DESCRIPTOR);
+    await mkdir(resolve(root, "dist"), { recursive: true });
+    await mkdir(resolve(root, "generated/release-data"), { recursive: true });
+    await writeFile(resolve(root, "dist/index.html"), "previous successful output", "utf8");
+    await writeFile(resolve(root, STAGE_ONE_RELEASE_MANIFEST_PATH), "previous successful manifest", "utf8");
+    const logger = capturingLogger();
+    const runCommand: RunStageOneCommand = async ({ command, working_directory, output_directory }) => {
+      if (command === "build") await materializeVerifiedOutput(working_directory, output_directory!);
+      return {
+        exit_code: command === "browser" ? 1 : 0,
+        output: command === "browser" ? "Critical journey failed deliberately" : `${command} passed`,
+      };
+    };
+
+    const result = await runStageOneRelease({
+      filesystem_root: root,
+      dependencies: { run_command: runCommand, logger },
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.diagnostics).toContainEqual(expect.objectContaining({ code: "browser_failed" }));
+    expect(await readFile(resolve(root, "runtime/browser-test-output.txt"), "utf8")).toBe(
+      "Critical journey failed deliberately",
+    );
+    expect(await readFile(resolve(root, "dist/index.html"), "utf8")).toBe("previous successful output");
+    expect(await readFile(resolve(root, STAGE_ONE_RELEASE_MANIFEST_PATH), "utf8")).toBe(
+      "previous successful manifest",
+    );
+    expect(logger.info).toHaveBeenCalledWith(
+      "Running Stage 1 Playwright journeys and accessibility checks.",
+    );
+    expect(logger.debug).toHaveBeenCalledWith("Critical journey failed deliberately");
+    expect(logger.error).toHaveBeenCalledWith(expect.stringContaining("Stage 1 release blocked"));
   });
 
   test("blocks a dead generated navigation destination", async () => {

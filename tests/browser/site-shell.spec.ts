@@ -31,6 +31,23 @@ async function setViewport(page: Page, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 900 });
 }
 
+async function getDisclosureExpandedState(page: Page): Promise<boolean | undefined> {
+  const session = await page.context().newCDPSession(page);
+  const { root } = await session.send("DOM.getDocument");
+  const { nodeId } = await session.send("DOM.querySelector", {
+    nodeId: root.nodeId,
+    selector: "[data-site-navigation-disclosure] > summary",
+  });
+  const { node } = await session.send("DOM.describeNode", { nodeId });
+  const tree = await session.send("Accessibility.getPartialAXTree", {
+    backendNodeId: node.backendNodeId,
+    fetchRelatives: false,
+  });
+  return tree.nodes[0]?.properties?.find(({ name }) => name === "expanded")?.value.value as
+    | boolean
+    | undefined;
+}
+
 test("renders the desktop shell with canonical links and shared alignment", async ({ page }) => {
   await setViewport(page, 1440);
   await page.goto("/");
@@ -103,6 +120,7 @@ test("opens the mobile disclosure from the keyboard and restores focus on Escape
   await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeHidden();
   await expect(disclosure).not.toHaveAttribute("open", "");
   await expect(mobileNavigation).toBeHidden();
+  expect(await getDisclosureExpandedState(page)).toBe(false);
   const menuBox = await menu.boundingBox();
   expect(menuBox?.height).toBeGreaterThanOrEqual(44);
   expect(menuBox?.width).toBeGreaterThanOrEqual(44);
@@ -110,6 +128,7 @@ test("opens the mobile disclosure from the keyboard and restores focus on Escape
   await menu.focus();
   await page.keyboard.press("Enter");
   await expect(disclosure).toHaveAttribute("open", "");
+  expect(await getDisclosureExpandedState(page)).toBe(true);
   await expect(mobileNavigation).toBeVisible();
   await expectOrderedLinks(mobileNavigation, HEADER_LINKS);
   await expect(mobileNavigation).toHaveCSS("border-top-width", "1px");
@@ -121,6 +140,19 @@ test("opens the mobile disclosure from the keyboard and restores focus on Escape
   await page.keyboard.press("Escape");
   await expect(disclosure).not.toHaveAttribute("open", "");
   await expect(menu).toBeFocused();
+  expect(await getDisclosureExpandedState(page)).toBe(false);
+
+  await page.keyboard.press("Space");
+  await expect(disclosure).toHaveAttribute("open", "");
+  expect(await getDisclosureExpandedState(page)).toBe(true);
+
+  const lastLink = mobileNavigation.getByRole("link", { name: "Export JSON" });
+  await lastLink.focus();
+  await page.keyboard.press("Tab");
+  const firstMainLink = page.locator("main a[href]").first();
+  await expect(firstMainLink).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(lastLink).toBeFocused();
 });
 
 test("moves focus through the skip link and shell regions in document order", async ({ page }) => {

@@ -228,6 +228,12 @@ describe("constructReleaseModel production", () => {
     expect(entry.activity.date_updated).toBe("2026-07-21");
     expect(entry.activity.latest_meaningful_activity.revision_number).toBe(1);
     expect(entry.activity.latest_meaningful_activity.entry_title).toBe("Verified frontier result");
+    const containingTrail = result.release.topic_trails.find(({ entries }) =>
+      entries.some(({ entry: trailEntry }) => trailEntry.id === entry.entry.id),
+    );
+    expect(containingTrail?.last_activity.published_at).toBe(
+      entry.activity.latest_meaningful_activity.published_at,
+    );
     expect(result.release.changelog_events.filter(({ type }) => type !== "methodology_change")).toHaveLength(1);
   });
 

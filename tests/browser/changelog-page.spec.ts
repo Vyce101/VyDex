@@ -1,6 +1,7 @@
 // Verifies the static material Changelog content, responsive index, and accessibility.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
 async function setViewport(page: Page, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 1000 });
@@ -13,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 test("renders through the shared shell with canonical metadata and active navigation", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    "https://vydex.example/changelog/",
+    `${EXPECTED_SITE_ORIGIN}/changelog/`,
   );
   await expect(page.locator('header [aria-current="page"]')).toHaveCount(2);
   await expect(page.locator('header [aria-current="page"]')).toHaveText(["Changelog", "Changelog"]);
@@ -81,7 +82,7 @@ test("uses semantic date-only output and record-specific accessible link names",
   await expect(methodologyLink).toHaveText("View Methodology →");
   await expect(methodologyLink).toHaveAttribute(
     "href",
-    "https://vydex.example/methodology/1.0.0/",
+    `${EXPECTED_SITE_ORIGIN}/methodology/1.0.0/`,
   );
 });
 

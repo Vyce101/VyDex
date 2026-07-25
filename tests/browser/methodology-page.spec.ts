@@ -1,6 +1,7 @@
 // Verifies static Methodology routes, anchors, responsive records, and Entry help links.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
 const METHODOLOGY_ROUTES = ["/methodology/", "/methodology/1.0.0/"] as const;
 const JUMP_TARGETS = [
@@ -62,7 +63,7 @@ test("uses route-specific self canonical links and active shared navigation", as
     await page.goto(route);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
-      `https://vydex.example${route}`,
+      `${EXPECTED_SITE_ORIGIN}${route}`,
     );
     const activeLinks = page.locator('header [aria-current="page"]');
     await expect(activeLinks).toHaveCount(2);
@@ -181,7 +182,7 @@ test("links Entry explanatory labels to immutable Methodology anchors", async ({
     for (const link of await links.all()) {
       await expect(link).toHaveAttribute(
         "href",
-        `https://vydex.example/methodology/1.0.0/#${target}`,
+        `${EXPECTED_SITE_ORIGIN}/methodology/1.0.0/#${target}`,
       );
     }
   }

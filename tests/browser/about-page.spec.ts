@@ -1,6 +1,7 @@
 // Verifies the static About page content, responsive rules, navigation, and accessibility.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
 async function setViewport(page: Page, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 1000 });
@@ -13,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 test("renders through the shared shell with a canonical URL and active About navigation", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
-    "https://vydex.example/about/",
+    `${EXPECTED_SITE_ORIGIN}/about/`,
   );
   const activeLinks = page.locator('header [aria-current="page"]');
   await expect(activeLinks).toHaveCount(2);
@@ -97,9 +98,9 @@ test("renders ordered actions, scope rows, carefulness cells, and semantic relat
   await expect(page.locator(".about-related-links")).toHaveJSProperty("tagName", "UL");
   await expect(page.locator(".about-related-links > li")).toHaveCount(3);
   for (const [label, href] of [
-    ["Methodology", "https://vydex.example/methodology/"],
-    ["Changelog", "https://vydex.example/changelog/"],
-    ["Export JSON", "https://vydex.example/export/"],
+    ["Methodology", `${EXPECTED_SITE_ORIGIN}/methodology/`],
+    ["Changelog", `${EXPECTED_SITE_ORIGIN}/changelog/`],
+    ["Export JSON", `${EXPECTED_SITE_ORIGIN}/export/`],
   ] as const) {
     await expect(page.locator(".about-related-links").getByRole("link", { name: label })).toHaveAttribute(
       "href",

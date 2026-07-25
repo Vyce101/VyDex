@@ -32,6 +32,7 @@ test("renders the exact Homepage hierarchy, copy, actions, and section order", a
   await expect(page.locator(".homepage-hero__boundary")).toHaveCSS("font-weight", "650");
   await expect(page.locator(".homepage-hero__boundary")).toHaveCSS("margin-top", "20px");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
+    "Latest Update",
     "Recent Entries and Evidence Updates",
     "How VyDex Reads Claims",
   ]);

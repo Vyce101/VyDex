@@ -1,7 +1,8 @@
 // Configures foundation tests to run in a Node environment.
-import { defineConfig } from "vitest/config";
+import { getViteConfig } from "astro/config";
+import type { ViteUserConfig } from "vitest/config";
 
-export default defineConfig({
+const vitestConfig = {
   test: {
     environment: "node",
     include: [
@@ -12,4 +13,6 @@ export default defineConfig({
       "tests/domain/**/*.test.ts",
     ],
   },
-});
+} satisfies ViteUserConfig;
+
+export default getViteConfig(vitestConfig);

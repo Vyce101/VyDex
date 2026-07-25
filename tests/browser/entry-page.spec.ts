@@ -104,6 +104,7 @@ test("shows all Domains, relationships, statuses, follow-up context, and metadat
     "Topic Trail",
     "Evidence Type",
   ]);
+  await expect(page.locator(".entry-metadata__list dd").nth(0)).toHaveText("Unknown");
   await expect(page.locator(".entry-metadata__list dd").nth(5)).toHaveText("None scheduled");
   await expect(page.locator(".entry-metadata__list dd").nth(6)).toHaveText("Main Entry");
 });
@@ -148,6 +149,9 @@ test("uses the approved continuous-sheet responsive transformations without over
       "flex-direction",
       layoutCase.statusDirection,
     );
+    const statusFontSizes = await page.locator(".entry-status-summary .atlas-status-tab")
+      .evaluateAll((elements) => elements.map((element) => Number.parseFloat(getComputedStyle(element).fontSize)));
+    expect(Math.min(...statusFontSizes)).toBeGreaterThanOrEqual(12);
     const connector = page.locator(".entry-frontier__connector");
     await expect(connector).toHaveCSS(
       layoutCase.connector === "vertical" ? "border-left-width" : "border-top-width",

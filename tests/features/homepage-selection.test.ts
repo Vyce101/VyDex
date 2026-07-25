@@ -47,6 +47,21 @@ describe("selectHomepageEntries", () => {
     expect(new Set(selection.recent_entries)).toEqual(new Set(input));
   });
 
+  test("keeps Homepage order when current wording changes without new material activity", () => {
+    const older = createResolvedEntry(1);
+    const newer = createResolvedEntry(2);
+    const beforeCorrection = selectHomepageEntries([older, newer]).recent_entries.map(
+      ({ entry }) => entry.id,
+    );
+
+    newer.entry.title = "Corrected non-material wording";
+    const afterCorrection = selectHomepageEntries([newer, older]).recent_entries.map(
+      ({ entry }) => entry.id,
+    );
+
+    expect(afterCorrection).toEqual(beforeCorrection);
+  });
+
   test("fails closed for an empty production collection", () => {
     expect(() => selectHomepageEntries([])).toThrow("at least one valid current Entry");
     expect(() => createHomepagePresentationModel({ mode: "production", current_entries: [] })).toThrow(

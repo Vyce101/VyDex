@@ -1,6 +1,7 @@
 // Verifies the semantic, accessible, and static application foundation.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
 test("renders semantic content without horizontal overflow", async ({ page }) => {
   await page.goto("/");
@@ -48,7 +49,8 @@ test("has no automatically detectable accessibility violations", async ({ page }
 test("publishes the immutable Dataset 1.0.0 Schema", async ({ request }) => {
   const response = await request.get("/schemas/vydex-dataset/1.0.0.json");
   expect(response.ok()).toBe(true);
-  expect(response.headers()["content-type"]).toContain("application/json");
+  expect(response.headers()["content-type"]).toContain("application/schema+json");
+  expect(response.headers()["cache-control"]).toBe("public, max-age=31536000, immutable");
 
   const text = await response.text();
   const schema = JSON.parse(text) as {
@@ -62,7 +64,7 @@ test("publishes the immutable Dataset 1.0.0 Schema", async ({ request }) => {
   expect(text.endsWith("\n")).toBe(true);
   expect(text.endsWith("\n\n")).toBe(false);
   expect(schema.$schema).toBe("https://json-schema.org/draft/2020-12/schema");
-  expect(schema.$id).toBe("https://vydex.example/schemas/vydex-dataset/1.0.0.json");
+  expect(schema.$id).toBe(`${EXPECTED_SITE_ORIGIN}/schemas/vydex-dataset/1.0.0.json`);
   expect(schema.$defs.dates.properties.date_happened?.description).toContain("null means unknown");
   expect(schema.$defs.dates.properties.date_disclosed?.description).toContain("null means unknown");
   expect(schema.$defs.dates.properties.next_check_date?.description).toContain("no check is scheduled");
@@ -70,11 +72,6 @@ test("publishes the immutable Dataset 1.0.0 Schema", async ({ request }) => {
     "null means not applicable",
   );
 
-  const hostingHeaders = await request.get("/_headers");
-  expect(hostingHeaders.ok()).toBe(true);
-  const hostingHeadersText = await hostingHeaders.text();
-  expect(hostingHeadersText).toContain("Content-Type: application/schema+json; charset=utf-8");
-  expect(hostingHeadersText).toContain("Cache-Control: public, max-age=31536000, immutable");
 });
 
 test.describe("without browser JavaScript", () => {
