@@ -1,7 +1,7 @@
 // Verifies the semantic, accessible, and static application foundation.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
+import { BROWSER_BASE_URL, EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
 test("renders semantic content without horizontal overflow", async ({ page }) => {
   await page.goto("/");
@@ -19,9 +19,10 @@ test("renders semantic content without horizontal overflow", async ({ page }) =>
 
 test("loads project-owned fonts without external requests", async ({ page }) => {
   const externalRequests: string[] = [];
+  const expectedHost = new URL(BROWSER_BASE_URL).hostname;
   page.on("request", (request) => {
     const requestUrl = new URL(request.url());
-    if (requestUrl.hostname !== "127.0.0.1") {
+    if (requestUrl.hostname !== expectedHost) {
       externalRequests.push(request.url());
     }
   });

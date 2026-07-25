@@ -1,6 +1,10 @@
 // Verifies complete Stage 1 journeys, direct routes, redirects, and navigation boundaries.
 import { expect, test, type Page } from "@playwright/test";
-import { BROWSER_TEST_URL, EXPECTED_SITE_ORIGIN } from "./playwright-config";
+import {
+  BROWSER_TEST_URL,
+  EXPECTED_SITE_ORIGIN,
+  IS_HOSTED_BROWSER_TEST,
+} from "./playwright-config";
 
 const ENTRY_PATHS = [
   "/entries/dreamer-4-offline-minecraft-diamonds/",
@@ -37,6 +41,7 @@ async function expectPath(page: Page, pathname: string): Promise<void> {
 }
 
 async function proxyPublicOriginToLocalOutput(page: Page): Promise<void> {
+  if (IS_HOSTED_BROWSER_TEST) return;
   await page.route(`${EXPECTED_SITE_ORIGIN}/**`, async (route) => {
     const publicUrl = new URL(route.request().url());
     const response = await route.fetch({

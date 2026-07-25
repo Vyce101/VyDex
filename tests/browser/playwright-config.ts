@@ -7,6 +7,8 @@ export const BROWSER_TEST_HOST = "127.0.0.1";
 export const BROWSER_TEST_PORT = 4322;
 export const BROWSER_TEST_URL = `http://${BROWSER_TEST_HOST}:${BROWSER_TEST_PORT}`;
 export const EXPECTED_SITE_ORIGIN = parseRequiredPublicSiteOrigin(process.env.PUBLIC_SITE_ORIGIN);
+export const BROWSER_BASE_URL = process.env.VYDEX_BROWSER_BASE_URL?.trim() || BROWSER_TEST_URL;
+export const IS_HOSTED_BROWSER_TEST = BROWSER_BASE_URL !== BROWSER_TEST_URL;
 
 export function createStageOnePlaywrightConfig(
   webServer?: PlaywrightTestConfig["webServer"],
@@ -18,7 +20,7 @@ export function createStageOnePlaywrightConfig(
     retries: process.env.CI ? 2 : 0,
     reporter: "list",
     use: {
-      baseURL: BROWSER_TEST_URL,
+      baseURL: BROWSER_BASE_URL,
       screenshot: "only-on-failure",
       trace: "retain-on-failure",
     },
