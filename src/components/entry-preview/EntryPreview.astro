@@ -5,12 +5,19 @@ import { projectEntryPreview, type EntryPreviewSource } from "./project-entry-pr
 
 interface Props {
   entry: EntryPreviewSource;
+  treatment?: "default" | "quiet";
+  topicTrail?: EntryPreviewSource["primary_topic_trail"];
 }
 
-const preview = projectEntryPreview(Astro.props.entry);
+const { entry, treatment = "default", topicTrail } = Astro.props;
+const preview = projectEntryPreview(entry, { topic_trail: topicTrail });
 ---
 
-<article class="entry-preview atlas-sheet" data-entry-preview>
+<article
+  class:list={["entry-preview", "atlas-sheet", treatment === "quiet" && "entry-preview--quiet"]}
+  data-entry-preview
+  data-entry-preview-treatment={treatment}
+>
   <div class="entry-preview__metadata atlas-type-metadata" data-entry-preview-section="metadata">
     <span data-entry-preview-field="domain">{preview.domain_label}</span>
     <time datetime={preview.date_updated} data-entry-preview-field="date-updated">

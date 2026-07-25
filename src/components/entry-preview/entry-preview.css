@@ -3,6 +3,12 @@
   min-inline-size: 0;
 }
 
+.entry-preview.entry-preview--quiet {
+  background: transparent;
+  border-inline: 0;
+  border-radius: var(--atlas-radius);
+}
+
 .entry-preview__metadata {
   border-block-end: 1px solid var(--atlas-color-rule-record);
   display: flex;

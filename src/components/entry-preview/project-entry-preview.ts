@@ -37,6 +37,10 @@ export type EntryPreviewViewModel = {
   canonical_url: string;
 };
 
+export type EntryPreviewProjectionOptions = {
+  topic_trail?: EntryPreviewSource["primary_topic_trail"];
+};
+
 function requirePlainText(value: unknown, field: string): string {
   const result = plainTextSchema.safeParse(value);
   if (!result.success) throw new Error(`Entry preview requires ${field}.`);
@@ -66,7 +70,10 @@ function requireMappedLabel<Value extends string>(
   return { value: typedValue, label: labels[typedValue] };
 }
 
-export function projectEntryPreview(source: EntryPreviewSource): EntryPreviewViewModel {
+export function projectEntryPreview(
+  source: EntryPreviewSource,
+  options: EntryPreviewProjectionOptions = {},
+): EntryPreviewViewModel {
   if (!source || typeof source !== "object") {
     throw new Error("Entry preview requires a validated source.");
   }
@@ -81,6 +88,8 @@ export function projectEntryPreview(source: EntryPreviewSource): EntryPreviewVie
 
   const claim = singleLineInlineMarkdownSchema.safeParse(source.entry?.claim);
   if (!claim.success) throw new Error("Entry preview requires a valid claim.");
+
+  const topicTrail = options.topic_trail ?? source.primary_topic_trail;
 
   return {
     domain_label: DOMAIN_LABELS[domain],
@@ -103,9 +112,9 @@ export function projectEntryPreview(source: EntryPreviewSource): EntryPreviewVie
       "Review Status",
     ),
     primary_topic_trail: {
-      name: requirePlainText(source.primary_topic_trail?.name, "a Topic Trail name"),
+      name: requirePlainText(topicTrail?.name, "a Topic Trail name"),
       canonical_url: requireCanonicalUrl(
-        source.primary_topic_trail?.canonical_url,
+        topicTrail?.canonical_url,
         "Topic Trail canonical URL",
       ),
     },
