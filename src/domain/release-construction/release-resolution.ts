@@ -2,6 +2,7 @@
 import type { AboutRecord, Methodology, MethodologyPublicationEvent, TopicTrail } from "../canonical-records";
 import type { ValidationDiagnostic } from "../cross-record-validation";
 import { toCanonicalUrl, type PublicRouteRegistry, type SiteOrigin } from "../route-generation";
+import { compareResolvedPublicEntriesByLatestMaterialActivity } from "./compare-resolved-public-entries";
 import { createReleaseDiagnostic } from "./release-diagnostics";
 import type { ValidatedHistory, ValidatedInputs } from "./release-input-validation";
 import type {
@@ -13,15 +14,6 @@ import type {
   ResolvedTopicTrail,
   ResolvedTopicTrailReference,
 } from "./types";
-
-function compareResolvedEntries(left: ResolvedPublicEntry, right: ResolvedPublicEntry): number {
-  const timestampOrder = right.activity.latest_meaningful_activity.published_at.localeCompare(
-    left.activity.latest_meaningful_activity.published_at,
-  );
-  if (timestampOrder !== 0) return timestampOrder;
-  const titleOrder = left.entry.title.localeCompare(right.entry.title, "en");
-  return titleOrder !== 0 ? titleOrder : left.entry.id.localeCompare(right.entry.id, "en");
-}
 
 export function resolveEntries(input: {
   parsed: ValidatedInputs;
@@ -67,7 +59,7 @@ export function resolveEntries(input: {
       methodology: methodologyReference,
     });
   }
-  return resolved.sort(compareResolvedEntries);
+  return resolved.sort(compareResolvedPublicEntriesByLatestMaterialActivity);
 }
 
 export function resolveTopicTrails(input: {
