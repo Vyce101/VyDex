@@ -131,6 +131,52 @@ describe("canonical About content", () => {
     },
   );
 
+  test("blocks a production release when the maintainer line is missing", () => {
+    const incompleteAbout = structuredClone(APPROVED_ABOUT_CONTENT);
+    Reflect.deleteProperty(incompleteAbout, "maintainer_line");
+
+    const result = constructProductionRelease(incompleteAbout);
+
+    expect(result.success).toBe(false);
+    expect(result.mode).toBe("production");
+    if (result.success || result.mode !== "production") return;
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        severity: "error",
+        code: "required_field",
+        record_type: "about",
+        filename: "data/canonical-records/about/about.json",
+        path: ["maintainer_line"],
+      }),
+    );
+  });
+
+  test.each([
+    "curated_not_exhaustive",
+    "english_language_bias",
+    "verification_varies_by_domain",
+    "ai_heavy_coverage",
+    "evidence_can_change",
+  ] as const)("blocks a production release when scope_limits.%s is missing", (scopeLimit) => {
+    const incompleteAbout = structuredClone(APPROVED_ABOUT_CONTENT);
+    Reflect.deleteProperty(incompleteAbout.scope_limits, scopeLimit);
+
+    const result = constructProductionRelease(incompleteAbout);
+
+    expect(result.success).toBe(false);
+    expect(result.mode).toBe("production");
+    if (result.success || result.mode !== "production") return;
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        severity: "error",
+        code: "required_field",
+        record_type: "about",
+        filename: "data/canonical-records/about/about.json",
+        path: ["scope_limits", scopeLimit],
+      }),
+    );
+  });
+
   test("preserves the approved About content in the validated release", () => {
     const result = constructProductionRelease(about);
 
