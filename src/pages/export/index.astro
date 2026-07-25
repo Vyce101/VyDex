@@ -1,0 +1,26 @@
+---
+// Renders the static Export JSON route from the selected validated application export.
+import { prepareApplicationExport } from "../../adapters/application-export";
+import {
+  loadFixedMetadataDevelopmentApplicationRelease,
+  loadPersistedProductionApplicationRelease,
+} from "../../adapters/application-release";
+import { toCanonicalUrl } from "../../domain";
+import ExportPage from "../../features/export-page/ExportPage.astro";
+import FoundationLayout from "../../layouts/FoundationLayout.astro";
+
+const usesFixedNonProductionMetadata = import.meta.env.DEV || import.meta.env.MODE === "test";
+const release = usesFixedNonProductionMetadata
+  ? await loadFixedMetadataDevelopmentApplicationRelease({ filesystem_root: process.cwd() })
+  : await loadPersistedProductionApplicationRelease({ filesystem_root: process.cwd() });
+const prepared = prepareApplicationExport(release);
+if (!prepared.success) {
+  const codes = prepared.diagnostics.map(({ code }) => code).join(", ");
+  throw new Error(`Cannot render Export JSON Page: ${codes}.`);
+}
+const canonicalUrl = toCanonicalUrl(release.site_origin, release.routes.export);
+---
+
+<FoundationLayout title="Export JSON — VyDex" canonicalUrl={canonicalUrl}>
+  <ExportPage model={prepared.data.presentation} />
+</FoundationLayout>

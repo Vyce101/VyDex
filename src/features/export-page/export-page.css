@@ -1,0 +1,136 @@
+/* Composes Frontier Atlas primitives into the responsive Export JSON record page. */
+.export-page,
+.export-header,
+.export-header__intro,
+.export-section,
+.export-current,
+.export-notes {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.export-page {
+  gap: var(--atlas-space-80);
+}
+
+.export-header {
+  gap: var(--atlas-space-20);
+  max-inline-size: var(--atlas-reading-measure);
+}
+
+.export-header__intro,
+.export-notes {
+  gap: var(--atlas-space-16);
+}
+
+.export-section {
+  gap: var(--atlas-space-24);
+}
+
+.export-prose {
+  max-inline-size: var(--atlas-reading-measure);
+}
+
+.export-current {
+  border-block-start-color: var(--atlas-color-rule-strong);
+  gap: var(--atlas-space-20);
+  padding: var(--atlas-space-20);
+}
+
+.export-current__summary {
+  margin: 0;
+}
+
+.export-current__summary > div {
+  display: grid;
+  gap: var(--atlas-space-8);
+  grid-template-columns: minmax(9rem, 2fr) minmax(0, 3fr);
+  padding-block: var(--atlas-space-12);
+}
+
+.export-current__summary > div + div {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+}
+
+.export-current__summary dt,
+.export-current__summary dd {
+  font-family: var(--atlas-font-sans);
+  margin: 0;
+}
+
+.export-current__summary dt {
+  color: var(--atlas-color-ink-secondary);
+  font-size: var(--atlas-type-metadata-size);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: var(--atlas-type-metadata-line);
+  text-transform: uppercase;
+}
+
+.export-current__summary dd {
+  color: var(--atlas-color-ink-primary);
+  font-size: var(--atlas-type-interface-size);
+  line-height: var(--atlas-type-interface-line);
+}
+
+.export-current__versions {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  padding-block-start: var(--atlas-space-16);
+}
+
+.export-current__download {
+  align-self: stretch;
+}
+
+.export-included {
+  margin-block-start: var(--atlas-space-4);
+}
+
+.export-included code {
+  color: var(--atlas-color-ink-primary);
+  font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.94em;
+  white-space: normal;
+}
+
+.export-included__group {
+  font-family: var(--atlas-font-sans);
+  font-weight: 700;
+}
+
+.export-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-8);
+  margin: 0;
+  max-inline-size: var(--atlas-reading-measure);
+  padding-inline-start: var(--atlas-space-24);
+}
+
+.export-section__link {
+  align-self: flex-start;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-control-line);
+}
+
+@media (min-width: 768px) {
+  .export-page {
+    gap: var(--atlas-space-96);
+  }
+
+  .export-current {
+    padding: var(--atlas-space-24);
+  }
+
+  .export-current__download {
+    align-self: flex-start;
+  }
+
+  .export-included th:first-child,
+  .export-included td:first-child {
+    inline-size: 28%;
+  }
+}

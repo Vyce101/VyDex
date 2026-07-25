@@ -1,0 +1,95 @@
+---
+// Renders the public Export JSON record sheet, field index, limits, and use notes.
+import type { ExportPagePresentationModel } from "../../adapters/application-export";
+import "./export-page.css";
+
+interface Props {
+  model: ExportPagePresentationModel;
+}
+
+const { model } = Astro.props;
+const includedRows = [
+  ["Entry Identity", "title, claim, entry_state, domains, topic_trails"],
+  ["Evidence Judgment", "claim_status, evidence_strength, review_status, evidence_types, methodology_version"],
+  ["Dates", "date_happened, date_disclosed, date_added, date_updated, date_last_checked, next_check_date"],
+  ["Evidence Record", "frontier_delta, confirmed_significance, potential_significance_if_confirmed, caveats, details, sources, used_for"],
+  ["Update Context", "latest_update_summary and current revision metadata"],
+] as const;
+---
+
+<article
+  class="export-page"
+  data-export-page
+  data-schema-path={model.schema_path}
+>
+  <header class="export-header" data-export-section="export-header">
+    <h1 class="atlas-type-entry-title">Export JSON</h1>
+    <div class="export-header__intro atlas-type-editorial-lead">
+      <p>Download the latest VyDex entry versions as structured JSON.</p>
+      <p>The export is for reuse, review, citation support, and AI-assisted analysis of the public evidence record.</p>
+    </div>
+  </header>
+
+  <section class="export-section" aria-labelledby="current-export" data-export-section="current-export">
+    <h2 id="current-export" class="atlas-type-major-heading">Current Export</h2>
+    <div class="export-current atlas-sheet">
+      <dl class="export-current__summary">
+        <div><dt>Format</dt><dd>{model.format}</dd></div>
+        <div><dt>Scope</dt><dd>{model.scope}</dd></div>
+        <div><dt>Entries</dt><dd data-export-entry-count>{model.entry_count}</dd></div>
+        <div><dt>Last Generated</dt><dd data-export-generated-date>{model.last_generated}</dd></div>
+        <div><dt>Methodology Versions</dt><dd>Included per entry</dd></div>
+      </dl>
+      <p class="export-current__versions atlas-type-supporting">
+        Represented versions: {model.methodology_versions.join(", ")}
+      </p>
+      <a
+        class="atlas-button atlas-button--primary export-current__download"
+        href={model.download_path}
+        download={model.download_filename}
+        data-export-download
+      >
+        Download Latest JSON
+      </a>
+    </div>
+  </section>
+
+  <section class="export-section" aria-labelledby="whats-included" data-export-section="whats-included">
+    <h2 id="whats-included" class="atlas-type-major-heading">What’s Included</h2>
+    <p class="export-prose atlas-type-interface">
+      The Stage 1 export contains the latest public version of each entry included in the current ledger.
+    </p>
+    <table class="atlas-table export-included" aria-labelledby="whats-included">
+      <thead><tr><th scope="col">Group</th><th scope="col">Fields</th></tr></thead>
+      <tbody>
+        {includedRows.map(([group, fields]) => (
+          <tr>
+            <td data-label="Group" class="export-included__group">{group}</td>
+            <td data-label="Fields"><code>{fields}</code></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="export-section" aria-labelledby="stage-one-limits" data-export-section="stage-one-limits">
+    <h2 id="stage-one-limits" class="atlas-type-major-heading">Stage 1 Limits</h2>
+    <p class="export-prose atlas-type-interface">This export is not a full historical archive.</p>
+    <ul class="export-list atlas-type-interface">
+      <li>No historical entry versions</li>
+      <li>No custom filters</li>
+      <li>No CSV export</li>
+      <li>No public API</li>
+    </ul>
+  </section>
+
+  <section class="export-section" aria-labelledby="use-notes" data-export-section="use-notes">
+    <h2 id="use-notes" class="atlas-type-major-heading">Use Notes</h2>
+    <div class="export-notes export-prose atlas-type-interface">
+      <p>Use the export when you need the latest public entry versions in machine-readable form.</p>
+      <p>Use Entry Pages when you need the full human-readable explanation and source context.</p>
+      <p>Use Methodology when you need definitions for Claim Status, Evidence Strength, Review Status, Entry State, and other labels.</p>
+    </div>
+    <a class="export-section__link" href="/methodology/">View Methodology →</a>
+  </section>
+</article>
