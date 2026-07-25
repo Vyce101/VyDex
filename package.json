@@ -27,7 +27,8 @@
     "test:browser:hosted:run": "playwright test --config playwright.hosted.config.ts",
     "verify:pages-deployment": "tsx scripts/deployment/verify-cloudflare-pages-deployment.ts dist",
     "verify:hosted-stage-1": "tsx scripts/deployment/verify-hosted-stage-one.ts",
-    "deploy:pages-production": "tsx scripts/deployment/deploy-and-verify-cloudflare-pages.ts"
+    "deploy:pages-production": "tsx scripts/deployment/deploy-and-verify-cloudflare-pages.ts",
+    "rehearse:pages-rollback": "tsx scripts/deployment/rehearse-cloudflare-pages-rollback.ts"
   },
   "dependencies": {
     "@fontsource-variable/source-sans-3": "5.2.9",

@@ -1,0 +1,114 @@
+# Rehearses Cloudflare Pages production rollback only after protected manual approval.
+name: Rehearse production rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type REHEARSE_PRODUCTION_ROLLBACK to confirm live rollback and restoration
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Reproduce complete Stage 1 release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PUBLIC_SITE_ORIGIN: ${{ vars.PUBLIC_SITE_ORIGIN }}
+
+    steps:
+      - name: Require explicit rehearsal confirmation
+        env:
+          ROLLBACK_CONFIRMATION: ${{ inputs.confirmation }}
+        run: test "$ROLLBACK_CONFIRMATION" = "REHEARSE_PRODUCTION_ROLLBACK"
+
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up exact Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install immutable dependency tree
+        run: npm ci
+
+      - name: Install pinned Chromium runtime
+        run: npx --no-install playwright install --with-deps chromium
+
+      - name: Reproduce and verify committed release
+        run: npm run release:stage-1:ci
+
+      - name: Upload validated rehearsal artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: vydex-rollback-rehearsal-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  rehearse:
+    name: Roll back and restore production
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: vydex-cloudflare-pages-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: ${{ vars.PUBLIC_SITE_ORIGIN }}
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+      PUBLIC_SITE_ORIGIN: ${{ vars.PUBLIC_SITE_ORIGIN }}
+      ROLLBACK_CONFIRMATION: ${{ inputs.confirmation }}
+
+    steps:
+      - name: Check out validated repository state
+        uses: actions/checkout@v6
+
+      - name: Set up exact Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install immutable deployment toolchain
+        run: npm ci
+
+      - name: Install pinned Chromium runtime
+        run: npx --no-install playwright install --with-deps chromium
+
+      - name: Download validated rehearsal artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: vydex-rollback-rehearsal-${{ github.sha }}
+          path: dist
+
+      - name: Verify deployment environment and artifact inventory
+        run: npm run verify:pages-deployment
+
+      - name: Rehearse rollback and guaranteed restoration
+        run: npm run rehearse:pages-rollback
+
+      - name: Upload rehearsal verification and recovery evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: vydex-rollback-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            runtime/hosted-verification/
+            user/logs/
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 30
