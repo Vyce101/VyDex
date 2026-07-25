@@ -9,9 +9,10 @@ import "../styles/global.css";
 
 interface Props {
   title: string;
+  canonicalUrl?: string;
 }
 
-const { title } = Astro.props;
+const { title, canonicalUrl } = Astro.props;
 const activeNavigationKey = getActiveNavigationKey(Astro.url.pathname);
 ---
 
@@ -22,6 +23,7 @@ const activeNavigationKey = getActiveNavigationKey(Astro.url.pathname);
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
   </head>
   <body>
     <a class="site-skip-link" href="#main-content">Skip to main content</a>
