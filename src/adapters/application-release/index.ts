@@ -35,6 +35,8 @@ export type LoadConfiguredApplicationReleaseInput = {
   site_origin?: string;
 };
 
+const atomicProductionReleaseCache = new Map<string, Promise<ReleaseModel>>();
+
 const FIXED_NON_PRODUCTION_RELEASE_METADATA: ReleaseMetadata = releaseMetadataSchema.parse({
   release_id: "01900000-0000-7000-8000-000000000099",
   generated_at: "2026-07-24T20:30:00Z",
@@ -50,6 +52,26 @@ function requireCompleteProductionRelease(result: ConstructReleaseModelResult): 
 }
 
 export async function loadPersistedProductionApplicationRelease(
+  input: LoadConfiguredApplicationReleaseInput,
+): Promise<ReleaseModel> {
+  const atomicBuildEnabled = process.env.VYDEX_ATOMIC_RELEASE_BUILD === "1";
+  const cacheKey = `${input.filesystem_root}\u0000${input.site_origin ?? ""}`;
+  if (atomicBuildEnabled) {
+    const cached = atomicProductionReleaseCache.get(cacheKey);
+    if (cached) return cached;
+  }
+
+  const loading = loadPersistedProductionApplicationReleaseUncached(input);
+  if (atomicBuildEnabled) atomicProductionReleaseCache.set(cacheKey, loading);
+  try {
+    return await loading;
+  } catch (error) {
+    if (atomicBuildEnabled) atomicProductionReleaseCache.delete(cacheKey);
+    throw error;
+  }
+}
+
+async function loadPersistedProductionApplicationReleaseUncached(
   input: LoadConfiguredApplicationReleaseInput,
 ): Promise<ReleaseModel> {
   const releaseMetadata = await loadPersistedReleaseDescriptor({

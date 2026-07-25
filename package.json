@@ -16,6 +16,7 @@
     "build": "npm run typecheck && npm test && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build",
     "build:test": "npm run typecheck && npm test && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build --mode test",
     "preview": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "release:stage-1": "cross-env ASTRO_TELEMETRY_DISABLED=1 tsx scripts/release/stage-one-release.ts",
     "test:browser:install": "playwright install chromium",
     "test:browser": "cross-env PUBLIC_SITE_ORIGIN=https://vydex.example npm run build:test && playwright test"
   },
