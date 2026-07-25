@@ -90,7 +90,7 @@ describe("constructReleaseModel production", () => {
       }),
     );
     expect(result.release.routes.dataset_artifact).toBe(
-      `/datasets/releases/${IDS.release}/vydex-latest-entry-versions-v1-0-0.json`,
+      `/datasets/releases/${IDS.release}/vydex-latest-entry-versions-v1-0-0-2026-07-21.json`,
     );
     expect(Object.isFrozen(result.release)).toBe(true);
   });

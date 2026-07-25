@@ -1,6 +1,7 @@
 // Verifies the exact, deterministic, and Schema-valid Dataset 1.0.0 projection.
 import { describe, expect, test, vi } from "vitest";
 import {
+  deriveDatasetArtifactLocation,
   generateVyDexDatasetSchemaV1,
   generateVyDexDatasetV1,
   type ReleaseModel,
@@ -178,7 +179,7 @@ describe("generateVyDexDatasetV1", () => {
     if (!result.success) return;
 
     const immutablePath =
-      `/datasets/releases/${IDS.release}/vydex-latest-entry-versions-v1-0-0.json`;
+      `/datasets/releases/${IDS.release}/vydex-latest-entry-versions-v1-0-0-2026-07-21.json`;
     expect(result.data.public_path).toBe(immutablePath);
     expect(result.data.schema_public_path).toBe("/schemas/vydex-dataset/1.0.0.json");
     expect(result.data.latest_dataset_redirect).toEqual({
@@ -189,6 +190,40 @@ describe("generateVyDexDatasetV1", () => {
     });
     expect(result.data.serialized_json.endsWith("\n")).toBe(true);
     expect(result.data.serialized_json.endsWith("\n\n")).toBe(false);
+  });
+
+  test("derives release-specific filenames from the UTC generated date without timezone input", () => {
+    const release = createDatasetFixtureRelease();
+    const originalTimezone = process.env.TZ;
+
+    process.env.TZ = "Pacific/Kiritimati";
+    const easternLocation = deriveDatasetArtifactLocation(release.release_metadata);
+    process.env.TZ = "America/Los_Angeles";
+    const westernLocation = deriveDatasetArtifactLocation(release.release_metadata);
+
+    if (originalTimezone === undefined) delete process.env.TZ;
+    else process.env.TZ = originalTimezone;
+
+    expect(easternLocation).toEqual(westernLocation);
+    expect(easternLocation.filename).toBe(
+      "vydex-latest-entry-versions-v1-0-0-2026-07-21.json",
+    );
+    expect(easternLocation.public_path).toBe(
+      `/datasets/releases/${IDS.release}/${easternLocation.filename}`,
+    );
+  });
+
+  test("changes the immutable location when the validated release descriptor changes", () => {
+    const release = createDatasetFixtureRelease();
+    const nextMetadata = {
+      ...release.release_metadata,
+      release_id: "01900000-0000-7000-8000-000000000088" as typeof release.release_metadata.release_id,
+      generated_at: "2026-07-22T00:05:00Z" as typeof release.release_metadata.generated_at,
+    };
+
+    expect(deriveDatasetArtifactLocation(nextMetadata)).not.toEqual(
+      deriveDatasetArtifactLocation(release.release_metadata),
+    );
   });
 
   test("produces byte-identical Schema and dataset output for identical releases", () => {
