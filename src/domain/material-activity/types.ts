@@ -25,6 +25,7 @@ export type LatestMeaningfulActivity = {
   published_at: Rfc3339UtcTimestamp;
   revision_category: EntryRevisionCategory;
   update_summary: string;
+  entry_title: string;
 };
 
 export type DerivedEntryRevisionActivity = {

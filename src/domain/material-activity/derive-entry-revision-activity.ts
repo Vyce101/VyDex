@@ -29,6 +29,7 @@ export function deriveEntryRevisionActivity(
         published_at: newestMaterial.published_at,
         revision_category: newestMaterial.revision_category,
         update_summary: newestMaterial.update_summary,
+        entry_title: newestMaterial.entry.title,
       },
     },
     diagnostics: [],

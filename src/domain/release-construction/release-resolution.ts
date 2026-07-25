@@ -3,6 +3,7 @@ import type { AboutRecord, Methodology, MethodologyPublicationEvent, TopicTrail 
 import type { ValidationDiagnostic } from "../cross-record-validation";
 import { toCanonicalUrl, type PublicRouteRegistry, type SiteOrigin } from "../route-generation";
 import { compareResolvedPublicEntriesByLatestMaterialActivity } from "./compare-resolved-public-entries";
+import { compareResolvedTopicTrailEntriesByLatestUpdates } from "./compare-resolved-topic-trail-entries";
 import { createReleaseDiagnostic } from "./release-diagnostics";
 import { orderEntrySourcesForPublicDisplay } from "../source-ordering";
 import type { ValidatedHistory, ValidatedInputs } from "./release-input-validation";
@@ -77,10 +78,13 @@ export function resolveTopicTrails(input: {
   const resolved: ResolvedTopicTrail[] = [];
   let hasEmptyTrail = false;
   for (const trail of input.trails) {
-    const entries = input.entries.filter(
-      ({ entry }) =>
-        entry.primary_topic_trail_id === trail.id || entry.secondary_topic_trail_ids.includes(trail.id),
-    );
+    const entries = input.entries
+      .filter(
+        ({ entry }) =>
+          entry.primary_topic_trail_id === trail.id ||
+          entry.secondary_topic_trail_ids.includes(trail.id),
+      )
+      .sort(compareResolvedTopicTrailEntriesByLatestUpdates);
     if (entries.length === 0) {
       hasEmptyTrail = true;
       input.diagnostics.push(
@@ -104,7 +108,6 @@ export function resolveTopicTrails(input: {
       last_activity: {
         ...latestEntry.activity.latest_meaningful_activity,
         entry_id: latestEntry.entry.id,
-        entry_title: latestEntry.entry.title,
       },
     });
   }

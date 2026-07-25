@@ -69,7 +69,6 @@ export type ResolvedPublicEntry = {
 
 export type TopicTrailLastActivity = LatestMeaningfulActivity & {
   entry_id: UUIDv7;
-  entry_title: string;
 };
 
 export type ResolvedTopicTrail = {
