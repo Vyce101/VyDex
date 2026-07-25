@@ -32,10 +32,10 @@ It does not own:
 1. `FoundationLayout.astro` loads the project-owned Source Sans 3 and Source Serif 4 files, then imports `src/styles/global.css`.
 2. `global.css` imports the token, base, typography, layout, component, and site-shell stylesheets in a stable order.
 3. Mobile tokens apply by default. Media queries change the grid and approved type roles at 768px, 1024px, and 1312px; viewports below 400px use the smaller mobile page margin.
-4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](stage-1-site-shell.md) composes those primitives for shared navigation, the [Entry Preview](entry-preview.md) composes them for record summaries, the [Stage 1 Entry Page](stage-1-entry-page.md) composes them for complete maintained records, and the [Stage 1 Methodology Page](stage-1-methodology-page.md) composes them for the public rulebook.
+4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](stage-1-site-shell.md) composes those primitives for shared navigation, the [Entry Preview](entry-preview.md) composes them for record summaries, the [Stage 1 About Page](stage-1-about-page.md) composes them for project identity and limitations, the [Stage 1 Entry Page](stage-1-entry-page.md) composes them for complete maintained records, and the [Stage 1 Methodology Page](stage-1-methodology-page.md) composes them for the public rulebook.
 5. Vitest checks the token and source contract. Playwright checks representative computed styles, responsive layouts, interaction states, reduced motion, grayscale-readable states, accessibility, and horizontal overflow.
 
-The current public interface includes the [Stage 1 Homepage](stage-1-homepage.md), statically generated [Stage 1 Entry pages](stage-1-entry-page.md), and current and immutable [Stage 1 Methodology pages](stage-1-methodology-page.md). Each feature owns its composition while reusing the same type roles, rules, sheets, links, status treatments, spacing, and focus behavior.
+The current public interface includes the [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), statically generated [Stage 1 Entry pages](stage-1-entry-page.md), and current and immutable [Stage 1 Methodology pages](stage-1-methodology-page.md). Each feature owns its composition while reusing the same type roles, rules, sheets, links, status treatments, spacing, and focus behavior.
 
 ## Presentation Contracts
 
@@ -78,6 +78,7 @@ Under `prefers-reduced-motion: reduce`, non-essential transitions and disclosure
 - The [Entry Preview](entry-preview.md) owns its field sequence, typed projection, and feature layout. Frontier Atlas supplies the sheet, rules, typography, status treatments, focus behavior, spacing, and responsive breakpoint used by that component.
 - The [Stage 1 Site Shell](stage-1-site-shell.md) owns shared navigation behavior and page structure. Frontier Atlas supplies its tokens, focus treatment, responsive breakpoint, and page alignment primitive.
 - The [Stage 1 Homepage](stage-1-homepage.md) owns its 1100px page composition, Hero annotation, action arrangement, and claim-reading band while reusing Frontier Atlas tokens and primitives.
+- The [Stage 1 About Page](stage-1-about-page.md) owns its open editorial composition, reading-width prose, responsive actions, ruled Scope Limit rows, carefulness band, and Related Links list while reusing Frontier Atlas tokens and primitives.
 - The [Stage 1 Entry Page](stage-1-entry-page.md) owns its continuous 1080px sheet, exact record hierarchy, full-width section composition, responsive Frontier Delta, and feature-specific source records while reusing Frontier Atlas tokens and primitives.
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) owns its open reading sections, ruled Jump To index, Methodology plates, and feature-specific table composition while reusing Frontier Atlas table, focus, typography, spacing, and color contracts.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro shell, local font loading, static build, and validation commands. Frontier Atlas owns the presentation contract loaded by that shell.
@@ -110,6 +111,7 @@ Design-system review fails when presentation code introduces a local color, larg
 - `src/styles/site-shell.css` — Frontier Atlas presentation for the shared Stage 1 Header, Footer, mobile disclosure, and skip link.
 - `src/components/entry-preview/` — Feature-owned composition of Atlas primitives for the Entry Preview.
 - `src/features/homepage/homepage.css` — Homepage-owned composition of Frontier Atlas primitives.
+- `src/features/about-page/about-page.css` — About-owned composition of reading-width prose, actions, and continuous ruled structures.
 - `src/features/entry-page/` — Entry Page projection, Astro composition, and feature-owned responsive styles.
 - `src/features/methodology-page/` — Methodology rulebook projection, Astro composition, and feature-owned responsive styles.
 - `tests/foundation/frontier-atlas-contract.test.ts` — Source and token safeguards.
@@ -128,6 +130,6 @@ Check:
 - Whether mobile tables retain visible definition labels and desktop table semantics.
 - Whether reduced-motion and dark operating-system preferences preserve the approved static states and light palette.
 - Whether a page ticket predates the compact-metadata accessibility adjustment. If it conflicts, preserve the Secondary Ink rule unless the project owner explicitly approves a tested accessible replacement.
-- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](stage-1-site-shell.md), the [Entry Preview](entry-preview.md), the [Stage 1 Homepage](stage-1-homepage.md), the [Stage 1 Entry Page](stage-1-entry-page.md), or the [Stage 1 Methodology Page](stage-1-methodology-page.md).
+- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](stage-1-site-shell.md), the [Entry Preview](entry-preview.md), the [Stage 1 Homepage](stage-1-homepage.md), the [Stage 1 About Page](stage-1-about-page.md), the [Stage 1 Entry Page](stage-1-entry-page.md), or the [Stage 1 Methodology Page](stage-1-methodology-page.md).
 
 Read [Stage 1 Site Shell](stage-1-site-shell.md) before changing shared navigation or page structure, and read [Static Application Foundation](static-application-foundation.md) before changing global imports, font loading, test commands, or the Astro presentation boundary.
