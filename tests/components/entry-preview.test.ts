@@ -81,6 +81,24 @@ describe("projectEntryPreview", () => {
     expect(preview.claim_html).not.toContain("<script>");
   });
 
+  test("allows a list host to identify the current Topic Trail without mutating the Entry", () => {
+    const source = createResolvedEntry();
+    const original = structuredClone(source);
+
+    const preview = projectEntryPreview(source, {
+      topic_trail: {
+        name: "Secondary Trail",
+        canonical_url: "https://example.com/topic-trails/secondary-trail/" as ResolvedPublicEntry["primary_topic_trail"]["canonical_url"],
+      },
+    });
+
+    expect(preview.primary_topic_trail).toEqual({
+      name: "Secondary Trail",
+      canonical_url: "https://example.com/topic-trails/secondary-trail/",
+    });
+    expect(source).toEqual(original);
+  });
+
   test.each([
     {
       name: "has no Domain",

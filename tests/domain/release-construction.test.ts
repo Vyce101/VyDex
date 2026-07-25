@@ -5,6 +5,7 @@ import { validateSiteOrigin } from "../../src/domain/route-generation";
 import {
   IDS,
   createLoadedCanonicalRecords,
+  createValidEntry,
   createValidReleaseMetadata,
   createValidSnapshot,
 } from "./fixtures";
@@ -205,7 +206,52 @@ describe("constructReleaseModel production", () => {
     expect(entry.snapshot.revision_number).toBe(2);
     expect(entry.activity.date_updated).toBe("2026-07-21");
     expect(entry.activity.latest_meaningful_activity.revision_number).toBe(1);
+    expect(entry.activity.latest_meaningful_activity.entry_title).toBe("Verified frontier result");
     expect(result.release.changelog_events.filter(({ type }) => type !== "methodology_change")).toHaveLength(1);
+  });
+
+  test("orders each resolved Topic Trail by its material-revision title tie-breaker", () => {
+    const records = createLoadedCanonicalRecords();
+    const secondEntry = createValidEntry();
+    secondEntry.id = "01900000-0000-7000-8000-000000000020";
+    secondEntry.slug = "alpha-resolved-result";
+    secondEntry.aliases = [];
+    secondEntry.title = "Alpha resolved result";
+    secondEntry.secondary_topic_trail_ids = [];
+    const secondSnapshot = createValidSnapshot();
+    secondSnapshot.revision_id = "01900000-0000-7000-8000-000000000021";
+    secondSnapshot.entry_id = secondEntry.id;
+    secondSnapshot.entry = secondEntry;
+    records.entries.push({
+      record_type: "entry",
+      filename: "data/canonical-records/entries/alpha-resolved-result.json",
+      raw_text: JSON.stringify(secondEntry),
+      value: secondEntry,
+    });
+    records.entry_publication_snapshots.push({
+      record_type: "entry_publication_snapshot",
+      filename: `data/publication-snapshots/entries/${secondEntry.id}/1-${secondSnapshot.revision_id}.json`,
+      raw_text: JSON.stringify(secondSnapshot),
+      value: secondSnapshot,
+    });
+
+    const result = constructProduction(records);
+
+    expect(result.success).toBe(true);
+    if (!result.success || result.mode !== "production") return;
+    const trail = result.release.topic_trails.find(
+      ({ topic_trail }) => topic_trail.id === IDS.topicTrail,
+    )!;
+    expect(trail.entries.map(({ entry }) => entry.title)).toEqual([
+      "Alpha resolved result",
+      "Verified frontier result",
+    ]);
+    expect(trail.entry_count).toBe(2);
+    expect(trail.last_activity).toMatchObject({
+      entry_id: secondEntry.id,
+      entry_title: "Alpha resolved result",
+      published_at: "2026-07-21T20:15:30Z",
+    });
   });
 
   test("retains every historical slug as a direct permanent redirect", () => {
@@ -271,6 +317,53 @@ describe("constructReleaseModel production", () => {
     expect(emptyTrailResult.success).toBe(false);
     if (!emptyTrailResult.success && emptyTrailResult.mode === "production") {
       expect(emptyTrailResult.diagnostics.map(({ code }) => code)).toContain("empty_public_topic_trail");
+    }
+  });
+
+  test("blocks incomplete Topic Trails and activity that cannot be derived", () => {
+    for (const field of ["name", "description"] as const) {
+      const records = createLoadedCanonicalRecords();
+      Reflect.deleteProperty(
+        records.topic_trails[0]!.value as Record<string, unknown>,
+        field,
+      );
+      const result = constructProduction(records);
+      expect(result.success).toBe(false);
+      if (!result.success && result.mode === "production") {
+        expect(result.diagnostics).toContainEqual(
+          expect.objectContaining({
+            code: "required_field",
+            record_type: "topic_trail",
+            path: [field],
+          }),
+        );
+      }
+    }
+
+    const invalidActivity = createLoadedCanonicalRecords();
+    const snapshot = invalidActivity.entry_publication_snapshots[0]!.value as ReturnType<
+      typeof createValidSnapshot
+    >;
+    snapshot.materiality = "non_material";
+    const invalidActivityResult = constructProduction(invalidActivity);
+    expect(invalidActivityResult.success).toBe(false);
+    if (!invalidActivityResult.success && invalidActivityResult.mode === "production") {
+      expect(invalidActivityResult.diagnostics.map(({ code }) => code)).toContain(
+        "revision_materiality_mismatch",
+      );
+    }
+  });
+
+  test("blocks Topic Trail route namespace collisions", () => {
+    const records = createLoadedCanonicalRecords();
+    const primaryTrail = records.topic_trails[0]!.value as { aliases: string[] };
+    primaryTrail.aliases = ["ai-capability-thresholds"];
+
+    const result = constructProduction(records);
+
+    expect(result.success).toBe(false);
+    if (!result.success && result.mode === "production") {
+      expect(result.diagnostics.map(({ code }) => code)).toContain("slug_namespace_collision");
     }
   });
 

@@ -67,6 +67,7 @@ describe("Entry revision activity", () => {
         published_at: "2026-07-22T20:15:30Z",
         revision_category: "material_update",
         update_summary: "Published revision 2.",
+        entry_title: "Verified frontier result revision 2",
       },
     });
   });
