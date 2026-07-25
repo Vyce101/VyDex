@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added complete static public Entry pages for every current Main Entry, including the exact maintained-record hierarchy, responsive Frontier Delta, source context, canonical relationship links, and accessible no-JavaScript rendering.
+- Added a generic static not-found page that preserves genuine HTTP `404` responses for unknown Entry slugs.
 - Added the static Stage 1 Homepage with release-selected Latest Update and Recent Entries, responsive Frontier Atlas composition, canonical actions, and the Claim, Evidence, and Caveat reading band.
 - Added read-only production loading for the durable `generated/release-data/release.json` descriptor and deterministic fixed-metadata adapters for development and tests.
 - Added a reusable responsive Entry preview that presents its Domain, update date, claim, statuses, Topic Trail, and accessible Entry links consistently across list contexts.
@@ -23,11 +25,16 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Centralized public source ordering in the domain layer so release resolution, Entry pages, and Dataset generation share the same evidence-role and title ordering without mutating stored records.
+- Moved validated Entry Markdown rendering into a shared presentation module used by Entry previews and full Entry pages.
+- Published Dreamer 4 revision 2 as a material review update with Review Status `Stable` and a July 25, 2026 last-checked date.
 - Replaced title-based Entry ordering with a shared comparator using latest material activity, Date Added, and immutable Entry ID.
 - Changed CI and browser validation to use the explicit fixed-metadata test build while keeping normal production builds descriptor-gated.
 - Moved dataset projection out of release construction so exports consume the same completed production release model as other public consumers.
 
 ### Fixed
+
+- Fixed the Frontier Delta directional connector and aligned public Entry sections to one full-width maintained-record layout across supported viewports.
 
 ### Removed
 
