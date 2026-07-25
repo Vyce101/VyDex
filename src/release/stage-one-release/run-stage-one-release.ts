@@ -1,5 +1,4 @@
 // Orchestrates the all-or-nothing Stage 1 production release gate.
-import { spawn } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -7,6 +6,7 @@ import { v7 as uuidV7 } from "uuid";
 import { prepareApplicationExport, type PreparedApplicationExport } from "../../adapters/application-export";
 import { loadCanonicalRecords } from "../../adapters/canonical-record-loader";
 import { writeDatasetArtifact } from "../../adapters/dataset-artifact-writer";
+import { runNpmCommand } from "../../adapters/npm-command-runner";
 import {
   createStageOneReleaseDescriptor,
   readStageOneReleaseDescriptor,
@@ -68,10 +68,6 @@ const NOOP_LOGGER: ReleaseLogger = {
   filename: "",
 };
 
-function executableName(): string {
-  return process.platform === "win32" ? "npm.cmd" : "npm";
-}
-
 async function defaultRunCommand(input: Parameters<RunStageOneCommand>[0]): Promise<StageOneCommandResult> {
   const argsByCommand: Record<StageOneReleaseCommand, string[]> = {
     typecheck: ["run", "typecheck"],
@@ -79,22 +75,10 @@ async function defaultRunCommand(input: Parameters<RunStageOneCommand>[0]): Prom
     build: ["exec", "--", "astro", "build", "--outDir", input.output_directory!],
     browser: ["exec", "--", "tsx", "scripts/test/run-stage-one-browser-checks.ts", input.output_directory!],
   };
-  return new Promise((complete, reject) => {
-    const child = spawn(executableName(), argsByCommand[input.command], {
-      cwd: input.working_directory,
-      env: input.environment,
-      windowsHide: true,
-      stdio: ["ignore", "pipe", "pipe"],
-    });
-    let output = "";
-    child.stdout.on("data", (chunk) => {
-      output += String(chunk);
-    });
-    child.stderr.on("data", (chunk) => {
-      output += String(chunk);
-    });
-    child.on("error", reject);
-    child.on("close", (code) => complete({ exit_code: code ?? 1, output }));
+  return runNpmCommand({
+    command_arguments: argsByCommand[input.command],
+    working_directory: input.working_directory,
+    environment: input.environment,
   });
 }
 
