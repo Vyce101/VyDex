@@ -1,11 +1,11 @@
 ---
 label: Stage 1 Site Shell
-order: 800
+order: 1300
 ---
 
 # Stage 1 Site Shell
 
-The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It owns the navigation behavior shared by the implemented [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Methodology Page](stage-1-methodology-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page. This page is for maintainers and coding agents changing shared layout, navigation, document metadata, or page-level accessibility.
+The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It owns the navigation behavior shared by the implemented [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Export JSON Page](stage-1-export-json-page.md), [Stage 1 Methodology Page](stage-1-methodology-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page. This page is for maintainers and coding agents changing shared layout, navigation, document metadata, or page-level accessibility.
 
 ## Purpose and Ownership
 
@@ -36,7 +36,7 @@ It does not own:
 3. The layout renders the skip link, shared Header, one focusable Main region, and shared Footer in that order.
 4. At 768px and wider, the Header shows the wordmark and desktop navigation. Narrower viewports show the wordmark and a closed native `details` disclosure labelled `Menu`.
 5. The browser can open and close the mobile disclosure without JavaScript. A small enhancement listens for Escape, closes an open disclosure, and returns focus to its `summary`.
-6. Page content remains inside the layout-owned Main region. Homepage, About, Changelog, Entry, Methodology, Topic Trail, not-found, and later Stage 1 page modules consume the same layout instead of importing the Header or Footer directly.
+6. Page content remains inside the layout-owned Main region. Homepage, About, Changelog, Entry, Export JSON, Methodology, Topic Trail, not-found, and later Stage 1 page modules consume the same layout instead of importing the Header or Footer directly.
 
 ## Inputs and Output Contract
 
@@ -70,7 +70,8 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) supplies different self-canonical URLs for its current and immutable routes while reusing the same shell and active navigation state.
 - The [Stage 1 About Page](stage-1-about-page.md) supplies its self-canonical URL and uses the route-derived active About state on `/about/`.
 - The [Stage 1 Changelog Page](stage-1-changelog-page.md) supplies its self-canonical URL and uses the route-derived active Changelog state on `/changelog/`.
-- The [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page use no active navigation item. Export remains future page work even though the shell already links to its canonical destination.
+- The [Stage 1 Export JSON Page](stage-1-export-json-page.md) supplies its self-canonical URL and uses the route-derived active Export JSON state on `/export/`.
+- The [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page use no active navigation item.
 - The future atomic release gate must reject unresolved navigation destinations before production. The shell does not weaken that release requirement during the current intermediate development state.
 
 ## Failure Behavior

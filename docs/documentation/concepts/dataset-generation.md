@@ -18,6 +18,7 @@ The system keeps every public dataset consumer on one versioned contract without
 - Deterministic array ordering, including defensive reuse of the domain-owned public source order, plus stable property construction, indentation, UTF-8 text, and final-newline behavior.
 - Validation of serialized dataset content against the exact public Schema.
 - Immutable artifact paths and the stable-latest redirect descriptor.
+- Pure release-specific filename and path derivation from validated release metadata.
 - Structured generation diagnostics.
 
 It does not own:
@@ -45,6 +46,8 @@ The generator returns:
 - The Dataset Schema public path.
 - A `302` stable-latest redirect descriptor targeting the immutable artifact.
 
+The application export boundary calls the generator with an already selected validated release. It checks that repeated generation produces the same path and bytes, validates the page-facing metadata against the generated dataset, and returns the artifact together with the [Export JSON Page](stage-1-export-json-page.md) presentation model. Dataset generation does not own that presentation model or page composition.
+
 `generateVyDexDatasetSchemaV1` accepts a production site origin and returns the origin-specific Schema value and deterministic Schema bytes. The repository now contains the validated Stage 1 seed records and their initial snapshots, but it does not contain genuine persisted release metadata. Tests use fixed metadata to prove that the records can form a production release. That input is not persisted and does not represent a genuine release, so no dataset artifact is currently committed.
 
 ## Normal Flow
@@ -55,7 +58,8 @@ The generator returns:
 4. The generator derives public values and applies the Dataset `1.0.0` ordering rules without mutating the release. Sources are reordered from a copy through the same helper used by release resolution.
 5. It builds the Schema from the same validated site origin used by the release. The Schema `$id` and dataset `$schema` must be the same absolute canonical URL.
 6. The dataset is serialized with two-space indentation and exactly one final newline, parsed again, and validated with Ajv in strict draft-2020-12 mode.
-7. A successful result can be passed to the dataset artifact writer. Generation itself performs no filesystem, environment, clock, randomness, or logging work.
+7. The application export boundary repeats generation and rejects any path or byte difference for the same in-memory release.
+8. A successful artifact can feed the static Export JSON endpoint or the dataset artifact writer. Generation itself performs no filesystem, environment, clock, randomness, or logging work.
 
 ## Deterministic Public Ordering
 
@@ -91,8 +95,10 @@ Astro prerenders the Schema route from the shared Schema generator. `PUBLIC_SITE
 The generated public artifact path is:
 
 ```text
-/datasets/releases/{release-id}/vydex-latest-entry-versions-v1-0-0.json
+/datasets/releases/{release-id}/vydex-latest-entry-versions-v1-0-0-{YYYY-MM-DD}.json
 ```
+
+The date comes from the first ten characters of the validated RFC 3339 UTC `release_metadata.generated_at` value. The derivation does not parse the timestamp through a local timezone and never reads the current clock, filesystem time, Git history, or build date. The Release ID directory identifies the immutable release, while the dated basename stays readable when downloaded.
 
 The dataset artifact writer accepts an explicit output root, creates required parent directories, verifies that the resolved target remains inside that root, and creates the file exclusively. If the path already contains identical bytes, the writer returns an idempotent `unchanged` result. If the bytes differ, it returns `immutable_artifact_collision` and leaves the existing file untouched.
 
@@ -102,12 +108,15 @@ The stable convenience path is `/datasets/vydex-latest-entry-versions-v1-0-0.jso
 
 Generation returns structured blocking diagnostics. It fails when the input is not a complete production release, release metadata or routes are inconsistent, a removed or duplicate public Entry is present, canonical URLs disagree with the route registry, Methodology is not `1.0.0`, the Schema identity differs from the dataset reference, the Schema does not compile, or the serialized dataset fails Schema validation.
 
+Application export preparation also fails when repeated generation changes the immutable path or bytes, Entry count disagrees with the generated Entry array, scope is not `latest_entry_versions`, generation time differs from the release descriptor, represented Methodology versions disagree with dataset metadata, or the filename, public path, or Schema path does not match the shared derived location. It returns structured diagnostics and no page model.
+
 Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collision`, or `artifact_write_failed`. It never resolves a collision by overwriting the existing immutable artifact. Formatting diagnostics for a terminal and choosing a process exit code remain responsibilities of the future release command.
 
 ## Internal Edge Cases
 
 - Schema and dataset identities are derived from the same validated origin rather than a hardcoded hostname.
 - Release IDs and timestamps are copied unchanged; generation never reads the clock or creates an ID.
+- The artifact date is sliced from an already validated UTC timestamp, so process and host timezones cannot change the filename.
 - Source Evidence Types are sorted before Entry-level Evidence Types are derived.
 - A byte-identical existing file is valid idempotent output, not a collision.
 - Symlinked or escaped output paths are rejected before existing bytes are accepted.
@@ -120,6 +129,7 @@ Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collisio
 - [Release Construction](release-construction.md) owns production validity, relationship resolution, canonical URLs, and route registration. Dataset generation rejects disagreements rather than rebuilding those decisions.
 - The domain-owned source-ordering module is shared with release resolution. Dataset generation may defensively reorder copied input, but it must not introduce a second role cascade or mutate resolved sources.
 - [Static Application Foundation](static-application-foundation.md) owns Astro publication, configured environment access, Cloudflare response metadata, pinned dependencies, and CI execution.
+- The [Export JSON Page](stage-1-export-json-page.md) consumes the prepared artifact and presentation model. It never parses generated bytes, reconstructs release metadata, or links to the stable convenience path.
 - The future atomic release command will own descriptor persistence, writer invocation, deployment redirects, and deployed-target verification. Those capabilities are not implemented by this system.
 
 ## Invariants
@@ -130,6 +140,7 @@ Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collisio
 - Stable IDs represent relationships; labels, slugs, and URLs are derived from resolved records.
 - Schema `$id` equals dataset `$schema` and uses the release's validated HTTPS origin.
 - Identical releases, site origins, dependencies, and generator code produce byte-identical Schema and dataset text.
+- Identical validated release metadata and source records produce the same dated immutable path as well as identical bytes.
 - The immutable writer never overwrites different bytes.
 - Pure generation remains free of filesystem, environment, logging, clock, and randomness side effects.
 - Release resolution, Entry pages, and Dataset generation agree on public source order and preserve every source's attached fields.
@@ -139,7 +150,9 @@ Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collisio
 - `src/domain/json-export-generation/` — Versioned public types, Schema construction, projection, validation, and serialization.
 - `src/domain/source-ordering/` — Shared public Source Role and title ordering contract.
 - `src/adapters/dataset-artifact-writer/` — Injected filesystem emission and collision protection.
+- `src/adapters/application-export/` — Determinism checks and page-facing metadata validation over a generated artifact.
 - `src/pages/schemas/vydex-dataset/` — Thin static Schema publication route.
+- `src/pages/datasets/releases/` — Thin prerendered immutable artifact endpoint.
 - `src/domain/route-generation/` — Schema, stable-latest, and immutable artifact route ownership.
 - `tests/domain/`, `tests/adapters/`, and `tests/browser/` — Contract, determinism, writer, and published Schema coverage.
 
@@ -154,5 +167,6 @@ Check:
 - Whether Schema `$id`, dataset `$schema`, route registration, and public publication still agree.
 - Whether nullable meanings, Source Role labels, Evidence Strength scores, and derived Evidence Types remain exact.
 - Whether two identical generations still produce identical bytes and exactly one final newline.
+- Whether filename derivation still uses only the validated UTC descriptor date and shared route function.
 - Whether the writer remains idempotent for identical bytes and refuses every different-byte collision.
 - Whether environment, filesystem, terminal, clock, or release-descriptor behavior is being introduced into the wrong boundary.

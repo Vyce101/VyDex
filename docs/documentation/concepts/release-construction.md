@@ -43,7 +43,7 @@ The canonical loader receives an injectable repository root and reads the approv
 - An explicit public site origin.
 - Either `production` or `preview` mode.
 
-A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
+A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Export JSON Page](stage-1-export-json-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
@@ -94,7 +94,7 @@ Stage 1 production rejects `removed` on either the editable canonical Entry or t
 
 ## Routes and Redirects
 
-Route collision checks operate on normalized root-relative pathnames before the constructor creates absolute URLs. The registry owns the homepage and `#latest` anchor, current Entry and Topic Trail routes, current and versioned Methodology routes, About, Changelog, export landing, dataset Schema, stable-latest dataset, and release-specific dataset artifact paths.
+Route collision checks operate on normalized root-relative pathnames before the constructor creates absolute URLs. The registry owns the homepage and `#latest` anchor, current Entry and Topic Trail routes, current and versioned Methodology routes, About, Changelog, export landing, dataset Schema, stable-latest dataset, and release-specific dataset artifact paths. Artifact paths use the Release ID directory and a basename dated from the validated UTC `generated_at` value through the shared route derivation function.
 
 The resolved Methodology pairs the validated canonical record with separate current and immutable absolute URLs. The Methodology Page consumes those URLs directly for route-specific canonical metadata; Entry records continue to carry the immutable version URL assigned by their published snapshot.
 
@@ -151,6 +151,7 @@ The loader and constructor return diagnostics without writing to standard output
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) consumes `ResolvedMethodology`, including its current and version-specific canonical URLs. It must not reconstruct those URLs from the request pathname.
 - The [Stage 1 About Page](stage-1-about-page.md) consumes `ResolvedAboutRecord`. It must not load authoring JSON, repair missing content, or reconstruct Related Link destinations.
 - The [Stage 1 Changelog Page](stage-1-changelog-page.md) consumes the ordered material-event collection, validates its display projection, and groups derived dates without adding a second comparator or exposing exact times.
+- The [Stage 1 Export JSON Page](stage-1-export-json-page.md) prepares Dataset `1.0.0` and its page model from this same release. It must not load a second descriptor or reconstruct the artifact route.
 - The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
 - The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
@@ -159,7 +160,7 @@ The loader and constructor return diagnostics without writing to standard output
 
 ## Invariants
 
-- One release model is the source for homepage, Entry, Topic Trail, Methodology, About, Changelog, route, redirect, and dataset consumers.
+- One release model is the source for homepage, Entry, Topic Trail, Methodology, About, Changelog, Export JSON, route, redirect, and dataset consumers.
 - Invalid records are never silently omitted, repaired, or promoted into authoritative derived values.
 - Public Entry state and relationships come from immutable snapshots; editable differences remain unpublished.
 - Resolved current Entries expose sources in deterministic public order without changing canonical records or immutable snapshots.

@@ -38,15 +38,17 @@ The persisted-descriptor adapter resolves that path beneath an injected reposito
 
 Development and explicit test-mode builds use a named adapter with stable non-production metadata. That adapter performs no writes, cannot be selected as a production fallback, and does not turn its constants into genuine release state. A later atomic release command remains the sole owner of creating or loading a genuine descriptor for a new release.
 
-The release constructor returns one validated in-memory release model. [Dataset Generation](../documentation/concepts/dataset-generation.md) consumes that model, validates the public Dataset `1.0.0` projection against its Schema, and returns deterministic JSON plus immutable and stable-latest descriptors.
+The release constructor returns one validated in-memory release model. [Dataset Generation](../documentation/concepts/dataset-generation.md) consumes that model, validates the public Dataset `1.0.0` projection against its Schema, and returns deterministic JSON plus immutable and stable-latest descriptors. The application export boundary prepares that artifact twice, rejects inconsistent output, and derives the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) presentation model from the same generated dataset rather than a second metadata source.
 
 The dataset artifact writer accepts an explicit output root and writes only the immutable release-specific dataset file beneath it. It creates missing parent directories, treats identical existing bytes as idempotent success, and refuses to overwrite different bytes. The writer does not choose `generated/release-data/`, `dist/`, or another repository location on its own.
+
+Astro's release-specific dataset endpoint is a separate static-publication boundary. Development and test builds use the fixed non-production descriptor to prerender one dated artifact into `dist/` so the Export JSON download can be exercised. This build output is disposable and never becomes a genuine descriptor or durable release artifact. Production uses only the persisted genuine descriptor and therefore fails before publication while that descriptor is absent.
 
 `generated/release-data/` is reserved for durable release state owned by the future atomic release command. The directory and descriptor path are not ignored as disposable cache. Once the command creates a genuine descriptor, it must remain available to clean clones, CI jobs, and later rebuilds; under the current architecture it remains eligible to be checked in with the release artifacts unless a separate durable artifact store is introduced.
 
 The future command will also own stable-latest deployment redirect emission and verification. The current writer does not create a mutable latest copy or a Cloudflare `_redirects` file.
 
-`dist/` contains generated Astro output. It must not be used as canonical, historical, or release-descriptor storage.
+`dist/` contains generated Astro output, including the test-mode Export JSON artifact. It must not be used as canonical, historical, durable release-artifact, or release-descriptor storage.
 
 ## Invariants
 
@@ -54,11 +56,13 @@ The future command will also own stable-latest deployment redirect emission and 
 - The canonical loader is read-only and accepts an injectable filesystem root for tests.
 - The production descriptor loader reads exactly `generated/release-data/release.json` and never creates or substitutes it.
 - Fixed development/test metadata remains non-production, deterministic, and write-free.
+- Test-mode static artifact publication writes only to disposable Astro output and never persists its fixed metadata as genuine release state.
 - Missing directories behave as empty collections; syntax and path failures return structured diagnostics with filenames.
 - Current public Entry content comes from the newest valid immutable snapshot, not unpublished canonical Entry edits.
 - Generated output must not be written into canonical-record or snapshot directories.
 - Dataset output must remain under the injected writer root, and immutable paths must never overwrite different bytes.
+- The Export JSON page and static artifact endpoint must consume one prepared application export from the selected release rather than reconstructing metadata independently.
 - Storage paths and filenames must not replace durable IDs as relationship keys.
 - Filesystem adapters call framework-independent validators rather than reproducing record rules.
 
-See [Canonical Records](../documentation/concepts/canonical-records.md), [Publication Revisions](../documentation/concepts/publication-revisions.md), and [Release Construction](../documentation/concepts/release-construction.md) for the contracts applied to these locations.
+See [Canonical Records](../documentation/concepts/canonical-records.md), [Publication Revisions](../documentation/concepts/publication-revisions.md), [Release Construction](../documentation/concepts/release-construction.md), and the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) for the contracts applied to these locations.

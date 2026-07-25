@@ -1,6 +1,6 @@
 ---
 label: Stage 1 About Page
-order: 625
+order: 700
 ---
 
 # Stage 1 About Page
@@ -91,7 +91,7 @@ Normal validation, build, and test failures are the observability boundary. The 
 - [Stage 1 Site Shell](stage-1-site-shell.md) owns Header, Main, Footer, active navigation, skip navigation, and document metadata output. The feature provides only main content and its route-owned canonical URL.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns the reading measure, spacing, colors, typography, buttons, rules, focus treatment, and responsive breakpoint. About CSS composes those primitives without adding local substitute tokens.
 - [Static Application Foundation](static-application-foundation.md) owns Astro mode selection, application release loading, static generation, and the test harness.
-- Methodology, Changelog, and Export remain separate destination features. The About page describes and links to them without taking ownership of their content or behavior.
+- Methodology, Changelog, and the [Export JSON Page](stage-1-export-json-page.md) remain separate destination features. The About page describes and links to them without taking ownership of their content or behavior.
 
 ## Invariants
 
