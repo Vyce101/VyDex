@@ -1,11 +1,11 @@
 ---
 label: Stage 1 Site Shell
-order: 700
+order: 800
 ---
 
 # Stage 1 Site Shell
 
-The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It also owns the navigation behavior that must work before the individual Stage 1 pages are connected to public release data. This page is for maintainers and coding agents changing shared layout, navigation, or page-level accessibility.
+The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It also owns the navigation behavior shared by the implemented [Stage 1 Homepage](stage-1-homepage.md) and later public pages. This page is for maintainers and coding agents changing shared layout, navigation, or page-level accessibility.
 
 ## Purpose and Ownership
 
@@ -35,7 +35,7 @@ It does not own:
 3. The layout renders the skip link, shared Header, one focusable Main region, and shared Footer in that order.
 4. At 768px and wider, the Header shows the wordmark and desktop navigation. Narrower viewports show the wordmark and a closed native `details` disclosure labelled `Menu`.
 5. The browser can open and close the mobile disclosure without JavaScript. A small enhancement listens for Escape, closes an open disclosure, and returns focus to its `summary`.
-6. Page content remains inside the layout-owned Main region. Later Stage 1 page modules consume the same layout instead of importing the Header or Footer directly.
+6. Page content remains inside the layout-owned Main region. The Homepage and later Stage 1 page modules consume the same layout instead of importing the Header or Footer directly.
 
 ## Inputs and Output Contract
 
@@ -66,7 +66,7 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 - [Release Construction](release-construction.md) and route generation own canonical paths. The shell imports the fixed Stage 1 path map instead of maintaining a second set of destination strings.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns the colors, type roles, focus outline, page margins, and 768px breakpoint. The shell composes those primitives but does not replace them.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro document boundary and build process. The shell is rendered through that boundary and remains static-first.
-- The current `/` route is still a technical fixture. Methodology, About, Changelog, Export, Entry, and Topic Trail pages remain future page work even though the shell already links to their canonical destinations.
+- The [Stage 1 Homepage](stage-1-homepage.md) is the current `/` route and uses no active navigation item. Methodology, About, Changelog, Export, Entry, and Topic Trail pages remain future page work even though the shell already links to their canonical destinations.
 - The future atomic release gate must reject unresolved navigation destinations before production. The shell does not weaken that release requirement during the current intermediate development state.
 
 ## Failure Behavior

@@ -18,6 +18,7 @@ The system prevents pages, components, and exports from assembling their own int
 - Construction of canonical paths, absolute URLs, and permanent alias-redirect descriptors.
 - Derivation of material public Changelog events.
 - Registration of the Schema, stable-latest dataset, and immutable release-specific artifact routes.
+- Read-only loading and validation of persisted production release metadata at the application boundary.
 - Strict production failure and diagnostic-rich private preview results.
 
 It does not own:
@@ -25,7 +26,7 @@ It does not own:
 - Authoring or editing canonical content.
 - Creating or persisting Entry snapshots.
 - Generating release IDs or timestamps.
-- Reading or writing a persisted release descriptor.
+- Creating, rewriting, or silently substituting a persisted release descriptor.
 - Projecting or serializing the dataset, writing generated artifacts, or emitting deployment redirect files.
 - Rendering the Stage 1 pages or a private preview interface.
 - Terminal logging, persistent logs, process exit behavior, or the current clock.
@@ -45,10 +46,12 @@ A successful production call returns one immutable `ReleaseModel`. It contains c
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
+The application boundary exposes two named release sources. `loadPersistedProductionApplicationRelease` reads the exact production descriptor path and constructs a strict release. `loadFixedMetadataDevelopmentApplicationRelease` injects stable non-production metadata for development and test mode without writing it anywhere.
+
 ## Normal Flow
 
 1. The application adapter reads canonical files through the project-owned loader. The loader enumerates filenames deterministically, parses JSON, and checks snapshot storage paths without changing any file.
-2. The application supplies release metadata and a site origin. The framework-independent constructor does not read environment variables; the application adapter reads `PUBLIC_SITE_ORIGIN` and passes it in.
+2. The application supplies release metadata and a site origin. Production reads metadata from the persisted descriptor; development and explicit test mode inject fixed non-production metadata. The framework-independent constructor does not read environment variables or files.
 3. Record schemas validate Entries, Topic Trails, Methodologies, About content, Methodology publication events, and snapshots. Aggregate validation checks identities, slug namespaces, and relationships.
 4. Snapshots are grouped by Entry ID. Each history is ordered by validated revision number and checked for numbering, chronology, materiality, Methodology references, and retained historical slugs.
 5. The newest valid snapshot becomes the public Entry. Editable canonical Entry differences remain unpublished and cannot affect public content, routes, membership, activity, Changelog events, or exports.
@@ -57,6 +60,14 @@ Preview always returns a `PreviewReleaseModel`. Valid sections remain available 
 8. Production returns the release only when no blocking diagnostic remains. Preview returns trustworthy partial results, invalid source records, and all diagnostics. Dataset projection happens only after a successful production result.
 
 The operation is deterministic. Identical records, snapshots, release metadata, and site origin produce the same result because the constructor does not generate IDs, read the clock, or inspect filesystem timestamps.
+
+## Persisted Release Metadata Boundary
+
+`PersistedReleaseDescriptor` is the validated `ReleaseMetadata` shape stored at `generated/release-data/release.json`. The read-only adapter resolves that exact path beneath an injected repository root, parses JSON, and validates it with `releaseMetadataSchema`.
+
+Production loading fails closed when the descriptor is missing, unreadable, malformed, or schema-invalid. It never falls back to the fixed development/test metadata. Ordinary builds, development starts, page renders, and tests do not create a UUID, read the clock, or write the descriptor.
+
+The fixed adapter is explicitly non-production. Its constants make local and automated output reproducible, but they are not genuine release state and must not be written into canonical records or persisted as a production descriptor. A later atomic release command remains the sole creator and writer of genuine descriptor state. Once created, the descriptor is durable release data and remains eligible for source control rather than disposable cache.
 
 ## Production and Private Preview
 
@@ -72,7 +83,7 @@ Any blocking diagnostic sets `promotable: false`. A loader-invalid source may ap
 
 Every canonical Entry must have a valid snapshot history, and every history must match one canonical Entry by stable ID. The current public state comes from the newest snapshot, not the editable Entry. This allows unpublished edits to exist without leaking into a release.
 
-Date Added comes from the first publication timestamp. Date Updated and latest meaningful activity come from the newest material revision. A non-material correction may become the current revision, but it does not move homepage or Topic Trail ordering and does not appear in the public Changelog.
+Date Added comes from the first publication timestamp. Date Updated and latest meaningful activity come from the newest material revision. Resolved public Entries sort by latest meaningful activity timestamp descending, Date Added descending, then immutable Entry ID ascending. The shared pure comparator is also used by the [Stage 1 Homepage](stage-1-homepage.md), so a non-material correction or title-only change cannot move an Entry in either list.
 
 Stage 1 production rejects `removed` on either the editable canonical Entry or the selected snapshot. Historical removal data remains schema-readable, but the release constructor does not create a public Removed Entry route.
 
@@ -124,9 +135,10 @@ The loader and constructor return diagnostics without writing to standard output
 - [Publication Revisions](publication-revisions.md) owns snapshot creation, history semantics, and material activity. Release construction validates complete stored histories and selects their current state.
 - [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
 - The [Entry Preview](entry-preview.md) consumes a typed subset of `ResolvedPublicEntry`. It must use resolved dates, Topic Trail data, and canonical URLs rather than load, infer, or repair authoring records.
+- The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
-- Release metadata persistence remains outside the canonical loader. Rebuilding the same release with the same explicit metadata preserves its ID and generation timestamp.
-- The repository contains the complete Stage 1 seed record set: About content, Methodology `1.0.0`, its publication event, three Entries, three non-empty Topic Trails, and three initial publication snapshots. An integration test supplies fixed test-only release metadata and the approved site origin to prove that these records construct one valid production release with three derived Added events. This does not create or persist a genuine release. The current Astro fixture separately calls the application release adapter in preview mode to obtain a validated seed Entry for Entry Preview conformance. Missing genuine release metadata keeps that fixture non-promotable; it does not invoke strict production construction, turn its hosts into public pages, emit a genuine dataset, persist a release descriptor, or emit deployment redirects. The versioned Schema is already published statically.
+- Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.
+- The repository contains the complete Stage 1 seed record set. Tests and the Homepage's non-production modes inject fixed metadata to construct it without creating or persisting a genuine release. Normal production remains blocked until the later atomic release command creates the descriptor.
 
 ## Invariants
 
@@ -137,6 +149,7 @@ The loader and constructor return diagnostics without writing to standard output
 - Stable IDs resolve relationships; filenames and slugs do not.
 - Canonical URLs come from a validated explicit origin and the route registry.
 - Release metadata is supplied unchanged and is never generated or inferred.
+- Production release metadata comes only from `generated/release-data/release.json`; fixed development/test metadata is never a fallback.
 - Production returns either one complete internally consistent release or no release.
 - Loader and domain code remain free of logging and write side effects.
 
@@ -144,7 +157,9 @@ The loader and constructor return diagnostics without writing to standard output
 
 - `src/adapters/canonical-record-loader/` — Read-only repository JSON loading and path diagnostics.
 - `src/adapters/application-release/` — Environment-facing origin configuration and the single application release call.
+- `src/adapters/persisted-release-descriptor/` — Exact-path descriptor reading, JSON parsing, and Schema validation.
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
+- `src/domain/release-construction/compare-resolved-public-entries.ts` — Shared material-activity ordering comparator.
 - `src/domain/route-generation/` — Origin, route-registry, canonical URL, and redirect contracts.
 - `src/domain/json-export-generation/` — Post-release Dataset `1.0.0` projection, Schema, validation, and serialization.
 - `tests/adapters/` and `tests/domain/` — Loader, production, preview, routing, Changelog, dataset, and writer coverage.
@@ -157,6 +172,8 @@ Check:
 - Whether preview output remains honest when an invalid record could change membership, counts, ordering, routes, or exports.
 - Whether public Entry selection still ignores unpublished editable differences.
 - Whether material activity remains separate from the current revision after a non-material update.
+- Whether release resolution and Homepage selection still share the same material-activity, Date Added, and immutable-ID comparator.
+- Whether production descriptor loading still uses the exact reserved path and fails instead of falling back to fixed metadata.
 - Whether route and alias checks run before absolute URL generation.
 - Whether every page-facing value still comes from the shared release model.
 - Whether dataset behavior belongs in [Dataset Generation](dataset-generation.md) rather than the release constructor.

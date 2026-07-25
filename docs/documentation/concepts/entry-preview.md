@@ -40,7 +40,7 @@ The public `EntryPreview.astro` component accepts that source, calls `projectEnt
 4. The component renders the metadata band, editorial body, status row, and footer in a fixed order.
 5. Frontier Atlas tokens and primitives supply the sheet, rules, type roles, focus treatment, status colors, spacing, and responsive breakpoint. Feature-owned CSS arranges those primitives for this component.
 
-The current `/` technical fixture obtains the existing Dreamer 4 seed Entry through the application release adapter in preview mode. It derives a validated exceptional Claim Status and inline-Markdown claim in memory, then passes the same source to the same component beneath three external host headings. No canonical record or production release is created or changed.
+The [Stage 1 Homepage](stage-1-homepage.md) passes the release-selected Latest Update Entry and each Recent Entry through the same component. It changes only the external heading and placement; it does not pass a visual variant or alter the record.
 
 ## User-Facing Behavior
 
@@ -78,7 +78,8 @@ The projection throws a normal build error when the source is missing, the Domai
 - [Canonical Records](canonical-records.md) owns the field schemas, inline-Markdown profile, controlled machine values, and exhaustive public-label maps. The preview consumes those contracts without widening them.
 - [Release Construction](release-construction.md) owns current snapshot selection, Date Updated, resolved Topic Trail data, and canonical URLs. The preview must not load or repair authoring records itself.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns the Atlas Sheet, Record Rules, typography roles, neutral and exceptional status treatments, focus behavior, spacing tokens, and 768px breakpoint. The preview owns only their feature-specific composition.
-- [Static Application Foundation](static-application-foundation.md) owns the Astro boundary, static build, fixture, and test harness. The preview adds no client script or runtime data dependency.
+- [Static Application Foundation](static-application-foundation.md) owns the Astro boundary, static build, and test harness. The preview adds no client script or runtime data dependency.
+- The [Stage 1 Homepage](stage-1-homepage.md) owns latest and recent selection, section headings, and page placement. It uses the same preview for both contexts and intentionally repeats the Latest Update Entry as the first recent Entry.
 - Hosts own their headings and record selection. They cannot make Latest look more important by passing a component variant because no such public interface exists.
 
 ## Invariants
@@ -89,14 +90,14 @@ The projection throws a normal build error when the source is missing, the Domai
 - Review Status remains visible and neutral at every supported width.
 - Topic Trail remains the continuing-storyline link, and repeated Read Entry links include the Entry title in their accessible names.
 - The component has no card-wide link, image, icon, source logo, score, progress bar, confidence wording, colored evidence rail, featured badge, trending badge, shadow, or hover lift.
-- All three fixture contexts render the same component without a context or visual-variant prop.
+- Latest Update and Recent Entries render the same component without a context or visual-variant prop.
 - Projection and rendering remain static, deterministic, and free of logging and browser state.
 
 ## Implementation Landmarks
 
 - `src/components/entry-preview/` — Public Astro component, typed projection, inline-Markdown rendering, and feature-owned styles.
 - `src/domain/canonical-records/controlled-values.ts` — Exhaustive status and Domain public-label maps.
-- `src/pages/index.astro` — Non-product three-host conformance fixture.
+- `src/features/homepage/` — Current public host for Latest Update and Recent Entries previews.
 - `tests/components/entry-preview.test.ts` — Projection, label mapping, Markdown safety, immutability, and failure coverage.
 - `tests/browser/entry-preview.spec.ts` — Structure, links, styles, responsive layout, keyboard, overflow, and accessibility coverage.
 

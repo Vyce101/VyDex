@@ -1,6 +1,6 @@
 ---
 label: Static Application Foundation
-order: 800
+order: 900
 ---
 
 # Static Application Foundation
@@ -19,7 +19,7 @@ It owns:
 - The `FoundationLayout.astro` document boundary that renders the [Stage 1 Site Shell](stage-1-site-shell.md) around page content.
 - The global stylesheet entry point and locally bundled fonts used by the [Frontier Atlas Design System](frontier-atlas-design-system.md).
 - Unit, responsive browser, and accessibility test harnesses.
-- The local application launcher and production build command.
+- The local application launcher, descriptor-gated production build, and fixed-metadata test build commands.
 - Static publication of the versioned Dataset Schema and its Cloudflare response metadata.
 - The root validation workflow and frozen dependency installation used by CI.
 
@@ -37,10 +37,11 @@ It does not own:
 2. Astro pages and layouts may import the public domain entry at `src/domain/index.ts`.
 3. Domain modules remain framework-independent and cannot import Astro or UI modules.
 4. Public HTML pages render their main content through `FoundationLayout.astro`, which supplies the skip link, Header, single Main region, and Footer.
-5. `npm run build` type-checks the project, runs Vitest, and generates static files in `dist/`. `PUBLIC_SITE_ORIGIN` must contain a root-only HTTPS origin so the Dataset Schema receives its absolute canonical `$id`.
-6. `npm run test:browser` rebuilds the site, serves the generated output locally, and runs the Playwright and Axe checks.
+5. `npm run build:test` type-checks the project, runs Vitest, and generates deterministic static output with fixed non-production release metadata. CI and Playwright use this explicit test mode.
+6. `npm run build` performs the same checks but loads the persisted production descriptor. It fails closed until `generated/release-data/release.json` contains valid genuine release metadata.
+7. `npm run test:browser` rebuilds in test mode, serves the generated output locally, and runs the Playwright and Axe checks. `PUBLIC_SITE_ORIGIN` must contain a root-only HTTPS origin so the Dataset Schema receives its absolute canonical `$id`.
 
-The current `/` page is the Frontier Atlas conformance fixture, not the Stage 1 homepage or a product interface.
+The current `/` page is the static [Stage 1 Homepage](stage-1-homepage.md). Its complete release-selected content is generated into HTML.
 
 ## Interactions With Other Project Areas
 
@@ -48,9 +49,9 @@ The canonical-record domain module defines the data contracts consumed by loader
 
 The Dataset Schema route is a thin Astro endpoint over the shared Schema generator. Astro prerenders the JSON file, while `public/_headers` supplies its `application/schema+json` media type and immutable cache policy on Cloudflare Pages. The endpoint reads `PUBLIC_SITE_ORIGIN`; the domain Schema generator receives the origin explicitly and never reads the environment.
 
-The application release adapter composes the read-only canonical loader with the framework-independent constructor. It reads `PUBLIC_SITE_ORIGIN` at the application boundary and defaults private preview to `http://localhost:4321`. Astro pages and components must use this shared release entry point rather than parse authoring files directly.
+The application release adapter composes the read-only canonical loader with the framework-independent constructor. It reads `PUBLIC_SITE_ORIGIN` at the application boundary. Production loads the existing persisted descriptor, while development and explicit test mode use stable fixed non-production metadata. Astro pages and components must use these named entry points rather than parse authoring files or choose metadata directly.
 
-The current technical fixture uses that adapter in preview mode to obtain a validated seed Entry for the [Entry Preview](entry-preview.md) conformance examples. The preview module receives resolved data through the Astro boundary; it does not load files, access the environment, or create a public route.
+The [Stage 1 Homepage](stage-1-homepage.md) receives resolved release data through the Astro boundary. Its feature module does not load files, access the environment, generate release metadata, or fetch Entry data in the browser.
 
 The repository also reserves separate locations for canonical records, publication snapshots, generated release data, and static output. Storage and generation behavior remain separate from the application foundation.
 
@@ -62,10 +63,10 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 
 ## Internal Edge Cases
 
-- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. The technical fixture imports canonical validation through that public domain entry and obtains release data through the application adapter, preserving the allowed dependency direction.
+- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. The Homepage obtains release data through the application adapter and imports its comparator through the public domain entry, preserving the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
 - The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. Production code does not hardcode a hostname; tests and CI use the reserved `https://vydex.example` origin.
-- The repository now has a complete validated Stage 1 seed record set, and an integration test constructs a successful production release from it using fixed test-only metadata. The current fixture calls the application release adapter in preview mode to obtain a real seed Entry for Entry Preview conformance. Without genuine release metadata it remains non-promotable, does not invoke strict production construction, and does not make its fixture hosts public pages. It publishes the Dataset Schema because Schema generation needs an origin rather than public Entry content.
+- The repository has a complete validated Stage 1 seed record set. Development, unit tests, browser tests, and conformance builds use one fixed non-production descriptor value without writing it. Normal production builds never fall back to that adapter and remain blocked until the atomic release command creates the genuine persisted descriptor.
 - Vitest runs both foundation architecture tests and domain validation tests in a Node environment.
 - Ajv validates generated datasets against the exact draft 2020-12 Schema. The pinned `fast-uri` override keeps Ajv's URI parser on its patched compatible release.
 
@@ -74,6 +75,7 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - The Astro app and Retype docs use independent lockfiles and build commands. Installing or building one must not overwrite the other.
 - Canonical records and publication snapshots must not be placed in generated output folders.
 - A failed browser test can occur after `dist/` has been generated. The presence of that directory does not mean a release is ready.
+- A successful `build:test` proves static rendering but does not create or validate genuine production release state.
 - Domain code may use framework-independent packages such as Zod and Markdown parsers, but it must not depend on Astro pages, layouts, or components.
 - Environment access belongs to the application adapter. The release constructor accepts an explicit site origin and never reads `process.env` or `import.meta.env`.
 - Site-shell navigation may consume the public route contract from the domain entry, but route-generation code must not import presentation components or Astro modules.
@@ -89,6 +91,7 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - The application remains light-only until a separate ticket supplies a complete approved dark palette and component-state contract.
 - Project commands keep Astro CLI telemetry disabled; the browser has no telemetry, analytics, or persistent client logging.
 - Type-checking, tests, and builds preserve non-zero failure results.
+- Ordinary builds, development starts, page renders, and tests never generate release IDs or timestamps.
 - Retype deployment remains separate from the application hosting target.
 
 ## Implementation Landmarks
@@ -100,6 +103,7 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - `src/pages/` and `src/layouts/` — Astro-owned page and document rendering boundary.
 - `src/components/site-shell/` — Shared Header, Footer, navigation model, and progressive enhancement.
 - `src/components/entry-preview/` — Reusable static Entry projection and presentation boundary.
+- `src/features/homepage/` — Stage 1 Homepage selection and rendering boundary.
 - `src/pages/schemas/` and `public/_headers` — Static Dataset Schema publication and hosting metadata.
 - `src/styles/` — Frontier Atlas tokens, base styles, type roles, layouts, components, and the global stylesheet entry point.
 - `tests/foundation/` — Architecture checks.
