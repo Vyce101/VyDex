@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Build and run domain checks
-        run: npm run build
+        run: npm run build:test
 
       - name: Install pinned Chromium runtime
         run: npx playwright install --with-deps chromium
