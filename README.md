@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="#current-status"><img alt="Current status: Stage 1 Entry pages implemented" src="https://img.shields.io/badge/status-Stage%201%20Entry%20pages%20implemented-0892D0" /></a>
+  <a href="#current-status"><img alt="Current status: Stage 1 public rulebook implemented" src="https://img.shields.io/badge/status-Stage%201%20public%20rulebook%20implemented-0892D0" /></a>
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest and Playwright configured" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
@@ -36,7 +36,7 @@ Important frontier claims are often scattered across announcements, papers, arti
 
 VyDex is designed to preserve claims as evidence records rather than short-lived posts.
 
-**Versioned records and citations.** Users will be able to see how an entry changed, inspect older versions, identify the methodology used at the time, and cite either the current record or a specific historical version.
+**Versioned records and citations.** Every current Entry links to the exact immutable Methodology version used to judge it. Public Entry history and citation of historical Entry versions remain later work.
 
 **Searchable evidence.** Users will be able to search claims and narrow the results using fields such as topic, status, evidence strength, review state, and dates without turning the database into a popularity ranking.
 
@@ -44,7 +44,7 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **Versioned structured releases.** Each dataset release has an immutable Schema, release-specific path, fixed release metadata, and deterministic JSON. A stable convenience URL can point to the newest immutable artifact without replacing it.
 
-The repository now includes the static application foundation, Frontier Atlas design system, shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, the first three real evidence records, the Stage 1 Homepage, and a complete static Entry Page for each public record. Topic Trail, Methodology, About, Changelog, and export destination pages remain separate Stage 1 work.
+The repository now includes the static application foundation, Frontier Atlas design system, shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, the first three real evidence records, the Stage 1 Homepage, a complete static Entry Page for each public record, and the current and immutable Methodology `1.0.0` pages. Topic Trail, About, Changelog, and export destination pages remain separate Stage 1 work.
 
 ## Why It Is Different
 
@@ -58,7 +58,9 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex now has a real Stage 1 Homepage and three statically generated public Entry pages backed by the canonical seed ledger. The Homepage explains the product and presents the latest and recent records. Each Entry Page exposes the complete maintained record: every Domain and Topic Trail, statuses, Frontier Delta, evidence-bounded details, separate significance fields, caveats, dates, ordered sources, and the Methodology used. Both surfaces use the shared Header, Footer, and Frontier Atlas contracts and remain readable without browser JavaScript.
+VyDex now has a real Stage 1 Homepage, three statically generated public Entry pages, and a complete public Methodology backed by the canonical seed ledger. The Homepage presents the latest and recent records. Each Entry Page exposes the maintained record: every Domain and Topic Trail, statuses, Frontier Delta, evidence-bounded details, separate significance fields, caveats, dates, ordered sources, and the Methodology used.
+
+The Methodology is available through a current route and an immutable `1.0.0` route with identical substantive content and route-specific canonical metadata. Entry field labels link to the matching definitions on the immutable version used by that record. These public surfaces use the shared Header, Footer, and Frontier Atlas contracts and remain readable without browser JavaScript.
 
 Entry ordering is deterministic across release resolution and the Homepage: latest material activity is dominant, Date Added breaks equal activity timestamps, and immutable Entry ID is the final fallback. Source ordering is also deterministic at the domain boundary, so Entry pages and Dataset generation receive the same evidence-role order without changing canonical records or immutable snapshots.
 
@@ -66,11 +68,11 @@ Production release metadata now has an explicit read-only application boundary. 
 
 The repository also contains three Topic Trails, complete immutable Entry histories including Dreamer 4's Stable review update, the canonical About record, Methodology `1.0.0`, its publication event, deterministic release and Dataset `1.0.0` construction, the versioned Dataset Schema, a generic static not-found page, and automated unit, responsive browser, keyboard, reduced-motion, overflow, and accessibility checks.
 
-The Homepage and public Entry pages are implemented on the latest branch, but the first genuine production descriptor and dataset artifact have not been created. Topic Trail, Methodology, About, Changelog, and export pages, publication persistence, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is reserved for the later launch release.
+The Homepage, public Entry pages, and Methodology pages are implemented on the latest branch, but the first genuine production descriptor and dataset artifact have not been created. Topic Trail, About, Changelog, and export pages, publication persistence, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is reserved for the later launch release.
 
 ## Major Milestones Roadmap
 
-- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface foundation, shared site shell, reusable Entry Preview, Stage 1 Homepage, public Entry pages, and static not-found page are complete. The remaining public destination pages, genuine dataset release, atomic release command, and deployment integration still need to be completed.
+- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface foundation, shared site shell, reusable Entry Preview, Stage 1 Homepage, public Entry pages, Methodology pages, and static not-found page are complete. Topic Trail, About, Changelog, and export destinations, the genuine dataset release, the atomic release command, and deployment integration still need to be completed.
 - **Stage 2 — Searchable Evidence Database.** Users can search real entries, filter by the evidence fields that matter, and understand why results are ordered as they are.
 - **Stage 3 — Versioned Ledger and Citation.** Users can inspect entry history, open older versions, understand what changed, see which methodology version applied, and cite an exact version.
 

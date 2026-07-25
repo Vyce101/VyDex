@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added current and immutable Methodology pages with the complete canonical `1.0.0` rulebook, stable section anchors, responsive definition records, route-specific canonical links, and accessible no-JavaScript rendering.
 - Added complete static public Entry pages for every current Main Entry, including the exact maintained-record hierarchy, responsive Frontier Delta, source context, canonical relationship links, and accessible no-JavaScript rendering.
 - Added a generic static not-found page that preserves genuine HTTP `404` responses for unknown Entry slugs.
 - Added the static Stage 1 Homepage with release-selected Latest Update and Recent Entries, responsive Frontier Atlas composition, canonical actions, and the Claim, Evidence, and Caveat reading band.
@@ -25,6 +26,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Linked Entry Page field labels to the matching anchored definition on the immutable Methodology version used by each Entry.
 - Centralized public source ordering in the domain layer so release resolution, Entry pages, and Dataset generation share the same evidence-role and title ordering without mutating stored records.
 - Moved validated Entry Markdown rendering into a shared presentation module used by Entry previews and full Entry pages.
 - Published Dreamer 4 revision 2 as a material review update with Review Status `Stable` and a July 25, 2026 last-checked date.
