@@ -277,7 +277,7 @@ export function createValidMethodologyPublicationEvent() {
   return {
     type: "methodology_change",
     methodology_id: IDS.methodology,
-    date: "2026-01-01",
+    published_at: "2026-07-21T19:15:30Z",
     title: "Methodology v1.0.0 Published",
     summary: "Published the initial public judgment standard for Stage 1 entries.",
   };

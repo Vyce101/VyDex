@@ -300,13 +300,18 @@ describe("canonical Stage 1 seed content", () => {
     expect(updateEvents).toEqual([
       expect.objectContaining({
         date: "2026-07-25",
-        timestamp: DREAMER_REVIEW_PUBLISHED_AT,
+        published_at: DREAMER_REVIEW_PUBLISHED_AT,
         source_identity: SEEDS.dreamer.current_revision_id,
         entry_id: SEEDS.dreamer.entry_id,
         summary: "Completed the evidence review and marked the Entry stable.",
       }),
     ]);
     expect(methodologyEvents).toHaveLength(1);
+    expect(methodologyEvents[0]).toMatchObject({
+      date: "2026-07-24",
+      published_at: "2026-07-24T19:21:21.438Z",
+      source_identity: "019f9593-391e-79d1-8f4a-3c88e68fc069",
+    });
     expect(release.changelog_events).toHaveLength(5);
     expect(entryEvents.map(({ source_identity }) => source_identity).sort()).toEqual(
       Object.values(SEEDS).map(({ revision_id }) => revision_id).sort(),
@@ -317,7 +322,10 @@ describe("canonical Stage 1 seed content", () => {
     expect(entryEvents.map(({ title }) => title).sort()).toEqual(entries.map(({ title }) => title).sort());
     expect(
       entryEvents.every(
-        (event) => event.type === "added" && event.date === "2026-07-24" && event.timestamp === PUBLISHED_AT,
+        (event) =>
+          event.type === "added" &&
+          event.date === "2026-07-24" &&
+          event.published_at === PUBLISHED_AT,
       ),
     ).toBe(true);
     expect(release.current_entries.every(({ entry }) => entry.entry_state !== "removed")).toBe(true);

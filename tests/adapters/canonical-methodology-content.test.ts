@@ -16,6 +16,7 @@ import {
 
 const METHODOLOGY_ID = "019f9593-391e-79d1-8f4a-3c88e68fc069";
 const EFFECTIVE_DATE = "2026-07-24";
+const PUBLICATION_TIMESTAMP = "2026-07-24T19:21:21.438Z";
 const APPROVED_INTRO =
   "How VyDex decides what enters the ledger, how claims are judged, and what each public label means.";
 const APPROVED_REVIEW_REASON_DEFINITION =
@@ -63,7 +64,7 @@ describe("canonical Methodology 1.0.0 content", () => {
     expect(publicationEvent).toEqual({
       type: "methodology_change",
       methodology_id: methodology.id,
-      date: methodology.effective_date,
+      published_at: PUBLICATION_TIMESTAMP,
       title: PUBLICATION_TITLE,
       summary: PUBLICATION_SUMMARY,
     });
@@ -140,7 +141,7 @@ describe("canonical Methodology 1.0.0 content", () => {
     expect(methodologySchema.safeParse(incomplete).success).toBe(false);
   });
 
-  test.each(["type", "methodology_id", "date", "title", "summary"])(
+  test.each(["type", "methodology_id", "published_at", "title", "summary"])(
     "rejects a publication event missing field %s",
     (field) => {
       const incomplete = withoutProperty(records.methodology_publication_events[0]!.value, [field]);

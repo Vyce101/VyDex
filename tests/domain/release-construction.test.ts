@@ -367,17 +367,27 @@ describe("constructReleaseModel production", () => {
     }
   });
 
-  test("uses the accepted date-only Methodology changelog tie-breaker", () => {
+  test("orders same-day Methodology and Entry events by exact publication timestamp", () => {
     const records = createLoadedCanonicalRecords();
-    const methodology = records.methodologies[0]!.value as { effective_date: string };
-    const event = records.methodology_publication_events[0]!.value as { date: string };
-    methodology.effective_date = "2026-07-21";
-    event.date = "2026-07-21";
+    const event = records.methodology_publication_events[0]!.value as { published_at: string };
+    event.published_at = "2026-07-21T19:15:30Z";
 
     const result = constructProduction(records);
     expect(result.success).toBe(true);
     if (!result.success || result.mode !== "production") return;
-    expect(result.release.changelog_events.map(({ type }) => type)).toEqual(["methodology_change", "added"]);
+    expect(result.release.changelog_events.map(({ type }) => type)).toEqual(["added", "methodology_change"]);
+    expect(result.release.changelog_events).toEqual([
+      expect.objectContaining({
+        type: "added",
+        date: "2026-07-21",
+        published_at: "2026-07-21T20:15:30Z",
+      }),
+      expect.objectContaining({
+        type: "methodology_change",
+        date: "2026-07-21",
+        published_at: "2026-07-21T19:15:30Z",
+      }),
+    ]);
   });
 
   test("is deterministic and has no logging side effects", () => {

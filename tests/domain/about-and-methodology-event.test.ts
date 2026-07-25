@@ -49,7 +49,7 @@ describe("MethodologyPublicationEvent", () => {
     );
   });
 
-  test("rejects non-Methodology event types and malformed dates", () => {
+  test("rejects non-Methodology event types and malformed timestamps", () => {
     expect(
       methodologyPublicationEventSchema.safeParse({
         ...createValidMethodologyPublicationEvent(),
@@ -59,7 +59,20 @@ describe("MethodologyPublicationEvent", () => {
     expect(
       methodologyPublicationEventSchema.safeParse({
         ...createValidMethodologyPublicationEvent(),
-        date: "2026-02-30",
+        published_at: "2026-02-30T12:00:00Z",
+      }).success,
+    ).toBe(false);
+  });
+
+  test("rejects missing timestamps and the removed calendar-only field", () => {
+    const missingTimestamp = createValidMethodologyPublicationEvent();
+    Reflect.deleteProperty(missingTimestamp, "published_at");
+
+    expect(methodologyPublicationEventSchema.safeParse(missingTimestamp).success).toBe(false);
+    expect(
+      methodologyPublicationEventSchema.safeParse({
+        ...createValidMethodologyPublicationEvent(),
+        date: "2026-07-24",
       }).success,
     ).toBe(false);
   });
