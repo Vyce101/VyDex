@@ -2,18 +2,16 @@
 
 ## Requirements
 
-- **Operating system:** Windows includes the `setup_and_run.bat` launcher. On macOS and Linux, use the npm commands below.
+- **Operating system:** Windows, macOS, or Linux. Windows also includes `setup_and_run.bat`.
 - **Node.js:** `24.11.1`
 - **npm:** `11.6.2`
-- **Local services:** None. VyDex does not require a backend, database, CMS, or external content service.
-- **API keys or model providers:** None.
-- **Public site origin:** Static builds require a root-only HTTPS `PUBLIC_SITE_ORIGIN` so the Dataset Schema can use its absolute canonical URL.
-- **Production release descriptor:** A genuine production build requires `generated/release-data/release.json`. Only `npm run release:stage-1` may create this durable file; local development and test builds do not create it.
-- **Hardware:** No special hardware is required. Browser testing downloads a local Chromium build and requires additional disk space.
+- **Local services:** None. VyDex does not require a backend, database, CMS, Worker, or Pages Function.
+- **API keys:** None for local development or tests. Cloudflare credentials are required only for the protected production deployment job.
+- **Hardware:** No special hardware is required. Browser testing downloads Chromium and needs additional disk space.
 
-## Git commands
+## Git Commands
 
-Run these commands from the repository root, which is the folder containing `package.json`.
+Run commands from the repository root, which contains `package.json`.
 
 Clone the repository:
 
@@ -28,31 +26,15 @@ Pull later changes without creating a merge commit:
 git pull --ff-only
 ```
 
-On Windows, `update.bat` performs this fast-forward update and stops before fetching if local changes are present.
+On Windows, `update.bat` performs the same fast-forward update and stops before fetching when local changes are present.
 
 ## Install
 
-Install exactly the dependency versions recorded in the root lockfile:
+Install the dependency versions recorded in the lockfile:
 
 ```powershell
 npm ci
 ```
-
-## Configure static builds
-
-For local build verification, use the reserved example origin. In PowerShell:
-
-```powershell
-$env:PUBLIC_SITE_ORIGIN = "https://vydex.example"
-```
-
-On macOS or Linux:
-
-```bash
-export PUBLIC_SITE_ORIGIN="https://vydex.example"
-```
-
-Set the real root-only HTTPS origin in the production build environment when deployment is configured. Do not add a path, query, fragment, username, or password.
 
 ## Run VyDex
 
@@ -62,56 +44,65 @@ Start the local Astro application:
 npm run dev
 ```
 
-Open `http://127.0.0.1:4321/` in your browser.
+Open `http://127.0.0.1:4321/`. Development uses fixed non-production metadata and does not write production release state.
 
-Development uses fixed non-production release metadata and the real canonical seed records. It does not write or imitate a genuine production descriptor.
+On Windows, `setup_and_run.bat` can install missing dependencies, start Astro, wait for the page to respond, and open it in your browser.
 
-On Windows, you can run `setup_and_run.bat` instead. It installs dependencies when needed, starts Astro, waits for the page to respond, and opens it in your browser.
+## Verify The Installation
 
-## Verify the installation
-
-Run the explicit non-production validation build:
+Run the non-production validation build:
 
 ```powershell
 npm run build:test
 ```
 
-`npm run build:test` runs type checking and unit tests before using fixed test-only release metadata to generate deterministic static output. It does not create `generated/release-data/release.json` or prove that a production release exists.
+This command runs type checking and unit tests, then generates deterministic test output. It does not create or modify the production release descriptor or manifest.
 
-The ordinary production build remains descriptor-gated:
-
-```powershell
-npm run build
-```
-
-Until the Stage 1 release gate creates the genuine descriptor, this command is expected to fail with a missing production release descriptor error. Do not create the descriptor manually or replace it with development/test metadata. `npm run build` is not the production release workflow because it does not perform the full release verification and promotion transaction.
-
-Install Chromium once, then run the responsive browser and accessibility tests:
+Install Chromium once, then run the responsive browser and accessibility suite:
 
 ```powershell
 npm run test:browser:install
 npm run test:browser
 ```
 
-The browser-test command supplies `https://vydex.example` and uses the explicit test-mode build, so it does not use a production hostname or descriptor. It writes validated test-release redirects into disposable `dist/`, serves that output through the pinned Wrangler Pages server, and exercises the complete desktop and mobile Playwright suite. Generated Wrangler state and test output remain ignored runtime data.
+The browser command uses the reserved `https://vydex.example` test origin, writes disposable output to ignored `dist/`, serves it through the pinned Wrangler Pages development server, and runs the Playwright and Axe checks.
 
-## Create or rebuild the Stage 1 release
+## Reproduce The Stage 1 Release
 
-Run the sole Stage 1 production release command from the repository root:
+The authoritative release origin is `https://vydex.pages.dev`. Set it before running production validation.
+
+PowerShell:
 
 ```powershell
-npm run release:stage-1
+$env:PUBLIC_SITE_ORIGIN = "https://vydex.pages.dev"
+npm run release:stage-1:ci
 ```
 
-The command uses the approved origin `https://vydex.vyce.workers.dev`. It type-checks the application, runs the complete Vitest suite, validates the canonical records and snapshots, prepares the Schema and export, builds into an isolated `runtime/` directory, and verifies every Stage 1 public surface. It then serves that exact staged directory through the pinned Wrangler Pages server and runs the complete Playwright suite before creating the manifest or promoting output. Full browser output is written to ignored `runtime/browser-test-output.txt`. A successful run promotes the complete static site to `dist/` and writes the internal manifest to `generated/release-data/release-manifest.json`.
+macOS or Linux:
 
-The first run that reaches descriptor creation writes `generated/release-data/release.json`. That UUIDv7 and UTC generation timestamp are permanent for the initial Stage 1 release, even if a later build or verification step fails. Every retry loads the same descriptor; the command has no rotation option.
+```bash
+export PUBLIC_SITE_ORIGIN="https://vydex.pages.dev"
+npm run release:stage-1:ci
+```
 
-Use `npm run build:test` when you only want disposable validation output. Do not run the release command to test a possible descriptor value, and do not edit or delete an existing descriptor to begin another release.
+The strict command requires both committed files:
 
-A failed release returns a non-zero result, leaves the previous successful `dist/` and manifest in place, and writes private diagnostics to the terminal and ignored rotating files under `user/logs/`. Browser failures also retain their complete ignored output under `runtime/`. Wrangler is used only as a local staged-output server; the command does not publish to Cloudflare Pages or replace the hosted deployment.
+```text
+generated/release-data/release.json
+generated/release-data/release-manifest.json
+```
 
-## Downloading the latest installation
+It checks that the descriptor, manifest, and configured origin agree; runs type checking and the complete Vitest suite; builds into isolated runtime storage; verifies every static surface; and runs Playwright and Axe against the staged output. It then compares the regenerated manifest and complete file inventory with the committed release state. A mismatch returns a non-zero result instead of creating a new release identity.
+
+On success, the terminal prints the release ID, generation timestamp, immutable export filename, manifest path, and `dist/` location. You can also read the release ID from `generated/release-data/release.json` and the export filename from `generated/release-data/release-manifest.json`.
+
+`npm run release:stage-1` is the one-time bootstrap-capable command. The initial Stage 1 identity has already been created, so CI and clean-runner reproduction must use `npm run release:stage-1:ci`. Do not delete or edit the committed descriptor or manifest to start another release.
+
+A failed release leaves the previous successful `dist/` and manifest unchanged. Private diagnostics appear in the terminal and rotating ignored files under `user/logs/`; complete test output remains under ignored `runtime/` storage.
+
+For production rollback instructions, see [How To Redeploy A Complete Stage 1 Release](documentation/how-to-redeploy-stage-1-release.md). For the hosting and validation boundaries, see [Cloudflare Pages Deployment](documentation/concepts/cloudflare-pages-deployment.md).
+
+## Downloading The Latest Installation
 
 1. Open the [VyDex repository](https://github.com/Vyce101/VyDex).
 2. Select **Code**, then **Download ZIP**.

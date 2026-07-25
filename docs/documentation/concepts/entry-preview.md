@@ -1,6 +1,6 @@
 ---
 label: Entry Preview
-order: 300
+order: 400
 ---
 
 # Entry Preview

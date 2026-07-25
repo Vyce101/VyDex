@@ -1,6 +1,6 @@
 ---
 label: Frontier Atlas Design System
-order: 400
+order: 500
 ---
 
 # Frontier Atlas Design System

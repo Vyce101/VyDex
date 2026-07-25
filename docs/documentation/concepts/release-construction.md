@@ -1,6 +1,6 @@
 ---
 label: Release Construction
-order: 600
+order: 700
 ---
 
 # Release Construction
@@ -49,7 +49,7 @@ A successful production call returns one immutable `ReleaseModel`. It contains c
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
-The application boundary exposes two named release sources. `loadPersistedProductionApplicationRelease` reads the exact production descriptor path and constructs a strict release. `loadFixedMetadataDevelopmentApplicationRelease` injects stable non-production metadata for development and test mode without writing it anywhere.
+The application boundary exposes two named release sources. `loadPersistedProductionApplicationRelease` reads the exact production descriptor path, requires the validated production origin, and constructs a strict release. `loadFixedMetadataDevelopmentApplicationRelease` injects stable non-production metadata for development and test mode without writing it anywhere.
 
 ## Normal Flow
 
@@ -74,9 +74,11 @@ The fixed adapter is explicitly non-production. Its constants make local and aut
 
 ## Production and Private Preview
 
-Production requires a root-only HTTPS origin, valid release metadata, one complete About record, Methodology `1.0.0`, its publication event, at least one public Entry, and no empty Topic Trail. A missing or invalid requirement blocks the complete release.
+Production requires a root-only HTTPS origin, valid release metadata, one complete About record, Methodology `1.0.0`, its publication event, at least one public Entry, and no empty Topic Trail. The application adapter fails clearly when `PUBLIC_SITE_ORIGIN` is absent or invalid. A missing or invalid requirement blocks the complete release.
 
 Preview may use an explicitly supplied HTTPS origin or HTTP localhost. The application adapter defaults an omitted preview origin to `http://localhost:4321`, even when a production origin exists in the environment. Missing release metadata keeps release-independent information available, but the preview is non-promotable and cannot expose a release-specific dataset artifact path or enter dataset generation.
+
+This diagnostic preview mode is separate from a Cloudflare Pages preview deployment. Git-integrated Pages previews run a production-shaped static build with the committed descriptor and `PUBLIC_SITE_ORIGIN=https://vydex.pages.dev`, so their temporary preview hostnames never become canonical URLs. [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) owns that hosting behavior.
 
 Invalid preview records are not repaired. The preview keeps their record type, recoverable ID, filename, raw or partial value, field diagnostics, and unresolved relationship diagnostics. The Topic Trail page may present `Missing Required Field` and `Last Activity: Unknown`, but the constructor never inserts those fallbacks into records, resolved release values, routes, Changelog events, or exports.
 
@@ -158,7 +160,8 @@ The loader and constructor return diagnostics without writing to standard output
 - The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.
-- The repository contains the complete Stage 1 seed record set. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting a genuine release. Ordinary production builds remain blocked until the release gate creates the descriptor.
+- Cloudflare preview URLs are hosting addresses, not release-construction inputs. Pages preview builds must pass the production origin into the strict application adapter.
+- The repository contains the complete Stage 1 seed record set and initial production descriptor. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting genuine release state. Ordinary production builds require the persisted descriptor and never generate a replacement.
 - The release gate caches one production application-release load during its Astro build so every generated route consumes the same in-memory model. Ordinary builds retain their existing uncached behavior.
 
 ## Invariants
@@ -179,6 +182,7 @@ The loader and constructor return diagnostics without writing to standard output
 
 - `src/adapters/canonical-record-loader/` — Read-only repository JSON loading and path diagnostics.
 - `src/adapters/application-release/` — Environment-facing origin configuration and the single application release call.
+- `src/adapters/public-site-origin/` — Root-only absolute HTTPS production-origin validation.
 - `src/adapters/persisted-release-descriptor/` — Exact-path descriptor reading, JSON parsing, and Schema validation.
 - `src/adapters/stage-one-release-descriptor/` — Exclusive creation and immutable reuse of the initial Stage 1 descriptor.
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
@@ -203,6 +207,7 @@ Check:
 - Whether Topic Trail resolution still uses material activity, Date Added, the retained material title, and immutable Entry ID without mutating `current_entries`.
 - Whether release resolution and Dataset generation still share the public source comparator while canonical and snapshot arrays remain untouched.
 - Whether production descriptor loading still uses the exact reserved path and fails instead of falling back to fixed metadata.
+- Whether production and Pages preview builds still require an explicit validated production origin while diagnostic previews retain their localhost default.
 - Whether the release UUIDv7 still participates in the global durable-ID collision check.
 - Whether route and alias checks run before absolute URL generation.
 - Whether every page-facing value still comes from the shared release model.

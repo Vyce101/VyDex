@@ -1,6 +1,6 @@
 ---
 label: Publication Revisions
-order: 500
+order: 600
 ---
 
 # Publication Revisions

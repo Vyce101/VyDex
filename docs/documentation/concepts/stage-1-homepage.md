@@ -1,6 +1,6 @@
 ---
 label: Stage 1 Homepage
-order: 1100
+order: 1200
 ---
 
 # Stage 1 Homepage

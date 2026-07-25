@@ -1,6 +1,6 @@
 ---
 label: Stage 1 Changelog Page
-order: 800
+order: 900
 ---
 
 # Stage 1 Changelog Page

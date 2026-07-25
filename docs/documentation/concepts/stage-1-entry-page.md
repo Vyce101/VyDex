@@ -1,6 +1,6 @@
 ---
 label: Stage 1 Entry Page
-order: 900
+order: 1000
 ---
 
 # Stage 1 Entry Page
