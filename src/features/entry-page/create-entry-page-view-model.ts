@@ -15,6 +15,10 @@ import {
   renderEntryBlockMarkdown,
   renderEntryInlineMarkdown,
 } from "../../shared/entry-markdown";
+import {
+  createMethodologySectionUrl,
+  METHODOLOGY_SECTION_IDS,
+} from "../../shared/methodology-navigation";
 
 export type EntryPageDate = {
   iso: CalendarDate;
@@ -40,6 +44,15 @@ export type EntryPageViewModel = {
   primary_topic_trail: EntryPageLink;
   secondary_topic_trails: EntryPageLink[];
   methodology: { version: string; url: string };
+  methodology_help_links: {
+    domain: string;
+    topic_trail: string;
+    evidence_type: string;
+    used_for: string;
+    source_role: string;
+    potential_significance: string;
+    review_reason: string;
+  };
   frontier_delta: {
     previous_frontier_html: string;
     new_claim_result_html: string;
@@ -118,6 +131,10 @@ export function createEntryPageViewModel(source: ResolvedPublicEntry): EntryPage
   const evidenceTypeLabels = EVIDENCE_TYPES
     .filter((evidenceType) => representedEvidenceTypes.has(evidenceType))
     .map((evidenceType) => EVIDENCE_TYPE_LABELS[evidenceType]);
+  const methodologyUrl = requireCanonicalUrl(
+    source.methodology.canonical_url,
+    "Methodology URL",
+  );
 
   return {
     title: entry.title,
@@ -143,7 +160,31 @@ export function createEntryPageViewModel(source: ResolvedPublicEntry): EntryPage
     })),
     methodology: {
       version: source.methodology.public_version,
-      url: requireCanonicalUrl(source.methodology.canonical_url, "Methodology URL"),
+      url: methodologyUrl,
+    },
+    methodology_help_links: {
+      domain: createMethodologySectionUrl(methodologyUrl, METHODOLOGY_SECTION_IDS.domains),
+      topic_trail: createMethodologySectionUrl(
+        methodologyUrl,
+        METHODOLOGY_SECTION_IDS.topicTrails,
+      ),
+      evidence_type: createMethodologySectionUrl(
+        methodologyUrl,
+        METHODOLOGY_SECTION_IDS.evidenceTypes,
+      ),
+      used_for: createMethodologySectionUrl(methodologyUrl, METHODOLOGY_SECTION_IDS.usedFor),
+      source_role: createMethodologySectionUrl(
+        methodologyUrl,
+        METHODOLOGY_SECTION_IDS.sourceRoles,
+      ),
+      potential_significance: createMethodologySectionUrl(
+        methodologyUrl,
+        METHODOLOGY_SECTION_IDS.significance,
+      ),
+      review_reason: createMethodologySectionUrl(
+        methodologyUrl,
+        METHODOLOGY_SECTION_IDS.reviewStatus,
+      ),
     },
     frontier_delta: {
       previous_frontier_html: renderEntryBlockMarkdown(entry.frontier_delta.previous_frontier),

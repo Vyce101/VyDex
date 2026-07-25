@@ -30,7 +30,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
         <p class="entry-header__claim atlas-type-editorial-lead" set:html={model.claim_html} />
         <div class="entry-header__trails atlas-type-supporting">
           <p>
-            <span>Topic Trail:</span>{" "}
+            <span><a href={model.methodology_help_links.topic_trail}>Topic Trail</a>:</span>{" "}
             <a href={model.primary_topic_trail.url}>{model.primary_topic_trail.label}</a>
           </p>
           {
@@ -65,7 +65,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
       {
         model.review_reason && (
           <div class="entry-status-summary__review atlas-type-supporting">
-            <p><strong>Review reason:</strong> {model.review_reason}</p>
+            <p><strong><a href={model.methodology_help_links.review_reason}>Review Reason</a>:</strong> {model.review_reason}</p>
             {
               model.next_check_date && (
                 <p>
@@ -140,7 +140,9 @@ const model = createEntryPageViewModel(Astro.props.entry);
       {
         model.potential_significance_html && (
           <div class="entry-significance__plate entry-significance__plate--potential">
-            <h3 class="atlas-type-subsection-heading">Potential Significance If Confirmed</h3>
+            <h3 class="atlas-type-subsection-heading">
+              <a href={model.methodology_help_links.potential_significance}>Potential Significance If Confirmed</a>
+            </h3>
             <div class="entry-prose" set:html={model.potential_significance_html} />
           </div>
         )
@@ -170,9 +172,9 @@ const model = createEntryPageViewModel(Astro.props.entry);
         <div><dt>Date Last Checked</dt><dd><time datetime={model.metadata.date_last_checked.iso}>{model.metadata.date_last_checked.label}</time></dd></div>
         <div><dt>Next Check Date</dt><dd>{model.metadata.next_check_date ? <time datetime={model.metadata.next_check_date.iso}>{model.metadata.next_check_date.label}</time> : "None scheduled"}</dd></div>
         <div><dt>Entry State</dt><dd>{model.metadata.entry_state_label}</dd></div>
-        <div><dt>Domain</dt><dd>{model.domains.join(", ")}</dd></div>
+        <div><dt><a href={model.methodology_help_links.domain}>Domain</a></dt><dd>{model.domains.join(", ")}</dd></div>
         <div>
-          <dt>Topic Trail</dt>
+          <dt><a href={model.methodology_help_links.topic_trail}>Topic Trail</a></dt>
           <dd>
             <a href={model.primary_topic_trail.url}>{model.primary_topic_trail.label}</a>
             {model.secondary_topic_trails.length > 0 && <span>; Also in: </span>}
@@ -184,7 +186,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
             ))}
           </dd>
         </div>
-        <div><dt>Evidence Type</dt><dd>{model.metadata.evidence_type_labels.join(", ")}</dd></div>
+        <div><dt><a href={model.methodology_help_links.evidence_type}>Evidence Type</a></dt><dd>{model.metadata.evidence_type_labels.join(", ")}</dd></div>
       </dl>
     </section>
 
@@ -197,12 +199,12 @@ const model = createEntryPageViewModel(Astro.props.entry);
               <h3 class="atlas-type-subsection-heading">{source.title}</h3>
               <p class="entry-source__publisher atlas-type-supporting">{source.publisher_or_domain}</p>
               <dl class="entry-source__metadata">
-                <div><dt>Source Role</dt><dd>{source.source_role_label}</dd></div>
-                <div><dt>Evidence Type</dt><dd>{source.evidence_type_labels.join(", ")}</dd></div>
+                <div><dt><a href={model.methodology_help_links.source_role}>Source Role</a></dt><dd>{source.source_role_label}</dd></div>
+                <div><dt><a href={model.methodology_help_links.evidence_type}>Evidence Type</a></dt><dd>{source.evidence_type_labels.join(", ")}</dd></div>
               </dl>
               <div class="entry-source__used-for">
                 <div class="entry-source__used-for-label">
-                  <strong>Used For</strong><span aria-hidden="true"></span>
+                  <strong><a href={model.methodology_help_links.used_for}>Used For</a></strong><span aria-hidden="true"></span>
                 </div>
                 <p>{source.used_for}</p>
               </div>
