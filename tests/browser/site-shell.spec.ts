@@ -193,7 +193,7 @@ test.describe("without browser JavaScript", () => {
     await page.keyboard.press("Enter");
     await expect(disclosure).toHaveAttribute("open", "");
     await expectOrderedLinks(mobileNavigation, HEADER_LINKS);
-    await expect(page.getByRole("main")).toContainText("Frontier Atlas design system");
+    await expect(page.getByRole("main")).toContainText("Versioned Evidence for Frontier Claims");
     await expect(page.getByRole("contentinfo")).toBeVisible();
   });
 });

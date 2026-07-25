@@ -6,7 +6,9 @@ test("renders semantic content without horizontal overflow", async ({ page }) =>
   await page.goto("/");
 
   await expect(page.getByRole("main")).toBeVisible();
-  await expect(page.getByRole("heading", { level: 1, name: "Frontier Atlas design system" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Versioned Evidence for Frontier Claims" }),
+  ).toBeVisible();
 
   const viewportFitsContent = await page.evaluate(
     () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
@@ -78,9 +80,10 @@ test("publishes the immutable Dataset 1.0.0 Schema", async ({ request }) => {
 test.describe("without browser JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
-  test("keeps the core fixture readable", async ({ page }) => {
+  test("keeps the complete Homepage readable", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("main")).toContainText("Disclosure content remains available");
+    await expect(page.getByRole("main")).toContainText("Recent Entries and Evidence Updates");
+    await expect(page.getByRole("main")).toContainText("How VyDex Reads Claims");
     await expect(page.getByRole("banner")).toBeVisible();
     await expect(page.getByRole("contentinfo")).toBeVisible();
   });
