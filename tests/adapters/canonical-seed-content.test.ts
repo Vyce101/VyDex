@@ -11,7 +11,7 @@ import {
 } from "../../src/domain/canonical-records";
 import { constructReleaseModel, type ReleaseModel } from "../../src/domain/release-construction";
 
-const SITE_ORIGIN = "https://vydex.vyce.workers.dev";
+const SITE_ORIGIN = "https://vydex-preview-123.pages.dev";
 const METHODOLOGY_ID = "019f9593-391e-79d1-8f4a-3c88e68fc069";
 const PUBLISHED_AT = "2026-07-24T20:18:26Z";
 const DREAMER_REVIEW_PUBLISHED_AT = "2026-07-25T13:03:03Z";

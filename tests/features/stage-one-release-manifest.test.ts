@@ -11,7 +11,10 @@ import {
   formatReleaseDiagnostics,
   serializeStageOneRedirects,
   serializeStageOneReleaseManifest,
+  validateCommittedStageOneReleaseState,
   validateImmutableDatasetAgainstPreviousManifest,
+  validateReproducedStageOneReleaseManifest,
+  verifyStageOneReleaseInventory,
 } from "../../src/release/stage-one-release";
 import { createDatasetFixtureRelease } from "../domain/dataset-fixtures";
 
@@ -92,5 +95,59 @@ describe("Stage 1 release manifest", () => {
     );
     expect(serialized).toContain("/datasets/vydex-latest-entry-versions-v1-0-0.json");
     expect(serialized).toContain(" 302\n");
+  });
+
+  test("requires committed release identity and origin to agree", async () => {
+    const fixture = await createManifestFixture();
+    expect(
+      validateCommittedStageOneReleaseState({
+        descriptor: fixture.release.release_metadata,
+        manifest: fixture.manifest,
+        site_origin: fixture.release.site_origin,
+      }),
+    ).toEqual([]);
+
+    const wrongIdentity = structuredClone(fixture.manifest);
+    wrongIdentity.generated_at = "2030-01-01T00:00:00.000Z";
+    const wrongOrigin = structuredClone(fixture.manifest);
+    wrongOrigin.site_origin = "https://different.pages.dev";
+    expect(
+      validateCommittedStageOneReleaseState({
+        descriptor: fixture.release.release_metadata,
+        manifest: wrongIdentity,
+        site_origin: fixture.release.site_origin,
+      }).map(({ code }) => code),
+    ).toContain("release_state_identity_mismatch");
+    expect(
+      validateCommittedStageOneReleaseState({
+        descriptor: fixture.release.release_metadata,
+        manifest: wrongOrigin,
+        site_origin: fixture.release.site_origin,
+      }).map(({ code }) => code),
+    ).toContain("release_state_origin_mismatch");
+  });
+
+  test("detects regenerated manifest and downloaded artifact drift", async () => {
+    const fixture = await createManifestFixture();
+    expect(
+      validateReproducedStageOneReleaseManifest({
+        committed_manifest: fixture.manifest,
+        reproduced_manifest: structuredClone(fixture.manifest),
+      }),
+    ).toEqual([]);
+    expect(await verifyStageOneReleaseInventory({ output_root: fixture.root, manifest: fixture.manifest })).toEqual([]);
+
+    await writeFile(resolve(fixture.root, "_astro/app.css"), "body{color:red}", "utf8");
+    expect(
+      validateReproducedStageOneReleaseManifest({
+        committed_manifest: fixture.manifest,
+        reproduced_manifest: { ...fixture.manifest, entry_count: fixture.manifest.entry_count + 1 },
+      }).map(({ code }) => code),
+    ).toContain("release_manifest_reproduction_mismatch");
+    expect(
+      (await verifyStageOneReleaseInventory({ output_root: fixture.root, manifest: fixture.manifest })).map(
+        ({ code }) => code,
+      ),
+    ).toContain("release_artifact_inventory_mismatch");
   });
 });

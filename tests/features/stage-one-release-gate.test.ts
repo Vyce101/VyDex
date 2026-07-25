@@ -5,19 +5,20 @@ import { dirname, join, resolve } from "node:path";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { prepareApplicationExport } from "../../src/adapters/application-export";
 import { loadPersistedProductionApplicationRelease } from "../../src/adapters/application-release";
+import { parseRequiredPublicSiteOrigin } from "../../src/adapters/public-site-origin";
 import { createStageOneReleaseDescriptor } from "../../src/adapters/stage-one-release-descriptor";
 import { generateVyDexDatasetSchemaV1, type ReleaseModel } from "../../src/domain";
 import {
   collectStageOneRedirects,
   runStageOneRelease,
   serializeStageOneRedirects,
-  STAGE_ONE_PUBLIC_SITE_ORIGIN,
   STAGE_ONE_RELEASE_MANIFEST_PATH,
   type RunStageOneCommand,
 } from "../../src/release/stage-one-release";
 import type { ReleaseLogger } from "../../src/shared/release-logger";
 
 const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
+const TEST_SITE_ORIGIN = parseRequiredPublicSiteOrigin("https://vydex-preview-123.pages.dev");
 const FIXED_DESCRIPTOR = {
   release_id: "01900000-0000-7000-8000-000000000099",
   generated_at: "2026-07-25T20:00:00.000Z",
@@ -71,7 +72,7 @@ async function materializeVerifiedOutput(
 ): Promise<void> {
   const release = await loadPersistedProductionApplicationRelease({
     filesystem_root: filesystemRoot,
-    site_origin: STAGE_ONE_PUBLIC_SITE_ORIGIN,
+    site_origin: TEST_SITE_ORIGIN,
   });
   const preparedResult = prepareApplicationExport(release);
   if (!preparedResult.success) throw new Error("Synthetic output requires a valid prepared export.");
@@ -186,6 +187,8 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
     const runCommand = successfulCommandRunner();
     const result = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: {
         now: () => new Date(FIXED_DESCRIPTOR.generated_at),
         create_release_id: () => FIXED_DESCRIPTOR.release_id,
@@ -207,7 +210,7 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
     ]);
     const browserInput = runCommand.mock.calls.find(([input]) => input.command === "browser")?.[0];
     expect(browserInput?.output_directory).toContain("stage-one-release-");
-    expect(browserInput?.environment.PUBLIC_SITE_ORIGIN).toBe(STAGE_ONE_PUBLIC_SITE_ORIGIN);
+    expect(browserInput?.environment.PUBLIC_SITE_ORIGIN).toBe(TEST_SITE_ORIGIN);
     expect(await readFile(resolve(root, "runtime/browser-test-output.txt"), "utf8")).toBe(
       "browser passed",
     );
@@ -221,10 +224,14 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
 
     const first = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: { run_command: successfulCommandRunner() },
     });
     const second = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: {
         now: () => new Date("2030-01-01T00:00:00.000Z"),
         create_release_id: () => "01900000-0000-7000-8000-000000000100",
@@ -239,6 +246,89 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
     expect(second.manifest.release_id).toBe(FIXED_DESCRIPTOR.release_id);
     expect(second.manifest.generated_at).toBe(FIXED_DESCRIPTOR.generated_at);
     expect(await readFile(descriptorFilename, "utf8")).toBe(originalDescriptor);
+  });
+
+  test("reproduces committed release state in existing-only CI mode", async () => {
+    const root = await createRepositoryRoot();
+    const bootstrap = await runStageOneRelease({
+      filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
+      dependencies: {
+        now: () => new Date(FIXED_DESCRIPTOR.generated_at),
+        create_release_id: () => FIXED_DESCRIPTOR.release_id,
+        run_command: successfulCommandRunner(),
+      },
+    });
+    expect(bootstrap.success).toBe(true);
+
+    const createReleaseId = vi.fn(() => "01900000-0000-7000-8000-000000000100");
+    const existingOnly = await runStageOneRelease({
+      filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "existing_only",
+      dependencies: {
+        create_release_id: createReleaseId,
+        run_command: successfulCommandRunner(),
+      },
+    });
+
+    expect(existingOnly.success).toBe(true);
+    expect(createReleaseId).not.toHaveBeenCalled();
+  });
+
+  test("keeps ephemeral CI from creating missing release state", async () => {
+    const root = await createRepositoryRoot();
+    const createReleaseId = vi.fn(() => FIXED_DESCRIPTOR.release_id);
+    const missingDescriptor = await runStageOneRelease({
+      filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "existing_only",
+      dependencies: { create_release_id: createReleaseId, run_command: successfulCommandRunner() },
+    });
+    expect(missingDescriptor.success).toBe(false);
+    if (!missingDescriptor.success) {
+      expect(missingDescriptor.diagnostics.map(({ code }) => code)).toContain("release_descriptor_required");
+    }
+    expect(createReleaseId).not.toHaveBeenCalled();
+
+    await createStageOneReleaseDescriptor(root, FIXED_DESCRIPTOR);
+    const missingManifest = await runStageOneRelease({
+      filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "existing_only",
+      dependencies: { run_command: successfulCommandRunner() },
+    });
+    expect(missingManifest.success).toBe(false);
+    if (!missingManifest.success) {
+      expect(missingManifest.diagnostics.map(({ code }) => code)).toContain("release_manifest_required");
+    }
+  });
+
+  test("blocks CI when the environment origin differs from the committed manifest", async () => {
+    const root = await createRepositoryRoot();
+    const bootstrap = await runStageOneRelease({
+      filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
+      dependencies: {
+        now: () => new Date(FIXED_DESCRIPTOR.generated_at),
+        create_release_id: () => FIXED_DESCRIPTOR.release_id,
+        run_command: successfulCommandRunner(),
+      },
+    });
+    expect(bootstrap.success).toBe(true);
+
+    const result = await runStageOneRelease({
+      filesystem_root: root,
+      site_origin: parseRequiredPublicSiteOrigin("https://vydex-other.pages.dev"),
+      release_state_policy: "existing_only",
+      dependencies: { run_command: successfulCommandRunner() },
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.diagnostics.map(({ code }) => code)).toContain("release_state_origin_mismatch");
+    }
   });
 
   test("blocks an incomplete Entry while preserving the previous manifest and dist", async () => {
@@ -256,6 +346,8 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
 
     const result = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: { run_command: runCommand },
     });
 
@@ -287,6 +379,8 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
 
     const result = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: { run_command: runCommand },
     });
 
@@ -310,6 +404,8 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
 
     const result = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: { run_command: runCommand },
     });
 
@@ -337,6 +433,8 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
 
     const result = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: { run_command: runCommand, logger },
     });
 
@@ -376,6 +474,8 @@ describe("atomic Stage 1 release gate", { timeout: 15_000 }, () => {
 
     const result = await runStageOneRelease({
       filesystem_root: root,
+      site_origin: TEST_SITE_ORIGIN,
+      release_state_policy: "bootstrap",
       dependencies: { run_command: runCommand },
     });
 

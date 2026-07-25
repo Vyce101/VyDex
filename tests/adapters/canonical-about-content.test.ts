@@ -89,7 +89,7 @@ function constructProductionRelease(about: unknown) {
   return constructReleaseModel({
     records: createRecordsWithAbout(about),
     release_metadata: createValidReleaseMetadata(),
-    site_origin: "https://vydex.vyce.workers.dev",
+    site_origin: "https://vydex-preview-123.pages.dev",
     mode: "production",
   });
 }
@@ -188,15 +188,15 @@ describe("canonical About content", () => {
       related_links: {
         methodology: {
           ...APPROVED_ABOUT_CONTENT.related_links.methodology,
-          url: "https://vydex.vyce.workers.dev/methodology/",
+          url: "https://vydex-preview-123.pages.dev/methodology/",
         },
         changelog: {
           ...APPROVED_ABOUT_CONTENT.related_links.changelog,
-          url: "https://vydex.vyce.workers.dev/changelog/",
+          url: "https://vydex-preview-123.pages.dev/changelog/",
         },
         export_json: {
           ...APPROVED_ABOUT_CONTENT.related_links.export_json,
-          url: "https://vydex.vyce.workers.dev/export/",
+          url: "https://vydex-preview-123.pages.dev/export/",
         },
       },
     });

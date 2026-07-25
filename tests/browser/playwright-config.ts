@@ -1,11 +1,12 @@
 // Defines the shared desktop and mobile Playwright projects for Stage 1 browser checks.
 import { defineConfig, type PlaywrightTestConfig } from "@playwright/test";
 import { resolve } from "node:path";
+import { parseRequiredPublicSiteOrigin } from "../../src/adapters/public-site-origin";
 
 export const BROWSER_TEST_HOST = "127.0.0.1";
 export const BROWSER_TEST_PORT = 4322;
 export const BROWSER_TEST_URL = `http://${BROWSER_TEST_HOST}:${BROWSER_TEST_PORT}`;
-export const EXPECTED_SITE_ORIGIN = process.env.PUBLIC_SITE_ORIGIN ?? "https://vydex.example";
+export const EXPECTED_SITE_ORIGIN = parseRequiredPublicSiteOrigin(process.env.PUBLIC_SITE_ORIGIN);
 
 export function createStageOnePlaywrightConfig(
   webServer?: PlaywrightTestConfig["webServer"],
