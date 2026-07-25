@@ -1,0 +1,208 @@
+{
+  "manifest_version": "1.0.0",
+  "release_id": "019f9b40-a3a8-75ad-b2b2-05a7100bcc34",
+  "generated_at": "2026-07-25T21:48:52.520Z",
+  "site_origin": "https://vydex.pages.dev",
+  "entry_count": 3,
+  "topic_trail_count": 3,
+  "methodology_versions": [
+    "1.0.0"
+  ],
+  "generated_routes": [
+    "/",
+    "/about/",
+    "/changelog/",
+    "/datasets/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/vydex-latest-entry-versions-v1-0-0-2026-07-25.json",
+    "/entries/dreamer-4-offline-minecraft-diamonds/",
+    "/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
+    "/entries/metr-software-task-horizons-doubling-seven-months/",
+    "/export/",
+    "/methodology/",
+    "/methodology/1.0.0/",
+    "/schemas/vydex-dataset/1.0.0.json",
+    "/topic-trails/ai-agents-in-software-engineering/",
+    "/topic-trails/ai-in-operational-weather-forecasting/",
+    "/topic-trails/world-models-for-agent-training/"
+  ],
+  "export_filename": "vydex-latest-entry-versions-v1-0-0-2026-07-25.json",
+  "json_schema_url": "https://vydex.pages.dev/schemas/vydex-dataset/1.0.0.json",
+  "redirects": [
+    {
+      "source": "/datasets/vydex-latest-entry-versions-v1-0-0.json",
+      "destination": "/datasets/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/vydex-latest-entry-versions-v1-0-0-2026-07-25.json",
+      "status": 302
+    },
+    {
+      "source": "/entries/google-deepmind-gdmi-hurricane-forecasting-2025/",
+      "destination": "/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
+      "status": 301
+    }
+  ],
+  "files": [
+    {
+      "path": "_astro/_slug_.CyWF7zay.css",
+      "bytes": 8268,
+      "sha256": "6e2f9bbf30bb4ab89324da467a6435ec8a750e2ef326a93be5c7395cf9866217"
+    },
+    {
+      "path": "_astro/FoundationLayout.D5Vr_FO4.css",
+      "bytes": 22771,
+      "sha256": "132982be2799d2b723a90c375bc5b882c48fdb39ada1a55d4116f9ede21771e1"
+    },
+    {
+      "path": "_astro/MethodologyPage.CXKfJJbk.css",
+      "bytes": 5682,
+      "sha256": "71e8e942da06dbe923589f77d92709fbe58e9c4d8647863bb89e153a6e624e07"
+    },
+    {
+      "path": "_astro/source-sans-3-cyrillic-ext-wght-normal.DzyfIafT.woff2",
+      "bytes": 10676,
+      "sha256": "6aba01e1a800f890b4d91094c4cf5e1769aaf77085371a3ad96065d586186796"
+    },
+    {
+      "path": "_astro/source-sans-3-cyrillic-wght-normal.BMDVbyM7.woff2",
+      "bytes": 18496,
+      "sha256": "b6b721e08d0324b9e743858e8260463085d4c5e1e684f036f9d4a8ca6c62996f"
+    },
+    {
+      "path": "_astro/source-sans-3-greek-ext-wght-normal.BWSLJLk6.woff2",
+      "bytes": 9784,
+      "sha256": "3576fb9237b1a58cb5b38369bd63074a6f884dbeb9f88069690b6bc67ee5d3ff"
+    },
+    {
+      "path": "_astro/source-sans-3-greek-wght-normal.C9H9m1vD.woff2",
+      "bytes": 14600,
+      "sha256": "5360981f035cd4307cd65e4cf46a27693a2409702d3234403c534d9e656d7844"
+    },
+    {
+      "path": "_astro/source-sans-3-latin-ext-wght-normal.C8iNium2.woff2",
+      "bytes": 60088,
+      "sha256": "a85a7459bdb3cdc1136751e151a506bae653fc29ada3ca86237477df6f1b59e6"
+    },
+    {
+      "path": "_astro/source-sans-3-latin-wght-normal.BqRLTx4X.woff2",
+      "bytes": 28740,
+      "sha256": "7a19a7027e125257d310c6dbd78ae3a30b5ea1e3794d60b12bb28227a003bfda"
+    },
+    {
+      "path": "_astro/source-sans-3-vietnamese-wght-normal.C1uRvKPU.woff2",
+      "bytes": 10324,
+      "sha256": "ff34bf5a131a3f9d194f47b4ff7de95aceef5dad72b74709a5d5bf2c069e1f86"
+    },
+    {
+      "path": "_astro/source-serif-4-cyrillic-ext-wght-normal.cHuGMAiY.woff2",
+      "bytes": 18064,
+      "sha256": "f423aab1098e5b0dae59d200aadbb9433e687f505425c7e73d1f65ae2b59016e"
+    },
+    {
+      "path": "_astro/source-serif-4-cyrillic-wght-normal.DwHjdM4S.woff2",
+      "bytes": 36468,
+      "sha256": "25e85aef8acff54f91ea7e85c9c2c260caf97101fdef194ed6b8b58bc34ce3eb"
+    },
+    {
+      "path": "_astro/source-serif-4-greek-wght-normal.ece1310W.woff2",
+      "bytes": 20228,
+      "sha256": "d84b0c5fda036126b6bb9205b144500fe08fec6d54d8bdd60645bc3e6577490b"
+    },
+    {
+      "path": "_astro/source-serif-4-latin-ext-wght-normal.CxNHBx-q.woff2",
+      "bytes": 42040,
+      "sha256": "41529a5b38008d9ea01e28ec18693a714a3216669ee477d83a5b9db999369625"
+    },
+    {
+      "path": "_astro/source-serif-4-latin-wght-normal.D9elroTD.woff2",
+      "bytes": 50824,
+      "sha256": "c1df4596be5029233ed2afbb8b2f6ea20784b3fb1aa5d6b5c6519ccd85eb3dfb"
+    },
+    {
+      "path": "_astro/source-serif-4-vietnamese-wght-normal.D-yuW59g.woff2",
+      "bytes": 13448,
+      "sha256": "63b54e70d3bfb018162640bfb0015be46a2ec96f3c00d4170c8a02d0ff9d5abd"
+    },
+    {
+      "path": "_headers",
+      "bytes": 372,
+      "sha256": "49a68a90dc417be00ac5f3c1cad543c8626509edeca53d1feb6d45635c712e8f"
+    },
+    {
+      "path": "_redirects",
+      "bytes": 286,
+      "sha256": "85241da2e76ca30b96246fa9f285c3675aa725d22a75373f70820edb1c39d20b"
+    },
+    {
+      "path": "404.html",
+      "bytes": 3000,
+      "sha256": "7eeb828df1b5854effae099b42c995fdc76562d7bcad9ff0348a288f4c05b412"
+    },
+    {
+      "path": "about/index.html",
+      "bytes": 13399,
+      "sha256": "ed4786e7bc9614e85c5424ade81d9408bcd53f9392135612789d5f83be3160d3"
+    },
+    {
+      "path": "changelog/index.html",
+      "bytes": 12130,
+      "sha256": "3f736a0dc8263cbfddf62a9a3560d518dad4dfab2f704a6fda7903dff812cc99"
+    },
+    {
+      "path": "datasets/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/vydex-latest-entry-versions-v1-0-0-2026-07-25.json",
+      "bytes": 52353,
+      "sha256": "d28bd7900d4433ce2d8d2bf873f3feaa6aa92b266dec6e6aaeb19ed9430b9768"
+    },
+    {
+      "path": "entries/dreamer-4-offline-minecraft-diamonds/index.html",
+      "bytes": 23688,
+      "sha256": "824aa8acd9657c31f6c72fc5c39511fe0a0b9cafd04a9d028f045ead12985466"
+    },
+    {
+      "path": "entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/index.html",
+      "bytes": 31552,
+      "sha256": "635fe99392b1250b2ff4027b2904f03772c7f2f9fce3fbcf86197c7e336e37c6"
+    },
+    {
+      "path": "entries/metr-software-task-horizons-doubling-seven-months/index.html",
+      "bytes": 24827,
+      "sha256": "0fed9835558165372d1a379a07a0b682407dc91295d2fa7757a0433a440e03ea"
+    },
+    {
+      "path": "export/index.html",
+      "bytes": 9235,
+      "sha256": "9e8a159697cf29b5059db0083b0c9b632e74b174ba3f580609ae81e4fafb5994"
+    },
+    {
+      "path": "index.html",
+      "bytes": 18420,
+      "sha256": "7d4af90a739023fe650b1df7b5b082a59209fb5f9646e8470903716a3737354e"
+    },
+    {
+      "path": "methodology/1.0.0/index.html",
+      "bytes": 30792,
+      "sha256": "105e3c37153fd504648d4147488b7d4833f0dca3192ed80fd5fc9220d15da3f5"
+    },
+    {
+      "path": "methodology/index.html",
+      "bytes": 30786,
+      "sha256": "d49d75a98260b444575a778a4bd99225824105c8cf71e2b8094e164597ef4576"
+    },
+    {
+      "path": "schemas/vydex-dataset/1.0.0.json",
+      "bytes": 17944,
+      "sha256": "a2a1feb0a292640e1865ca19193b607f475633a89977188b5d953e50d1358d96"
+    },
+    {
+      "path": "topic-trails/ai-agents-in-software-engineering/index.html",
+      "bytes": 10068,
+      "sha256": "342b3c084511fdc637d195f84e736c2e3a1115716636eece00be1f156f63d203"
+    },
+    {
+      "path": "topic-trails/ai-in-operational-weather-forecasting/index.html",
+      "bytes": 10227,
+      "sha256": "9a1afc3a2fd56200e4941e2505073455505f2e0f3c917978b28fa690720fe9ed"
+    },
+    {
+      "path": "topic-trails/world-models-for-agent-training/index.html",
+      "bytes": 10120,
+      "sha256": "a40e19ddf25e5efd8e59e6babdabaa12161de40021de50e64e6c90b561a07e2f"
+    }
+  ]
+}
