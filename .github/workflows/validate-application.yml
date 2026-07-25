@@ -80,6 +80,9 @@ jobs:
       - name: Install immutable deployment toolchain
         run: npm ci
 
+      - name: Install pinned Chromium runtime
+        run: npx --no-install playwright install --with-deps chromium
+
       - name: Download validated static release
         uses: actions/download-artifact@v7
         with:
@@ -89,9 +92,18 @@ jobs:
       - name: Verify deployment environment and artifact inventory
         run: npm run verify:pages-deployment
 
-      - name: Deploy complete static release to Cloudflare Pages
-        run: >-
-          npx --no-install wrangler pages deploy dist
-          --project-name "${CLOUDFLARE_PAGES_PROJECT_NAME}"
-          --branch main
-          --commit-hash "${GITHUB_SHA}"
+      - name: Deploy and verify complete production release
+        run: npm run deploy:pages-production
+
+      - name: Upload hosted verification and recovery evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: vydex-hosted-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            runtime/hosted-verification/
+            user/logs/
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 30
