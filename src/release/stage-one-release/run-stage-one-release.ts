@@ -33,7 +33,7 @@ import { verifyStageOneStaticOutput } from "./static-output-verifier";
 
 export const STAGE_ONE_PUBLIC_SITE_ORIGIN = "https://vydex.vyce.workers.dev" as const;
 
-export type StageOneReleaseCommand = "typecheck" | "test" | "build";
+export type StageOneReleaseCommand = "typecheck" | "test" | "build" | "browser";
 export type StageOneCommandResult = { exit_code: number; output: string };
 export type RunStageOneCommand = (input: {
   command: StageOneReleaseCommand;
@@ -77,6 +77,7 @@ async function defaultRunCommand(input: Parameters<RunStageOneCommand>[0]): Prom
     typecheck: ["run", "typecheck"],
     test: ["test"],
     build: ["exec", "--", "astro", "build", "--outDir", input.output_directory!],
+    browser: ["exec", "--", "tsx", "scripts/test/run-stage-one-browser-checks.ts", input.output_directory!],
   };
   return new Promise((complete, reject) => {
     const child = spawn(executableName(), argsByCommand[input.command], {
@@ -140,6 +141,33 @@ async function runQualityChecks(input: {
   if (tests.exit_code !== 0) return [commandFailure("test", tests.output)];
   const summary = tests.output.trim().split(/\r?\n/).slice(-8).join("\n");
   await input.logger.info(`Vitest completed successfully.\n${summary}`);
+  return [];
+}
+
+async function runBrowserChecks(input: {
+  filesystem_root: string;
+  runtime_root: string;
+  output_directory: string;
+  run_command: RunStageOneCommand;
+  logger: ReleaseLogger;
+}): Promise<StageOneReleaseDiagnostic[]> {
+  await input.logger.info("Running Stage 1 Playwright journeys and accessibility checks.");
+  const browser = await input.run_command({
+    command: "browser",
+    working_directory: input.filesystem_root,
+    output_directory: input.output_directory,
+    environment: {
+      ...process.env,
+      ASTRO_TELEMETRY_DISABLED: "1",
+      PUBLIC_SITE_ORIGIN: STAGE_ONE_PUBLIC_SITE_ORIGIN,
+    },
+  });
+  await writeFile(resolve(input.runtime_root, "browser-test-output.txt"), browser.output, "utf8");
+  await input.logger.debug(browser.output.trim());
+  if (browser.exit_code !== 0) return [commandFailure("browser", browser.output)];
+
+  const summary = browser.output.trim().split(/\r?\n/).slice(-8).join("\n");
+  await input.logger.info(`Playwright completed successfully.\n${summary}`);
   return [];
 }
 
@@ -362,6 +390,15 @@ export async function runStageOneRelease(input: {
       prepared_export: prepared.prepared_export,
     });
     if (verification.diagnostics.length > 0) return fail(logger, verification.diagnostics);
+
+    const browserDiagnostics = await runBrowserChecks({
+      filesystem_root: filesystemRoot,
+      runtime_root: runtimeRoot,
+      output_directory: stagingOutput,
+      run_command: dependencies.run_command,
+      logger,
+    });
+    if (browserDiagnostics.length > 0) return fail(logger, browserDiagnostics);
 
     const manifest = await buildStageOneReleaseManifest({
       output_root: stagingOutput,
