@@ -35,6 +35,15 @@ test("projects public labels, dates, relationships, metadata, and safe prose", (
     primary_topic_trail: { label: "Frontier Evaluations" },
     secondary_topic_trails: [{ label: "AI Capability Thresholds" }],
     methodology: { version: "1.0.0" },
+    methodology_help_links: {
+      domain: "https://vydex.example/methodology/1.0.0/#domains",
+      topic_trail: "https://vydex.example/methodology/1.0.0/#topic-trails",
+      evidence_type: "https://vydex.example/methodology/1.0.0/#evidence-types",
+      used_for: "https://vydex.example/methodology/1.0.0/#used-for",
+      source_role: "https://vydex.example/methodology/1.0.0/#source-roles",
+      potential_significance: "https://vydex.example/methodology/1.0.0/#significance",
+      review_reason: "https://vydex.example/methodology/1.0.0/#review-status",
+    },
   });
   expect(model.metadata).toMatchObject({
     date_happened: { iso: "2026-01-15", label: "Jan 15, 2026" },
@@ -79,6 +88,12 @@ test("includes follow-up reason and a scheduled next check without inventing one
     "Review when the independent replication is published.",
   );
   expect(scheduledModel.next_check_date).toEqual({ iso: "2026-08-15", label: "Aug 15, 2026" });
+  expect(scheduledModel.methodology_help_links.review_reason).toBe(
+    "https://vydex.example/methodology/1.0.0/#review-status",
+  );
+  expect(scheduledModel.methodology_help_links.potential_significance).toBe(
+    "https://vydex.example/methodology/1.0.0/#significance",
+  );
 
   scheduled.entry.next_check_date = null;
   expect(createEntryPageViewModel(scheduled).next_check_date).toBeNull();
