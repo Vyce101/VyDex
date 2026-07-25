@@ -102,7 +102,7 @@ export type ResolvedAboutRecord = Omit<AboutRecord, "related_links"> & {
 export type EntryChangelogEvent = {
   type: "added" | "updated" | "removed";
   date: CalendarDate;
-  timestamp: Rfc3339UtcTimestamp;
+  published_at: Rfc3339UtcTimestamp;
   title: string;
   summary: string;
   source_identity: UUIDv7;
@@ -113,6 +113,7 @@ export type EntryChangelogEvent = {
 export type MethodologyChangelogEvent = {
   type: "methodology_change";
   date: CalendarDate;
+  published_at: Rfc3339UtcTimestamp;
   title: string;
   summary: string;
   source_identity: UUIDv7;

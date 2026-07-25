@@ -176,19 +176,6 @@ function validateSingletons(
         ),
       );
     }
-    if (methodologyEvent.date !== methodology.effective_date) {
-      diagnostics.push(
-        createReleaseDiagnostic(
-          "methodology_event_date_mismatch",
-          "methodology_publication_event",
-          ["date"],
-          "The Methodology publication event date must equal the referenced effective_date.",
-          methodologyEvent.date,
-          methodologyEvent.methodology_id,
-          methodology.id,
-        ),
-      );
-    }
   }
 
   return {

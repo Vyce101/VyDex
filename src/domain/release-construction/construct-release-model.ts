@@ -9,8 +9,8 @@ import {
 import { buildInvalidPreviewRecords, deepFreeze } from "./preview-records";
 import { deduplicateDiagnostics } from "./release-diagnostics";
 import { validateReleaseInputs } from "./release-input-validation";
+import { deriveChangelog } from "./derive-changelog";
 import {
-  deriveChangelog,
   resolveAbout,
   resolveEntries,
   resolveTopicTrails,

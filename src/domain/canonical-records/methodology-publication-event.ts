@@ -2,12 +2,12 @@
 import { z } from "zod";
 import { publicChangelogTypeSchema } from "./controlled-values";
 import { plainTextSchema } from "./markdown";
-import { calendarDateSchema, uuidV7Schema } from "./primitives";
+import { rfc3339UtcTimestampSchema, uuidV7Schema } from "./primitives";
 
 export const methodologyPublicationEventSchema = z.strictObject({
   type: publicChangelogTypeSchema.extract(["methodology_change"]),
   methodology_id: uuidV7Schema,
-  date: calendarDateSchema,
+  published_at: rfc3339UtcTimestampSchema,
   title: plainTextSchema,
   summary: plainTextSchema,
 });
