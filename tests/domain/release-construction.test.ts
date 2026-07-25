@@ -108,6 +108,27 @@ describe("constructReleaseModel production", () => {
     expect(result.release.routes.entries[IDS.entry]).toBe("/entries/verified-frontier-result/");
   });
 
+  test("blocks a release descriptor ID that collides with any durable record", () => {
+    const metadata = { ...createValidReleaseMetadata(), release_id: IDS.entry };
+    const result = constructReleaseModel({
+      records: createLoadedCanonicalRecords(),
+      release_metadata: metadata,
+      site_origin: "https://vydex.example",
+      mode: "production",
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success && result.mode === "production") {
+      expect(result.diagnostics).toContainEqual(
+        expect.objectContaining({
+          code: "duplicate_durable_id",
+          record_type: "release_metadata",
+          path: ["release_id"],
+        }),
+      );
+    }
+  });
+
   test("blocks missing metadata, invalid origins, incomplete singleton content, and removed states", () => {
     const missingMetadata = constructReleaseModel({
       records: createLoadedCanonicalRecords(),
