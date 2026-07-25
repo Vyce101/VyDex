@@ -52,8 +52,8 @@ test("shows resolved fields, canonical links, and contextual accessible names", 
   const entry = latestPreview(page);
   await expect(entry.locator('[data-entry-preview-field="domain"]')).toHaveText("AI Capabilities");
   const date = entry.locator('[data-entry-preview-field="date-updated"]');
-  await expect(date).toHaveAttribute("datetime", "2026-07-24");
-  await expect(date).toHaveText("Date Updated: 2026-07-24");
+  await expect(date).toHaveAttribute("datetime", "2026-07-25");
+  await expect(date).toHaveText("Date Updated: 2026-07-25");
 
   await expect(entry.getByRole("link", { name: LATEST_ENTRY_TITLE, exact: true })).toHaveAttribute(
     "href",
@@ -66,7 +66,7 @@ test("shows resolved fields, canonical links, and contextual accessible names", 
     "Evidence: Strong",
   );
   await expect(entry.locator('[data-entry-preview-field="review-status"]')).toHaveText(
-    "Review: Follow-Up Needed",
+    "Review: Stable",
   );
   await expect(
     entry.getByRole("link", { name: `Topic Trail: ${LATEST_TRAIL_NAME}`, exact: true }),

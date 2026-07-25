@@ -187,7 +187,7 @@ test("keeps evidence states understandable in grayscale and passes Axe", async (
   await expect(statuses).toHaveText([
     "Claim: Supported",
     "Evidence: Strong",
-    "Review: Follow-Up Needed",
+    "Review: Stable",
   ]);
   for (const status of await statuses.all()) {
     await expect(status).toBeVisible();

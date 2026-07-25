@@ -14,11 +14,13 @@ import { constructReleaseModel, type ReleaseModel } from "../../src/domain/relea
 const SITE_ORIGIN = "https://vydex.vyce.workers.dev";
 const METHODOLOGY_ID = "019f9593-391e-79d1-8f4a-3c88e68fc069";
 const PUBLISHED_AT = "2026-07-24T20:18:26Z";
+const DREAMER_REVIEW_PUBLISHED_AT = "2026-07-25T13:03:03Z";
 
 const SEEDS = {
   dreamer: {
     entry_id: "019f95f1-29e5-7ea2-a96e-03b7e9d296cb",
     revision_id: "019f95f1-29e6-7e79-b6e4-85196b9c0ec3",
+    current_revision_id: "019f995f-3e13-7666-94f1-4331d5503e5f",
     trail_id: "019f95f1-29e6-73e2-8d15-188f7e0593bf",
     slug: "dreamer-4-offline-minecraft-diamonds",
     aliases: [],
@@ -116,7 +118,7 @@ describe("canonical Stage 1 seed content", () => {
     expect(records.diagnostics).toEqual([]);
     expect(entries).toHaveLength(3);
     expect(trails).toHaveLength(3);
-    expect(snapshots).toHaveLength(3);
+    expect(snapshots).toHaveLength(4);
     expect(records.methodologies).toHaveLength(1);
     expect(records.methodology_publication_events).toHaveLength(1);
   });
@@ -132,17 +134,18 @@ describe("canonical Stage 1 seed content", () => {
         primary_topic_trail_id: seed.trail_id,
         secondary_topic_trail_ids: [],
         methodology_id: METHODOLOGY_ID,
-        date_last_checked: "2026-07-24",
         next_check_date: null,
       });
     }
 
     expect(entries.find(({ id }) => id === SEEDS.dreamer.entry_id)).toMatchObject({
-      review_status: "follow_up_needed",
-      review_reason: expect.stringContaining("The work remains an arXiv v1 preprint"),
+      date_last_checked: "2026-07-25",
+      review_status: "stable",
+      review_reason: null,
     });
     for (const id of [SEEDS.gdmi.entry_id, SEEDS.metr.entry_id]) {
       expect(entries.find((entry) => entry.id === id)).toMatchObject({
+        date_last_checked: "2026-07-24",
         review_status: "stable",
         review_reason: null,
       });
@@ -226,8 +229,29 @@ describe("canonical Stage 1 seed content", () => {
         materiality: "material",
         update_summary: seed.update_summary,
       });
-      expect(snapshot.entry).toEqual(entry);
+      if (seed.entry_id === SEEDS.dreamer.entry_id) {
+        expect(snapshot.entry).toMatchObject({
+          date_last_checked: "2026-07-24",
+          review_status: "follow_up_needed",
+          review_reason: expect.stringContaining("The work remains an arXiv v1 preprint"),
+        });
+      } else {
+        expect(snapshot.entry).toEqual(entry);
+      }
     }
+
+    const dreamerCurrentSnapshot = snapshots.find(
+      ({ revision_id }) => revision_id === SEEDS.dreamer.current_revision_id,
+    )!;
+    expect(dreamerCurrentSnapshot).toMatchObject({
+      entry_id: SEEDS.dreamer.entry_id,
+      revision_number: 2,
+      published_at: DREAMER_REVIEW_PUBLISHED_AT,
+      revision_category: "material_update",
+      materiality: "material",
+      update_summary: "Completed the evidence review and marked the Entry stable.",
+      entry: entries.find(({ id }) => id === SEEDS.dreamer.entry_id),
+    });
   });
 
   test("constructs the complete production release with URLs, relationships, and activity dates", () => {
@@ -247,7 +271,7 @@ describe("canonical Stage 1 seed content", () => {
       expect(entry.secondary_topic_trails).toEqual([]);
       expect(entry.activity).toMatchObject({
         date_added: "2026-07-24",
-        date_updated: "2026-07-24",
+        date_updated: seed === SEEDS.dreamer ? "2026-07-25" : "2026-07-24",
       });
     }
 
@@ -265,15 +289,25 @@ describe("canonical Stage 1 seed content", () => {
     ]);
   });
 
-  test("derives three Added events alongside the existing Methodology event", () => {
+  test("derives the three Added events, Dreamer update, and existing Methodology event", () => {
     const entryEvents = release.changelog_events.filter(({ type }) => type === "added");
+    const updateEvents = release.changelog_events.filter(({ type }) => type === "updated");
     const methodologyEvents = release.changelog_events.filter(
       ({ type }) => type === "methodology_change",
     );
 
     expect(entryEvents).toHaveLength(3);
+    expect(updateEvents).toEqual([
+      expect.objectContaining({
+        date: "2026-07-25",
+        timestamp: DREAMER_REVIEW_PUBLISHED_AT,
+        source_identity: SEEDS.dreamer.current_revision_id,
+        entry_id: SEEDS.dreamer.entry_id,
+        summary: "Completed the evidence review and marked the Entry stable.",
+      }),
+    ]);
     expect(methodologyEvents).toHaveLength(1);
-    expect(release.changelog_events).toHaveLength(4);
+    expect(release.changelog_events).toHaveLength(5);
     expect(entryEvents.map(({ source_identity }) => source_identity).sort()).toEqual(
       Object.values(SEEDS).map(({ revision_id }) => revision_id).sort(),
     );

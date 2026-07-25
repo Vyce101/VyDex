@@ -6,8 +6,8 @@
   "claim": "Google DeepMind researchers report that Dreamer 4 obtained diamonds in 0.7% of 1,000 one-hour Minecraft evaluations after learning from a fixed 2,541-hour gameplay dataset and improving its policy through reinforcement learning entirely inside a learned world model, without online environment interaction during training.",
   "claim_status": "supported",
   "evidence_strength": "strong",
-  "review_status": "follow_up_needed",
-  "review_reason": "The work remains an arXiv v1 preprint, the original Minecraft implementation and weights are not publicly linked, and no independent replication of the diamond result is attached to this entry. Review should be triggered by peer review, an official code or weights release, independent reproduction, a revised paper, or a material challenge to the evaluation. The arXiv record still lists only the original 29 September 2025 submission.",
+  "review_status": "stable",
+  "review_reason": null,
   "entry_state": "main_entry",
   "domains": [
     "ai_capabilities",
@@ -18,7 +18,7 @@
   "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
   "date_happened": null,
   "date_disclosed": "2025-09-29",
-  "date_last_checked": "2026-07-24",
+  "date_last_checked": "2026-07-25",
   "next_check_date": null,
   "frontier_delta": {
     "previous_frontier": "Dreamer 3 had learned from online interaction to collect Minecraft diamonds from sparse rewards, reaching its first diamond after 30 million environment steps, while OpenAI’s VPT used large-scale video pretraining followed by online reinforcement learning to craft diamond tools. Dreamer 3 also received inventory information and abstract crafting actions rather than relying exclusively on the native visual interface.",
