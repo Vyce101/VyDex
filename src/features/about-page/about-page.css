@@ -1,0 +1,194 @@
+/* Composes Frontier Atlas primitives into the responsive static About page. */
+.about-page,
+.about-header,
+.about-section,
+.about-prose,
+.about-maintainer,
+.about-scope-limits,
+.about-carefulness-band,
+.about-carefulness-band__cell,
+.about-related-links {
+  min-inline-size: 0;
+}
+
+.about-page,
+.about-header,
+.about-section,
+.about-prose--stacked,
+.about-maintainer,
+.about-carefulness-band__cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-page {
+  gap: var(--atlas-space-80);
+}
+
+.about-page__preview-message {
+  color: var(--atlas-color-ink-secondary);
+}
+
+.about-header {
+  gap: var(--atlas-space-32);
+}
+
+.about-prose {
+  max-inline-size: var(--atlas-reading-measure);
+}
+
+.about-prose--stacked {
+  gap: var(--atlas-space-16);
+}
+
+.about-header__copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-header__lead {
+  margin-block-start: var(--atlas-space-20);
+}
+
+.about-header__positioning {
+  color: var(--atlas-color-ink-secondary);
+  font-weight: 650;
+  margin-block-start: var(--atlas-space-16);
+}
+
+.about-header__maintainer {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+  margin-block-start: var(--atlas-space-20);
+  padding-block-start: var(--atlas-space-16);
+}
+
+.about-header__actions {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-12);
+}
+
+.about-header__actions .atlas-button {
+  inline-size: 100%;
+}
+
+.about-section {
+  gap: var(--atlas-space-24);
+}
+
+.about-section__link {
+  align-self: flex-start;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-control-size);
+  font-weight: 650;
+  line-height: var(--atlas-type-control-line);
+}
+
+.about-maintainer {
+  border-block: 1px solid var(--atlas-color-rule-record);
+  gap: var(--atlas-space-20);
+  padding-block: var(--atlas-space-20);
+}
+
+.about-maintainer__label {
+  align-items: center;
+  color: var(--atlas-color-ink-primary);
+  display: flex;
+  gap: var(--atlas-space-12);
+}
+
+.about-maintainer__label::after {
+  border-block-start: 1px solid var(--atlas-color-rule-strong);
+  content: "";
+  inline-size: var(--atlas-space-32);
+}
+
+.about-scope-limits,
+.about-related-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about-scope-limits {
+  border-block-start: 1px solid var(--atlas-color-rule-strong);
+}
+
+.about-scope-limits > li {
+  border-block-end: 1px solid var(--atlas-color-rule-record);
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-8);
+  padding-block: var(--atlas-space-20);
+}
+
+.about-carefulness-band {
+  border-block: 1px solid var(--atlas-color-rule-strong);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.about-carefulness-band__cell {
+  gap: var(--atlas-space-12);
+  padding: var(--atlas-space-20) 0;
+}
+
+.about-carefulness-band__cell + .about-carefulness-band__cell {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+}
+
+.about-related-links {
+  border-block-start: 1px solid var(--atlas-color-rule-strong);
+}
+
+.about-related-links > li {
+  border-block-end: 1px solid var(--atlas-color-rule-record);
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-8);
+  padding-block: var(--atlas-space-20);
+}
+
+@media (min-width: 768px) {
+  .about-page {
+    gap: var(--atlas-space-96);
+  }
+
+  .about-header__actions {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .about-header__actions .atlas-button {
+    inline-size: auto;
+  }
+
+  .about-maintainer,
+  .about-scope-limits > li,
+  .about-related-links > li {
+    padding-block: var(--atlas-space-24);
+  }
+
+  .about-carefulness-band {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .about-carefulness-band__cell {
+    padding: var(--atlas-space-24);
+  }
+
+  .about-carefulness-band__cell:first-child {
+    padding-inline-start: 0;
+  }
+
+  .about-carefulness-band__cell:last-child {
+    padding-inline-end: 0;
+  }
+
+  .about-carefulness-band__cell + .about-carefulness-band__cell {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--atlas-color-rule-record);
+  }
+}

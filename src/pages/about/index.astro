@@ -1,0 +1,20 @@
+---
+// Renders the static About route from the configured validated application release.
+import {
+  loadFixedMetadataDevelopmentApplicationRelease,
+  loadPersistedProductionApplicationRelease,
+} from "../../adapters/application-release";
+import { toCanonicalUrl } from "../../domain";
+import AboutPage from "../../features/about-page/AboutPage.astro";
+import FoundationLayout from "../../layouts/FoundationLayout.astro";
+
+const usesFixedNonProductionMetadata = import.meta.env.DEV || import.meta.env.MODE === "test";
+const release = usesFixedNonProductionMetadata
+  ? await loadFixedMetadataDevelopmentApplicationRelease({ filesystem_root: process.cwd() })
+  : await loadPersistedProductionApplicationRelease({ filesystem_root: process.cwd() });
+const canonicalUrl = toCanonicalUrl(release.site_origin, release.routes.about);
+---
+
+<FoundationLayout title="About VyDex — VyDex" canonicalUrl={canonicalUrl}>
+  <AboutPage mode="production" about={release.about} />
+</FoundationLayout>

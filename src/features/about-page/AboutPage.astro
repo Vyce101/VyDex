@@ -1,0 +1,109 @@
+---
+// Renders the complete static About and Scope Limits page from canonical content.
+import type { ResolvedAboutRecord } from "../../domain";
+import { createAboutPagePresentationModel } from "./create-about-page-view-model";
+import "./about-page.css";
+
+type Props =
+  | { mode: "production"; about: ResolvedAboutRecord }
+  | { mode: "private_preview"; about?: ResolvedAboutRecord };
+
+const model = createAboutPagePresentationModel(Astro.props);
+---
+
+{
+  model.kind === "private_preview_missing" ? (
+    <p class="about-page__preview-message atlas-type-interface">{model.message}</p>
+  ) : (
+    <article class="about-page" data-about-page>
+      <header class="about-header" data-about-section="about-header">
+        <div class="about-prose about-header__copy">
+          <h1 class="atlas-type-entry-title">{model.title}</h1>
+          <div class="about-header__lead atlas-type-editorial-lead" set:html={model.header.lead_html} />
+          <p class="about-header__positioning atlas-type-interface">{model.header.positioning}</p>
+          <div class="about-header__maintainer atlas-type-interface" set:html={model.header.maintainer_line_html} />
+        </div>
+        <div class="about-header__actions">
+          {model.header.actions.map((action) => (
+            <a
+              class={`atlas-button atlas-button--${action.treatment}`}
+              href={action.href}
+            >
+              {action.label}
+            </a>
+          ))}
+        </div>
+      </header>
+
+      <section class="about-section" data-about-section="what-vydex-is" aria-labelledby="what-vydex-is">
+        <h2 id="what-vydex-is" class="atlas-type-major-heading">What VyDex Is</h2>
+        <div class="about-prose about-prose--stacked atlas-type-interface">
+          {model.what_vydex_is_html.map((paragraph) => <div set:html={paragraph} />)}
+        </div>
+        <a class="about-section__link" href={model.methodology_href}>View the Methodology →</a>
+      </section>
+
+      <section class="about-section" data-about-section="why-vydex-exists" aria-labelledby="why-vydex-exists">
+        <h2 id="why-vydex-exists" class="atlas-type-major-heading">Why VyDex Exists</h2>
+        <div class="about-prose about-prose--stacked atlas-type-interface">
+          {model.why_vydex_exists_html.map((paragraph) => <div set:html={paragraph} />)}
+        </div>
+      </section>
+
+      <section class="about-section" data-about-section="who-runs-vydex" aria-labelledby="who-runs-vydex">
+        <h2 id="who-runs-vydex" class="atlas-type-major-heading">Who Runs VyDex</h2>
+        <div class="about-maintainer">
+          <p class="about-maintainer__label atlas-type-metadata">Maintainer</p>
+          <div class="about-prose about-prose--stacked atlas-type-interface">
+            {model.who_runs_vydex_html.map((paragraph) => <div set:html={paragraph} />)}
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section" data-about-section="scope-limits" aria-labelledby="scope-limits">
+        <h2 id="scope-limits" class="atlas-type-major-heading">Scope Limits</h2>
+        <div class="about-prose atlas-type-interface" set:html={model.scope_limits.introduction_html} />
+        <ol class="about-scope-limits">
+          {model.scope_limits.rows.map((row) => (
+            <li>
+              <h3 class="atlas-type-subsection-heading">{row.heading}</h3>
+              <div class="atlas-type-interface" set:html={row.explanation_html} />
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="about-section" data-about-section="coverage-baseline" aria-labelledby="coverage-baseline">
+        <h2 id="coverage-baseline" class="atlas-type-major-heading">Coverage Baseline</h2>
+        <div class="about-prose about-prose--stacked atlas-type-interface">
+          {model.coverage_baseline_html.map((paragraph) => <div set:html={paragraph} />)}
+        </div>
+      </section>
+
+      <section class="about-section" data-about-section="how-vydex-stays-careful" aria-labelledby="how-vydex-stays-careful">
+        <h2 id="how-vydex-stays-careful" class="atlas-type-major-heading">How VyDex Stays Careful</h2>
+        <div class="about-carefulness-band">
+          {model.carefulness.map((cell) => (
+            <section class="about-carefulness-band__cell">
+              <h3 class="atlas-type-subsection-heading">{cell.heading}</h3>
+              <div class="atlas-type-interface" set:html={cell.explanation_html} />
+            </section>
+          ))}
+        </div>
+        <a class="about-section__link" href={model.methodology_href}>Read the Methodology →</a>
+      </section>
+
+      <section class="about-section" data-about-section="related-links" aria-labelledby="related-links">
+        <h2 id="related-links" class="atlas-type-major-heading">Related Links</h2>
+        <ul class="about-related-links">
+          {model.related_links.map((link) => (
+            <li>
+              <h3 class="atlas-type-subsection-heading"><a href={link.url}>{link.title}</a></h3>
+              <p class="atlas-type-interface">{link.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </article>
+  )
+}
