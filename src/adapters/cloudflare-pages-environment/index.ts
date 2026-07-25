@@ -2,6 +2,7 @@
 import { parseRequiredPublicSiteOrigin } from "../public-site-origin";
 
 export const STAGE_ONE_CLOUDFLARE_PAGES_PROJECT_NAME = "vydex" as const;
+export const STAGE_ONE_PUBLIC_SITE_ORIGIN = "https://vydex.pages.dev" as const;
 
 export type CloudflarePagesDeploymentEnvironment = {
   account_id: string;
@@ -26,10 +27,15 @@ export function loadCloudflarePagesDeploymentEnvironment(
     );
   }
 
+  const publicSiteOrigin = parseRequiredPublicSiteOrigin(environment.PUBLIC_SITE_ORIGIN);
+  if (publicSiteOrigin !== STAGE_ONE_PUBLIC_SITE_ORIGIN) {
+    throw new Error(`PUBLIC_SITE_ORIGIN must be ${STAGE_ONE_PUBLIC_SITE_ORIGIN}.`);
+  }
+
   return {
     account_id: requireEnvironmentValue(environment, "CLOUDFLARE_ACCOUNT_ID"),
     api_token: requireEnvironmentValue(environment, "CLOUDFLARE_API_TOKEN"),
     project_name: projectName,
-    public_site_origin: parseRequiredPublicSiteOrigin(environment.PUBLIC_SITE_ORIGIN),
+    public_site_origin: publicSiteOrigin,
   };
 }
