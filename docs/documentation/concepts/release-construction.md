@@ -43,7 +43,7 @@ The canonical loader receives an injectable repository root and reads the approv
 - An explicit public site origin.
 - Either `production` or `preview` mode.
 
-A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
+A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
@@ -114,7 +114,9 @@ Entry Changelog events come only from material snapshots:
 - `material_update` becomes `updated`.
 - `removal` becomes `removed` when historical data contains one.
 
-The separately authored Methodology publication event becomes `methodology_change`. Events sort by calendar date, exact timestamp when both events have one, the approved event-type order, public title, and stable source identity. Exact timestamps and tie-breakers are internal ordering data rather than public display fields.
+The separately authored Methodology publication event becomes `methodology_change`. Every resolved event exposes the same required `published_at` field and a public calendar `date` derived from it. Events sort uniformly by `published_at` newest first, then the approved event-type order, public title alphabetically in English, and stable `source_identity`. Entry events use the immutable revision ID; the Methodology event uses the affected Methodology ID. Exact timestamps and tie-breakers are internal ordering data rather than public display fields.
+
+Methodology `effective_date` is not an event-ordering field. The canonical `1.0.0` event uses the one-time migrated timestamp `2026-07-24T19:21:21.438Z`; future Methodology publication events must author their genuine timestamp at publication rather than infer it from a UUID, Git history, or the effective date.
 
 Release construction retains the selected snapshot, derived revision activity, canonical URL, resolved Topic Trail and Methodology references, and publicly ordered copied sources for every current Entry. It does not create public export records. The [Stage 1 Entry Page](stage-1-entry-page.md) renders that resolved order directly, while the separate dataset generator uses the same resolved state so pages and exports cannot disagree about which revision or relationship is current.
 
@@ -124,7 +126,7 @@ The source-ordering module owns one pure comparator: Source Role follows the app
 
 Diagnostics identify the record type, field or rule, recoverable record ID, filename, invalid value, and related record when those values exist. Production does not return a partial release when any blocking error remains.
 
-Blocking conditions include malformed JSON, invalid snapshot paths, invalid records, missing or orphan histories, broken relationships, duplicate or colliding routes, incomplete required content, wrong Methodology references, removed current Entries, empty Topic Trails, invalid origins or release metadata, and permanent-alias redirect failures.
+Blocking conditions include malformed JSON, invalid snapshot paths, invalid records, missing or orphan histories, broken relationships, duplicate or colliding routes, incomplete required content, missing or invalid material-event timestamps, wrong Methodology references, removed current Entries, empty Topic Trails, invalid origins or release metadata, and permanent-alias redirect failures.
 
 The loader and constructor return diagnostics without writing to standard output or standard error. A later atomic release command may format those diagnostics and choose a nonzero process exit code.
 
@@ -148,6 +150,7 @@ The loader and constructor return diagnostics without writing to standard output
 - The [Stage 1 Entry Page](stage-1-entry-page.md) consumes the complete `ResolvedPublicEntry`, including its publicly ordered sources. It must not introduce a page-local comparator.
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) consumes `ResolvedMethodology`, including its current and version-specific canonical URLs. It must not reconstruct those URLs from the request pathname.
 - The [Stage 1 About Page](stage-1-about-page.md) consumes `ResolvedAboutRecord`. It must not load authoring JSON, repair missing content, or reconstruct Related Link destinations.
+- The [Stage 1 Changelog Page](stage-1-changelog-page.md) consumes the ordered material-event collection, validates its display projection, and groups derived dates without adding a second comparator or exposing exact times.
 - The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
 - The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
@@ -176,6 +179,7 @@ The loader and constructor return diagnostics without writing to standard output
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
 - `src/domain/release-construction/compare-resolved-public-entries.ts` — Shared material-activity ordering comparator.
 - `src/domain/release-construction/compare-resolved-topic-trail-entries.ts` — Topic Trail latest-update comparator with the material-title tie-breaker.
+- `src/domain/release-construction/derive-changelog.ts` — Material-event projection, derived calendar dates, and uniform timestamp/type/title/identity ordering.
 - `src/domain/source-ordering/` — Shared public source comparator and copied-array ordering helper.
 - `src/domain/route-generation/` — Origin, route-registry, canonical URL, and redirect contracts.
 - `src/domain/json-export-generation/` — Post-release Dataset `1.0.0` projection, Schema, validation, and serialization.

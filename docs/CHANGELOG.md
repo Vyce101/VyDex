@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the static material Changelog page with exact-date grouping, a ruled Change Type Key, deterministic release ordering, validated affected-record links, responsive date-rail composition, and accessible no-JavaScript rendering.
 - Added the static About and Scope Limits page with canonical project identity, maintainer profile links, explicit coverage limits, responsive ruled layouts, and release-blocking content validation.
 - Added current and immutable Methodology pages with the complete canonical `1.0.0` rulebook, stable section anchors, responsive definition records, route-specific canonical links, and accessible no-JavaScript rendering.
 - Added complete static public Entry pages for every current Main Entry, including the exact maintained-record hierarchy, responsive Frontier Delta, source context, canonical relationship links, and accessible no-JavaScript rendering.
@@ -27,6 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Required exact RFC 3339 UTC timestamps for Methodology publication events, separated publication ordering from Methodology effective dates, and unified all public Changelog events on timestamp, type, title, and immutable-identity ordering.
 - Linked Entry Page field labels to the matching anchored definition on the immutable Methodology version used by each Entry.
 - Centralized public source ordering in the domain layer so release resolution, Entry pages, and Dataset generation share the same evidence-role and title ordering without mutating stored records.
 - Moved validated Entry Markdown rendering into a shared presentation module used by Entry previews and full Entry pages.

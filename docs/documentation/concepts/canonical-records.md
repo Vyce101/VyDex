@@ -38,7 +38,7 @@ A `Methodology` stores a public version and complete public content in named sec
 
 An `AboutRecord` stores the complete structured Stage 1 About content. It is a singleton without its own UUID because other records do not reference or version it. Its related-link fields contain titles and descriptions; [Release Construction](release-construction.md) supplies their canonical destinations.
 
-A `MethodologyPublicationEvent` records the one separately authored Stage 1 Methodology Changelog event. It references Methodology `1.0.0` by UUID and must use that Methodology's effective date.
+A `MethodologyPublicationEvent` records the one separately authored Stage 1 Methodology Changelog event. It references Methodology `1.0.0` by UUID and requires a genuine RFC 3339 UTC `published_at` timestamp. Its public calendar date is derived later from that timestamp. Methodology `effective_date` remains a separate value describing when the rules apply.
 
 An `EntryPublicationSnapshot` stores revision metadata with a complete validated Entry payload. The schema defines the durable shape; the separate [Publication Revisions](publication-revisions.md) system validates history, constructs snapshots, and derives activity without changing the canonical contract.
 
@@ -79,7 +79,7 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 ## Internal Edge Cases
 
 - Calendar dates must use `YYYY-MM-DD` and represent real dates; matching the text pattern alone is not enough.
-- Snapshot and release timestamps must be RFC 3339 UTC values using `Z`.
+- Snapshot, Methodology publication-event, and release timestamps must be RFC 3339 UTC values using `Z`.
 - Current slugs and aliases share one collision-free namespace within Entries and another within Topic Trails. The two route families do not share a namespace.
 - Domain, alias, secondary Topic Trail, citation ID, and per-source Evidence Type duplicates are rejected where their contracts require uniqueness.
 - Review reasons are required only while follow-up is active and must be `null` for stable reviews.
@@ -91,6 +91,7 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 
 - Durable UUIDv7 IDs share one global namespace across current Entries, Topic Trails, Methodologies, snapshot revisions, and release descriptors. Entry-local citation IDs are excluded.
 - `AboutRecord` has no durable ID, and a Methodology publication event references an existing Methodology ID rather than introducing another durable identity.
+- The Methodology `1.0.0` publication timestamp is a one-time migration value derived from its existing stable UUIDv7. Future publication events must author and persist their genuine timestamp when publication occurs; UUID decoding is not the publication workflow.
 - Entry relationships use UUIDs, never titles, filenames, names, or slugs.
 - Every primary and secondary Topic Trail reference and every Methodology reference must resolve during aggregate validation.
 - A snapshot’s outer Entry and Methodology IDs must match its embedded Entry, and its stored Methodology public version must match the referenced Methodology record.
@@ -132,6 +133,7 @@ Check:
 - Whether a prose change preserves the distinction between plain text, inline Markdown, Entry block Markdown, and Methodology Markdown.
 - Whether an aggregate rule can report the record, path, invalid value, violated rule, and related identity without filesystem access.
 - Whether singleton content should remain outside the durable UUID namespace.
+- Whether a Methodology publication event keeps `published_at` separate from the referenced Methodology's `effective_date` and avoids inferring future timestamps from UUIDs or repository metadata.
 - Whether compatibility behavior for aliases, snapshots, or removed Entries would be broken.
 
 Read [Static Application Foundation](static-application-foundation.md) before changing dependency direction, root tooling, or the Astro/domain boundary.
