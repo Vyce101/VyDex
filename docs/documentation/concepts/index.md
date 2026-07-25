@@ -13,6 +13,7 @@ These pages explain the system contracts that exist in VyDex today. They are wri
 - [Dataset Generation](dataset-generation.md) — Public Dataset `1.0.0`, JSON Schema, deterministic serialization, immutable artifact paths, and writer safety.
 - [Entry Preview](entry-preview.md) — Typed preview projection, exact record sequence, responsive presentation, and accessibility contract.
 - [Frontier Atlas Design System](frontier-atlas-design-system.md) — Shared visual tokens, typography, responsive layouts, components, and accessibility invariants.
+- [Hosted Release Verification](hosted-release-verification.md) — Live route, artifact, browser, accessibility, deployment evidence, and restoration contracts.
 - [Publication Revisions](publication-revisions.md) — Immutable Entry snapshots, revision history, materiality rules, and derived activity.
 - [Release Construction](release-construction.md) — Read-only loading, strict and preview releases, resolved public data, routes, and Changelog events.
 - [Stage 1 About Page](stage-1-about-page.md) — Canonical project identity and limitations, static projection, preview fallback, and responsive ruled presentation.

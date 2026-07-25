@@ -32,6 +32,7 @@ It does not own:
 - Defining the Dataset `1.0.0` contract or JSON Schema. [Dataset Generation](dataset-generation.md) owns those contracts.
 - Creating a later release descriptor or rotating the Stage 1 descriptor.
 - Deploying to Cloudflare Pages or changing the hosted production site. [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) owns publication.
+- Proving that Cloudflare serves the promoted routes, headers, redirects, bytes, accessibility behavior, or no-JavaScript journeys. [Hosted Release Verification](hosted-release-verification.md) owns that post-deployment contract.
 - Rendering a public preview, manifest route, diagnostics page, or client-side recovery state.
 
 ## Inputs and Outputs
@@ -64,7 +65,7 @@ The manifest records the persisted release identity and timestamp, site origin, 
 11. Bootstrap mode protects an existing immutable dataset hash. Strict mode requires the regenerated manifest and complete file inventory to match the committed manifest exactly.
 12. The gate replaces `dist/` and the internal manifest through one promotion transaction with temporary backups. It removes those backups after both replacements succeed.
 
-The command stops after local promotion. Deployment is a separate workflow.
+The command stops after local promotion. Deployment and verification of the real production origin are separate workflows. A successful local gate is required for publication, but it does not prove which Cloudflare deployment is canonical or what the production origin serves.
 
 ## Descriptor State and Rebuilds
 
@@ -109,6 +110,7 @@ The staging directory is removed after success or failure. Browser output, Wrang
 - [Dataset Generation](dataset-generation.md) creates deterministic Schema and export contracts. The gate writes, verifies, inventories, and promotes their output.
 - [Static Application Foundation](static-application-foundation.md) owns Astro configuration, public rendering, and the ordinary development and build commands. The gate invokes that build through an isolated output boundary.
 - [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) consumes only output that strict release mode reproduced and verified against committed release state.
+- [Hosted Release Verification](hosted-release-verification.md) reloads the same committed state after deployment and compares it with the live production surface. It does not change the gate's manifest or `dist/`.
 - [Stage 1 Site Shell](stage-1-site-shell.md) owns Header and Footer composition. The gate verifies its destinations on the generated HTML.
 - [Stage 1 Export JSON Page](stage-1-export-json-page.md) presents release-derived export metadata. The gate verifies that the page and downloadable bytes describe the same release.
 
@@ -129,6 +131,7 @@ The staging directory is removed after success or failure. Browser output, Wrang
 - A page can render successfully while showing the wrong count, ordering, navigation destination, or fragment. The gate verifies those values against the release model after rendering.
 - The Schema can parse as JSON but still fail strict compilation, carry the wrong canonical `$id`, or reject the dataset. Each case blocks the whole release.
 - A successful local promotion does not mean the hosted site changed. The deployment workflow must consume the exact validated artifact rather than rebuilding it independently.
+- A successful production upload does not prove hosted correctness. The hosted verifier must confirm Cloudflare routes, redirects, response metadata, artifact bytes, and browser behavior after the deployment becomes canonical.
 - A valid release model with the wrong configured origin is not deployable because its canonical URLs would disagree with the committed manifest.
 - Ordinary `npm run build`, development, and test-mode builds must never create the genuine descriptor or internal manifest.
 
@@ -144,9 +147,11 @@ The staging directory is removed after success or failure. Browser output, Wrang
 - Public ordering never depends on filesystem modification time, Git time, or rebuild time.
 - Preview diagnostics and private logs never enter public files.
 - The release command never deploys.
+- Hosted deployment IDs and rollback state never change the persisted Release ID or local manifest.
 
 ## Implementation Landmarks
 
+- `src/release/stage-one-hosted-verification/` - Separate post-deployment verification that consumes the gate's committed expected state.
 - `scripts/release/` — Thin command-line entry point and process exit behavior.
 - `src/release/stage-one-release/` — Release orchestration, diagnostics, redirects, static verification, manifest construction, and promotion.
 - `src/adapters/stage-one-release-descriptor/` — Exclusive descriptor creation and immutable reuse.

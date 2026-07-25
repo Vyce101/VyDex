@@ -54,11 +54,15 @@ The gate builds into a unique ignored directory under `runtime/`, calls the arti
 
 [Cloudflare Pages Deployment](../documentation/concepts/cloudflare-pages-deployment.md) consumes a complete validated copy of `dist/`. GitHub Actions transfers that output between validation and deployment jobs as a workflow artifact retained for 30 days. The artifact is operational rollback support, not a canonical source of truth, and the deployment job verifies every downloaded byte against the committed manifest before upload.
 
-Cloudflare Pages stores hosted deployments and their rollback history. That history can restore a previously successful production deployment, but it does not replace Git, canonical records, immutable snapshots, the lockfile, pinned toolchain, descriptor, or manifest. A preview hostname is not a public-origin record, and a Cloudflare rollback does not modify repository state.
+[Hosted Release Verification](../documentation/concepts/hosted-release-verification.md) reloads the committed descriptor and manifest after deployment, regenerates the expected Dataset and Schema, and compares them with the live Pages surface. Its reports, browser output, screenshots, traces, and logs remain ignored runtime files or retained workflow artifacts. They prove an operational check; they do not become canonical records, release metadata, or public site files.
+
+Cloudflare Pages stores hosted deployments and their rollback history. That history can restore a previously successful production deployment, but it does not replace Git, canonical records, immutable snapshots, the lockfile, pinned toolchain, descriptor, or manifest. A preview hostname is not a public-origin record or rollback target, and a Cloudflare rollback does not modify repository state.
+
+A Cloudflare deployment ID identifies one hosting record. It is separate from the persisted VyDex Release ID, so two successful production deployments may expose the same byte-identical release. The protected rehearsal records both deployment IDs and checksums before mutation, then restores the intended deployment in unconditional cleanup.
 
 The public site remains static HTML, CSS, JavaScript, and JSON. No Worker, Pages Function, runtime database, or Cloudflare-owned data store participates in record loading or page rendering.
 
-Release logs are private runtime data under ignored `user/logs/`. Complete browser output is stored at ignored `runtime/browser-test-output.txt`, and Wrangler local state remains under ignored runtime storage or `.wrangler/`. These files may contain validation diagnostics and must never be copied into `dist/` or exposed through a public route.
+Release logs are private runtime data under ignored `user/logs/`. Complete local browser output is stored at ignored `runtime/browser-test-output.txt`; hosted reports and browser output use ignored `runtime/hosted-verification/`; Wrangler local state remains under ignored runtime storage or `.wrangler/`. These files may contain validation diagnostics and must never be copied into `dist/` or exposed through a public route.
 
 ## Invariants
 
@@ -76,8 +80,11 @@ Release logs are private runtime data under ignored `user/logs/`. Complete brows
 - The internal manifest must describe the exact verified `dist/` inventory and must not be replaced after a failed release attempt.
 - Release staging, browser output, Wrangler state, and logs remain ignored private data, while descriptor and manifest state remain separate from `dist/`.
 - Workflow artifacts and Cloudflare deployment history remain operational copies rather than authoritative evidence or release metadata.
+- Hosted verification reports never replace the descriptor, manifest, canonical records, or immutable snapshots.
+- Cloudflare deployment IDs may change without changing the VyDex Release ID or artifact bytes.
+- Production, rollback, and restoration jobs share one exclusive concurrency group; preview deployments never qualify as recovery targets.
 - Preview and production hosting use the production origin recorded by the committed manifest for canonical URLs.
 - Storage paths and filenames must not replace durable IDs as relationship keys.
 - Filesystem adapters call framework-independent validators rather than reproducing record rules.
 
-See [Canonical Records](../documentation/concepts/canonical-records.md), [Publication Revisions](../documentation/concepts/publication-revisions.md), [Release Construction](../documentation/concepts/release-construction.md), [Stage 1 Release Gate](../documentation/concepts/stage-1-release-gate.md), [Cloudflare Pages Deployment](../documentation/concepts/cloudflare-pages-deployment.md), and the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) for the contracts applied to these locations.
+See [Canonical Records](../documentation/concepts/canonical-records.md), [Publication Revisions](../documentation/concepts/publication-revisions.md), [Release Construction](../documentation/concepts/release-construction.md), [Stage 1 Release Gate](../documentation/concepts/stage-1-release-gate.md), [Cloudflare Pages Deployment](../documentation/concepts/cloudflare-pages-deployment.md), [Hosted Release Verification](../documentation/concepts/hosted-release-verification.md), and the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) for the contracts applied to these locations.
