@@ -22,7 +22,24 @@ export const STAGE_ONE_FIXED_PUBLIC_PATHS = Object.freeze({
 
 export const DATASET_SCHEMA_PUBLIC_PATH = "/schemas/vydex-dataset/1.0.0.json" as const;
 export const DATASET_LATEST_PUBLIC_PATH = "/datasets/vydex-latest-entry-versions-v1-0-0.json" as const;
-export const DATASET_ARTIFACT_FILENAME = "vydex-latest-entry-versions-v1-0-0.json" as const;
+
+export type DatasetArtifactLocation = {
+  filename: string;
+  public_path: PublicPath;
+};
+
+export function deriveDatasetArtifactLocation(
+  releaseMetadata: ReleaseMetadata,
+): DatasetArtifactLocation {
+  const generatedDate = releaseMetadata.generated_at.slice(0, 10);
+  const filename = `vydex-latest-entry-versions-v1-0-0-${generatedDate}.json`;
+  return {
+    filename,
+    public_path: publicPath(
+      `/datasets/releases/${releaseMetadata.release_id}/${filename}`,
+    ),
+  };
+}
 
 export type PermanentRedirect = {
   source: PublicPath;
@@ -190,9 +207,7 @@ export function buildPublicRouteRegistry(input: {
     dataset_latest: publicPath(DATASET_LATEST_PUBLIC_PATH),
     ...(input.release_metadata
       ? {
-          dataset_artifact: publicPath(
-            `/datasets/releases/${input.release_metadata.release_id}/${DATASET_ARTIFACT_FILENAME}`,
-          ),
+          dataset_artifact: deriveDatasetArtifactLocation(input.release_metadata).public_path,
         }
       : {}),
     entries,

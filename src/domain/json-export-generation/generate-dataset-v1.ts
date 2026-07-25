@@ -15,9 +15,9 @@ import { orderEntrySourcesForPublicDisplay } from "../source-ordering";
 import type { ValidationDiagnostic, ValidationResult } from "../cross-record-validation";
 import type { ReleaseModel, ResolvedPublicEntry } from "../release-construction";
 import {
-  DATASET_ARTIFACT_FILENAME,
   DATASET_LATEST_PUBLIC_PATH,
   DATASET_SCHEMA_PUBLIC_PATH,
+  deriveDatasetArtifactLocation,
   toCanonicalUrl,
   validateSiteOrigin,
   type PublicPath,
@@ -174,7 +174,7 @@ function validateReleaseInput(release: ReleaseModel): ValidationDiagnostic[] {
   const originResult = validateSiteOrigin(release.site_origin, "production");
   if (!originResult.success) diagnostics.push(...originResult.diagnostics);
 
-  const expectedArtifactPath = `/datasets/releases/${metadataResult.data.release_id}/${DATASET_ARTIFACT_FILENAME}`;
+  const expectedArtifactPath = deriveDatasetArtifactLocation(metadataResult.data).public_path;
   if (release.routes.dataset_artifact !== expectedArtifactPath) {
     diagnostics.push(
       datasetDiagnostic(
