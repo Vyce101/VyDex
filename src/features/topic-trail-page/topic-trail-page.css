@@ -1,0 +1,121 @@
+/* Composes Frontier Atlas primitives into the responsive Topic Trail route index. */
+.topic-trail-page {
+  inline-size: 100%;
+  margin-inline: auto;
+  max-inline-size: 67.5rem;
+  min-inline-size: 0;
+}
+
+.topic-trail-header,
+.topic-trail-note,
+.topic-trail-entries {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.topic-trail-header {
+  gap: var(--atlas-space-20);
+  padding-block-end: var(--atlas-space-24);
+}
+
+.topic-trail-header__description {
+  max-inline-size: var(--atlas-reading-measure);
+  overflow-wrap: anywhere;
+}
+
+.topic-trail-header__route-cue {
+  background: var(--atlas-color-route);
+  block-size: 0.125rem;
+  inline-size: var(--atlas-space-48);
+}
+
+.topic-trail-metadata {
+  border-block: 1px solid var(--atlas-color-rule-strong);
+  display: grid;
+  font-family: var(--atlas-font-sans);
+  font-size: var(--atlas-type-metadata-size);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--atlas-type-metadata-line);
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.topic-trail-metadata > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--atlas-space-4);
+  min-inline-size: 0;
+  padding-block: var(--atlas-space-12);
+}
+
+.topic-trail-metadata > div + div {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+}
+
+.topic-trail-metadata dt,
+.topic-trail-metadata dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.topic-trail-metadata dt {
+  color: var(--atlas-color-ink-secondary);
+  font-weight: 700;
+}
+
+.topic-trail-metadata dd {
+  color: var(--atlas-color-ink-primary);
+  font-weight: 600;
+}
+
+.topic-trail-note {
+  border-block: 1px solid var(--atlas-color-rule-record);
+  gap: var(--atlas-space-8);
+  margin-block-start: var(--atlas-space-32);
+  padding-block: var(--atlas-space-16);
+}
+
+.topic-trail-note p {
+  color: var(--atlas-color-ink-secondary);
+  margin: 0;
+}
+
+.topic-trail-note a {
+  width: fit-content;
+}
+
+.topic-trail-entries {
+  gap: var(--atlas-space-24);
+  margin-block-start: var(--atlas-space-64);
+}
+
+.topic-trail-entries__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--atlas-space-24);
+  list-style: none;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+}
+
+.topic-trail-entries__list > li {
+  min-inline-size: 0;
+}
+
+@media (min-width: 768px) {
+  .topic-trail-metadata {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .topic-trail-metadata > div {
+    align-content: center;
+    padding: var(--atlas-space-16);
+  }
+
+  .topic-trail-metadata > div + div {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--atlas-color-rule-record);
+  }
+}

@@ -1,0 +1,36 @@
+---
+// Generates one static route for each resolved non-empty public Topic Trail.
+import type { GetStaticPaths } from "astro";
+import {
+  loadFixedMetadataDevelopmentApplicationRelease,
+  loadPersistedProductionApplicationRelease,
+} from "../../adapters/application-release";
+import type { ResolvedTopicTrail } from "../../domain";
+import TopicTrailPage from "../../features/topic-trail-page/TopicTrailPage.astro";
+import FoundationLayout from "../../layouts/FoundationLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const usesFixedNonProductionMetadata = import.meta.env.DEV || import.meta.env.MODE === "test";
+  const release = usesFixedNonProductionMetadata
+    ? await loadFixedMetadataDevelopmentApplicationRelease({ filesystem_root: process.cwd() })
+    : await loadPersistedProductionApplicationRelease({ filesystem_root: process.cwd() });
+
+  return release.topic_trails.map((trail) => ({
+    params: { slug: trail.topic_trail.slug },
+    props: { trail },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  trail: ResolvedTopicTrail;
+}
+
+const { trail } = Astro.props;
+---
+
+<FoundationLayout
+  title={`${trail.topic_trail.name} — VyDex`}
+  canonicalUrl={trail.canonical_url}
+>
+  <TopicTrailPage mode="production" trail={trail} />
+</FoundationLayout>

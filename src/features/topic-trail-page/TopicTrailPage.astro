@@ -1,0 +1,77 @@
+---
+// Renders one static Topic Trail route-index page from resolved release data.
+import EntryPreview from "../../components/entry-preview/EntryPreview.astro";
+import {
+  TOPIC_TRAIL_PREVIEW_FALLBACKS,
+  createTopicTrailPagePresentationModel,
+  type TopicTrailPagePresentationInput,
+} from "./create-topic-trail-page-view-model";
+import "./topic-trail-page.css";
+
+const model = createTopicTrailPagePresentationModel(Astro.props as TopicTrailPagePresentationInput);
+---
+
+<div class="topic-trail-page" data-topic-trail-page data-private-preview={model.is_private_preview}>
+  <header class="topic-trail-header" data-topic-trail-section="trail-header">
+    <h1 class="atlas-type-entry-title">{model.name}</h1>
+    <p class="topic-trail-header__description atlas-type-editorial-lead">{model.description}</p>
+    <span class="topic-trail-header__route-cue" aria-hidden="true"></span>
+  </header>
+
+  <dl class="topic-trail-metadata" data-topic-trail-section="metadata">
+    <div>
+      <dt>Entries in VyDex:</dt>
+      <dd>{model.metadata.entry_count}</dd>
+    </div>
+    <div>
+      <dt>Last Activity:</dt>
+      <dd>
+        {
+          model.metadata.last_activity ? (
+            <time datetime={model.metadata.last_activity.iso}>
+              {model.metadata.last_activity.label}
+            </time>
+          ) : (
+            TOPIC_TRAIL_PREVIEW_FALLBACKS.unknown_last_activity
+          )
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>Default Order:</dt>
+      <dd>{model.metadata.default_order}</dd>
+    </div>
+  </dl>
+
+  <aside class="topic-trail-note" data-topic-trail-section="trail-note">
+    <p class="atlas-type-supporting">
+      Topic Trails group related entries over time. They are not complete histories.
+    </p>
+    <a class="atlas-type-control" href={model.methodology_href}>
+      How Topic Trails Are Defined →
+    </a>
+  </aside>
+
+  <section
+    class="topic-trail-entries"
+    data-topic-trail-section="entries"
+    aria-labelledby="topic-trail-entries-heading"
+  >
+    <h2 id="topic-trail-entries-heading" class="atlas-type-major-heading">
+      Entries in This Trail
+    </h2>
+    <ol class="topic-trail-entries__list" data-topic-trail-entry-list>
+      {
+        model.entries.map((entry) => (
+          <li>
+            <EntryPreview
+              entry={entry}
+              treatment="quiet"
+              topicTrail={model.entry_preview_topic_trail}
+            />
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</div>
