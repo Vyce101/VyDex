@@ -1,6 +1,6 @@
 ---
 label: Stage 1 Site Shell
-order: 1300
+order: 1400
 ---
 
 # Stage 1 Site Shell
@@ -26,7 +26,7 @@ It does not own:
 - Page content or the data each Stage 1 route renders.
 - Whether a destination is ready for production publication.
 - Frontier Atlas colors, typography tokens, focus treatment, or responsive breakpoints.
-- Release construction, deployment redirects, or the future atomic release gate.
+- Release construction, deployment redirects, or release-gate verification.
 - Browser telemetry, analytics, or persistent client logging.
 
 ## Normal Flow
@@ -72,7 +72,7 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 - The [Stage 1 Changelog Page](stage-1-changelog-page.md) supplies its self-canonical URL and uses the route-derived active Changelog state on `/changelog/`.
 - The [Stage 1 Export JSON Page](stage-1-export-json-page.md) supplies its self-canonical URL and uses the route-derived active Export JSON state on `/export/`.
 - The [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page use no active navigation item.
-- The future atomic release gate must reject unresolved navigation destinations before production. The shell does not weaken that release requirement during the current intermediate development state.
+- The [Stage 1 Release Gate](stage-1-release-gate.md) checks the exact Header and Footer destinations on every generated HTML page and rejects unresolved links or fragments before promotion. The shell owns the markup; the gate owns output-wide verification.
 
 ## Failure Behavior
 

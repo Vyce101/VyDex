@@ -34,27 +34,29 @@ The publication domain returns new immutable snapshots to its caller, but it doe
 generated/release-data/release.json
 ```
 
-The persisted-descriptor adapter resolves that path beneath an injected repository root, reads it without modification, parses JSON, and validates it with `releaseMetadataSchema`. Production fails closed when the file is missing, unreadable, malformed, or schema-invalid. The canonical loader and framework-independent release constructor do not read or write the descriptor, and no ordinary build, development start, page render, or test generates a release ID or timestamp.
+The persisted-descriptor adapter resolves that path beneath an injected repository root, reads it without modification, parses JSON, and validates it with `releaseMetadataSchema`. Production page loading fails closed when the file is missing, unreadable, malformed, or schema-invalid. The canonical loader and framework-independent release constructor do not read or write the descriptor, and no ordinary build, development start, page render, or test generates a release ID or timestamp.
 
-Development and explicit test-mode builds use a named adapter with stable non-production metadata. That adapter performs no writes, cannot be selected as a production fallback, and does not turn its constants into genuine release state. A later atomic release command remains the sole owner of creating or loading a genuine descriptor for a new release.
+Development and explicit test-mode builds use a named adapter with stable non-production metadata. That adapter performs no writes, cannot be selected as a production fallback, and does not turn its constants into genuine release state. The separate Stage 1 descriptor adapter creates `release.json` exclusively when the [Stage 1 Release Gate](../documentation/concepts/stage-1-release-gate.md) finds it absent. If the file already exists, the gate loads it without rewriting any bytes. It does not rotate the descriptor or begin a later release.
 
 The release constructor returns one validated in-memory release model. [Dataset Generation](../documentation/concepts/dataset-generation.md) consumes that model, validates the public Dataset `1.0.0` projection against its Schema, and returns deterministic JSON plus immutable and stable-latest descriptors. The application export boundary prepares that artifact twice, rejects inconsistent output, and derives the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) presentation model from the same generated dataset rather than a second metadata source.
 
 The dataset artifact writer accepts an explicit output root and writes only the immutable release-specific dataset file beneath it. It creates missing parent directories, treats identical existing bytes as idempotent success, and refuses to overwrite different bytes. The writer does not choose `generated/release-data/`, `dist/`, or another repository location on its own.
 
-Astro's release-specific dataset endpoint is a separate static-publication boundary. Development and test builds use the fixed non-production descriptor to prerender one dated artifact into `dist/` so the Export JSON download can be exercised. This build output is disposable and never becomes a genuine descriptor or durable release artifact. Production uses only the persisted genuine descriptor and therefore fails before publication while that descriptor is absent.
+Astro's release-specific dataset endpoint is a separate static-publication boundary. Development and test builds use the fixed non-production descriptor to prerender one dated artifact into `dist/` so the Export JSON download can be exercised. This build output is disposable and never becomes a genuine descriptor or durable release artifact. Ordinary production builds use only the persisted genuine descriptor and therefore fail before publication while that descriptor is absent.
 
-`generated/release-data/` is reserved for durable release state owned by the future atomic release command. The directory and descriptor path are not ignored as disposable cache. Once the command creates a genuine descriptor, it must remain available to clean clones, CI jobs, and later rebuilds; under the current architecture it remains eligible to be checked in with the release artifacts unless a separate durable artifact store is introduced.
+`generated/release-data/` is reserved for durable release state owned by the Stage 1 release gate. The descriptor and internal `release-manifest.json` are not ignored as disposable cache. Once the gate creates a genuine descriptor, that exact file must remain available to clean clones, CI jobs, and later rebuilds. The manifest records only successfully verified output and is replaced only as part of promotion.
 
-The future command will also own stable-latest deployment redirect emission and verification. The current writer does not create a mutable latest copy or a Cloudflare `_redirects` file.
+The gate builds into a unique ignored directory under `runtime/`, calls the artifact writer with that explicit staging root, and writes a Cloudflare `_redirects` file beside the staged site. It verifies the permanent slug aliases and stable-latest dataset redirect but does not create a mutable dataset copy or invoke a deployment tool.
 
-`dist/` contains generated Astro output, including the test-mode Export JSON artifact. It must not be used as canonical, historical, durable release-artifact, or release-descriptor storage.
+`dist/` contains generated Astro output, including the test-mode Export JSON artifact. The release gate may replace it only after the complete staged output passes verification. It must not be used as canonical, historical, durable release-artifact, or release-descriptor storage. Promotion temporarily backs up `dist/` and the internal manifest so a failure while replacing either resource can restore the previous successful pair.
+
+Release logs are private runtime data under ignored `user/logs/`. They may contain validation diagnostics and must never be copied into `dist/` or exposed through a public route.
 
 ## Invariants
 
 - Canonical editable records, immutable snapshots, release descriptors, generated release data, and `dist/` remain separate storage classes.
 - The canonical loader is read-only and accepts an injectable filesystem root for tests.
-- The production descriptor loader reads exactly `generated/release-data/release.json` and never creates or substitutes it.
+- The production descriptor loader reads exactly `generated/release-data/release.json` and never creates or substitutes it; only the Stage 1 descriptor adapter may create that file.
 - Fixed development/test metadata remains non-production, deterministic, and write-free.
 - Test-mode static artifact publication writes only to disposable Astro output and never persists its fixed metadata as genuine release state.
 - Missing directories behave as empty collections; syntax and path failures return structured diagnostics with filenames.
@@ -62,7 +64,9 @@ The future command will also own stable-latest deployment redirect emission and 
 - Generated output must not be written into canonical-record or snapshot directories.
 - Dataset output must remain under the injected writer root, and immutable paths must never overwrite different bytes.
 - The Export JSON page and static artifact endpoint must consume one prepared application export from the selected release rather than reconstructing metadata independently.
+- The internal manifest must describe the exact verified `dist/` inventory and must not be replaced after a failed release attempt.
+- Release staging and logs remain ignored private data, while descriptor and manifest state remain separate from `dist/`.
 - Storage paths and filenames must not replace durable IDs as relationship keys.
 - Filesystem adapters call framework-independent validators rather than reproducing record rules.
 
-See [Canonical Records](../documentation/concepts/canonical-records.md), [Publication Revisions](../documentation/concepts/publication-revisions.md), [Release Construction](../documentation/concepts/release-construction.md), and the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) for the contracts applied to these locations.
+See [Canonical Records](../documentation/concepts/canonical-records.md), [Publication Revisions](../documentation/concepts/publication-revisions.md), [Release Construction](../documentation/concepts/release-construction.md), [Stage 1 Release Gate](../documentation/concepts/stage-1-release-gate.md), and the [Export JSON Page](../documentation/concepts/stage-1-export-json-page.md) for the contracts applied to these locations.

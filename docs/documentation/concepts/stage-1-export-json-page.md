@@ -23,11 +23,11 @@ It does not own:
 
 - Canonical records, publication snapshots, release construction, or production descriptor creation.
 - Dataset `1.0.0` field projection, Schema construction, JSON serialization, or Schema validation.
-- Durable artifact persistence, release manifests, stable-latest redirect publication, deployment verification, or atomic replacement.
+- Durable artifact persistence, release manifests, stable-latest redirect publication, deployment, or atomic replacement.
 - Historical Entry exports, CSV, custom filtering, a public API, login, payments, or commercial gating.
 - Runtime metadata loading, browser download management, telemetry, or persistent logging.
 
-[Dataset Generation](dataset-generation.md) owns the artifact contract and validated bytes. [Release Construction](release-construction.md) owns the complete release model and route registry. The later atomic release command will own genuine descriptor creation and durable publication.
+[Dataset Generation](dataset-generation.md) owns the artifact contract and validated bytes. [Release Construction](release-construction.md) owns the complete release model and route registry. The [Stage 1 Release Gate](stage-1-release-gate.md) owns genuine descriptor creation, staged artifact writing, verification, manifest creation, and local promotion.
 
 ## Inputs and Outputs
 
@@ -64,7 +64,7 @@ The download path is:
 
 `YYYY-MM-DD` is the UTC calendar date already present in validated `release_metadata.generated_at`. No current clock, local timezone, filesystem time, Git time, or build date participates in the filename. The Release ID directory provides the immutable identity; the dated basename makes a downloaded file understandable outside VyDex.
 
-The page links directly to this path. It does not use `/datasets/vydex-latest-entry-versions-v1-0-0.json`, because that stable convenience route is mutable across releases and remains unpublished until the later release gate owns and verifies its redirect.
+The page links directly to this path. It does not use `/datasets/vydex-latest-entry-versions-v1-0-0.json`, because that stable convenience route is mutable across releases. The release gate emits and verifies its `302` redirect while keeping the page's download tied to the immutable artifact.
 
 ## User-Facing Behavior
 
@@ -103,8 +103,8 @@ The Astro routes convert those failed results into build errors containing diagn
 - [Static Application Foundation](static-application-foundation.md) owns mode selection, static route generation, hosting response metadata, and build failure propagation.
 - [Stage 1 Site Shell](stage-1-site-shell.md) owns Header, Footer, active navigation, canonical document structure, and focus foundations.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns the sheet, rule, button, table, typography, breakpoint, and accessibility primitives composed by the page.
-- [Repository Data Boundaries](https://github.com/Vyce101/VyDex/blob/main/docs/architecture/repository-boundaries.md) separates disposable test-build artifacts from future durable genuine release state.
-- The later atomic release command may reuse preparation and the existing artifact writer, but it remains solely responsible for descriptor creation, manifests, stable redirect publication, deployment checks, and atomic replacement.
+- [Repository Data Boundaries](https://github.com/Vyce101/VyDex/blob/main/docs/architecture/repository-boundaries.md) separates disposable test-build artifacts from durable genuine release state.
+- The [Stage 1 Release Gate](stage-1-release-gate.md) reuses preparation and the existing artifact writer, then verifies the page and artifact together before promotion. Deployment remains outside both systems.
 
 ## Invariants
 
@@ -136,7 +136,7 @@ Check:
 - Whether the change belongs to Dataset generation, application preparation, static publication, or page presentation.
 - Whether page metadata still comes from the exact generated artifact rather than a second configuration source.
 - Whether the shared filename derivation still uses only validated UTC release metadata.
-- Whether the download still targets the immutable route and preserves the stable convenience path for the later release gate.
+- Whether the download still targets the immutable route while the release gate separately verifies the stable convenience redirect.
 - Whether repeat generation still proves identical path and bytes.
 - Whether test builds remain deterministic and write only disposable output without creating a descriptor.
 - Whether production still fails closed before rendering when genuine release state is unavailable or invalid.

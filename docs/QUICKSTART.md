@@ -8,7 +8,7 @@
 - **Local services:** None. VyDex does not require a backend, database, CMS, or external content service.
 - **API keys or model providers:** None.
 - **Public site origin:** Static builds require a root-only HTTPS `PUBLIC_SITE_ORIGIN` so the Dataset Schema can use its absolute canonical URL.
-- **Production release descriptor:** A genuine production build requires `generated/release-data/release.json`. The future atomic release command owns this durable file; local development and test builds do not create it.
+- **Production release descriptor:** A genuine production build requires `generated/release-data/release.json`. Only `npm run release:stage-1` may create this durable file; local development and test builds do not create it.
 - **Hardware:** No special hardware is required. Browser testing downloads a local Chromium build and requires additional disk space.
 
 ## Git commands
@@ -78,13 +78,13 @@ npm run build:test
 
 `npm run build:test` runs type checking and unit tests before using fixed test-only release metadata to generate deterministic static output. It does not create `generated/release-data/release.json` or prove that a production release exists.
 
-The normal production command remains descriptor-gated:
+The ordinary production build remains descriptor-gated:
 
 ```powershell
 npm run build
 ```
 
-Until the atomic release command creates the first genuine descriptor, this command is expected to fail with a missing production release descriptor error. Do not create the descriptor manually or replace it with development/test metadata.
+Until the Stage 1 release gate creates the genuine descriptor, this command is expected to fail with a missing production release descriptor error. Do not create the descriptor manually or replace it with development/test metadata. `npm run build` is not the production release workflow because it does not perform the full release verification and promotion transaction.
 
 Install Chromium once, then run the responsive browser and accessibility tests:
 
@@ -94,6 +94,22 @@ npm run test:browser
 ```
 
 The browser-test command supplies `https://vydex.example` and uses the explicit test-mode build, so it does not use a production hostname or descriptor.
+
+## Create or rebuild the Stage 1 release
+
+Run the sole Stage 1 production release command from the repository root:
+
+```powershell
+npm run release:stage-1
+```
+
+The command uses the approved origin `https://vydex.vyce.workers.dev`. It type-checks the application, runs the complete Vitest suite, validates the canonical records and snapshots, prepares the Schema and export, builds into an isolated `runtime/` directory, and verifies every Stage 1 public surface. A successful run promotes the complete static site to `dist/` and writes the internal manifest to `generated/release-data/release-manifest.json`.
+
+The first run that reaches descriptor creation writes `generated/release-data/release.json`. That UUIDv7 and UTC generation timestamp are permanent for the initial Stage 1 release, even if a later build or verification step fails. Every retry loads the same descriptor; the command has no rotation option.
+
+Use `npm run build:test` when you only want disposable validation output. Do not run the release command to test a possible descriptor value, and do not edit or delete an existing descriptor to begin another release.
+
+A failed release returns a non-zero result, leaves the previous successful `dist/` and manifest in place, and writes private diagnostics to the terminal and ignored rotating files under `user/logs/`. The command does not invoke Wrangler, publish to Cloudflare Pages, or replace the hosted deployment.
 
 ## Downloading the latest installation
 

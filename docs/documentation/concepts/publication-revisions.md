@@ -73,7 +73,7 @@ A non-material revision becomes current but does not move Date Updated or replac
 
 Publication stops before snapshot construction when any input or history rule fails. Blocking conditions include invalid canonical state, empty summaries, duplicate or discontinuous revisions, contradictory chronology, missing historical slug aliases, unresolved Methodologies, duplicate Methodology IDs, category/materiality conflicts, unchanged material declarations, and disabled Stage 1 removal.
 
-The domain returns `ValidationDiagnostic` values. A future command may format them for standard output or standard error, but formatting and process exit behavior do not belong in this system.
+The domain returns `ValidationDiagnostic` values. The [Stage 1 Release Gate](stage-1-release-gate.md) can enrich and format those diagnostics for private terminal output, but formatting and process exit behavior do not belong in this system.
 
 ## Internal Edge Cases
 

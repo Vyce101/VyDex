@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the atomic `npm run release:stage-1` gate with durable descriptor creation, isolated static generation, full-surface verification, internal manifests, Cloudflare redirect output, rotating private logs, and rollback-safe promotion to `dist/`.
 - Added the public Export JSON page with exact release scope, Entry count, generation date, Methodology-version metadata, responsive field index, and a direct immutable dataset download.
 - Added the static material Changelog page with exact-date grouping, a ruled Change Type Key, deterministic release ordering, validated affected-record links, responsive date-rail composition, and accessible no-JavaScript rendering.
 - Added generated Topic Trail pages with exact activity metadata, deterministic latest-update ordering, current-trail Entry previews, private-preview fallbacks, and static not-found behavior.
@@ -30,6 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Included release descriptor UUIDv7 values in the global durable-ID collision check used by production release validation.
 - Derived immutable dataset filenames from each release descriptor's UTC generation date while retaining the Release ID directory and stable convenience path.
 - Required exact RFC 3339 UTC timestamps for Methodology publication events, separated publication ordering from Methodology effective dates, and unified all public Changelog events on timestamp, type, title, and immutable-identity ordering.
 - Added the latest material revision's Entry title to derived activity so non-material title corrections cannot reorder Topic Trail lists.

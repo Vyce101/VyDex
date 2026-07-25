@@ -32,6 +32,8 @@ It does not own:
 - Rendering the Stage 1 pages or a private preview interface.
 - Terminal logging, persistent logs, process exit behavior, or the current clock.
 
+The [Stage 1 Release Gate](stage-1-release-gate.md) owns those production orchestration responsibilities. It supplies explicit metadata to this system and consumes either one complete release or its blocking diagnostics.
+
 ## Inputs and Outputs
 
 The canonical loader receives an injectable repository root and reads the approved locations under `data/canonical-records/` and `data/publication-snapshots/entries/`. It returns located source records and loader diagnostics. Invalid JSON retains its filename and raw source text so a private preview can explain the failure.
@@ -53,7 +55,7 @@ The application boundary exposes two named release sources. `loadPersistedProduc
 
 1. The application adapter reads canonical files through the project-owned loader. The loader enumerates filenames deterministically, parses JSON, and checks snapshot storage paths without changing any file.
 2. The application supplies release metadata and a site origin. Production reads metadata from the persisted descriptor; development and explicit test mode inject fixed non-production metadata. The framework-independent constructor does not read environment variables or files.
-3. Record schemas validate Entries, Topic Trails, Methodologies, About content, Methodology publication events, and snapshots. Aggregate validation checks identities, slug namespaces, and relationships.
+3. Record schemas validate Entries, Topic Trails, Methodologies, About content, Methodology publication events, snapshots, and release metadata. Aggregate validation checks the release UUIDv7 in the same durable-ID namespace as records and snapshots, then checks slug namespaces and relationships.
 4. Snapshots are grouped by Entry ID. Each history is ordered by validated revision number and checked for numbering, chronology, materiality, Methodology references, and retained historical slugs.
 5. The newest valid snapshot becomes the public Entry. Release resolution clones that Entry and orders its copied source array for public display; the immutable snapshot and editable canonical Entry remain unchanged.
 6. The constructor resolves routes, Topic Trail membership, Methodology and About links, derived dates, latest meaningful activity, trail counts, and trail Last Activity. Each trail receives its own copied Entry list in latest-update order.
@@ -68,7 +70,7 @@ The operation is deterministic. Identical records, snapshots, release metadata, 
 
 Production loading fails closed when the descriptor is missing, unreadable, malformed, or schema-invalid. It never falls back to the fixed development/test metadata. Ordinary builds, development starts, page renders, and tests do not create a UUID, read the clock, or write the descriptor.
 
-The fixed adapter is explicitly non-production. Its constants make local and automated output reproducible, but they are not genuine release state and must not be written into canonical records or persisted as a production descriptor. A later atomic release command remains the sole creator and writer of genuine descriptor state. Once created, the descriptor is durable release data and remains eligible for source control rather than disposable cache.
+The fixed adapter is explicitly non-production. Its constants make local and automated output reproducible, but they are not genuine release state and must not be written into canonical records or persisted as a production descriptor. The [Stage 1 Release Gate](stage-1-release-gate.md) is the sole creator of the initial genuine descriptor. It validates a candidate release before exclusive creation, preserves the winning descriptor during a creation race, and never rewrites an existing descriptor.
 
 ## Production and Private Preview
 
@@ -100,7 +102,7 @@ The resolved Methodology pairs the validated canonical record with separate curr
 
 Entry and Topic Trail aliases produce permanent `301` redirects. The stable-latest dataset path is not an alias and does not use that contract; [Dataset Generation](dataset-generation.md) returns a separate `302` descriptor whose destination changes with each release.
 
-Current slugs create canonical routes. Historical aliases create `301` redirect descriptors that point directly to the current route. Redirect sources must be unique, cannot collide with current routes, and cannot form loops or chains. This system returns descriptors only; a later static-site integration will translate them into a deployment artifact.
+Current slugs create canonical routes. Historical aliases create `301` redirect descriptors that point directly to the current route. Redirect sources must be unique, cannot collide with current routes, and cannot form loops or chains. This system returns descriptors only; the release gate translates them into the staged Cloudflare `_redirects` file and verifies the emitted rules.
 
 About content authors provide titles and descriptions for its related links, while the route registry supplies the destinations. Authored About data therefore cannot drift from the canonical Methodology, Changelog, or export routes.
 
@@ -128,7 +130,7 @@ Diagnostics identify the record type, field or rule, recoverable record ID, file
 
 Blocking conditions include malformed JSON, invalid snapshot paths, invalid records, missing or orphan histories, broken relationships, duplicate or colliding routes, incomplete required content, missing or invalid material-event timestamps, wrong Methodology references, removed current Entries, empty Topic Trails, invalid origins or release metadata, and permanent-alias redirect failures.
 
-The loader and constructor return diagnostics without writing to standard output or standard error. A later atomic release command may format those diagnostics and choose a nonzero process exit code.
+The loader and constructor return diagnostics without writing to standard output or standard error. The release gate enriches them with affected generated surfaces, formats the private report, and returns a non-zero command result.
 
 ## Internal Edge Cases
 
@@ -156,7 +158,8 @@ The loader and constructor return diagnostics without writing to standard output
 - The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.
-- The repository contains the complete Stage 1 seed record set. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting a genuine release. Normal production remains blocked until the later atomic release command creates the descriptor.
+- The repository contains the complete Stage 1 seed record set. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting a genuine release. Ordinary production builds remain blocked until the release gate creates the descriptor.
+- The release gate caches one production application-release load during its Astro build so every generated route consumes the same in-memory model. Ordinary builds retain their existing uncached behavior.
 
 ## Invariants
 
@@ -177,7 +180,9 @@ The loader and constructor return diagnostics without writing to standard output
 - `src/adapters/canonical-record-loader/` — Read-only repository JSON loading and path diagnostics.
 - `src/adapters/application-release/` — Environment-facing origin configuration and the single application release call.
 - `src/adapters/persisted-release-descriptor/` — Exact-path descriptor reading, JSON parsing, and Schema validation.
+- `src/adapters/stage-one-release-descriptor/` — Exclusive creation and immutable reuse of the initial Stage 1 descriptor.
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
+- `src/release/stage-one-release/` — Production orchestration that consumes this domain boundary.
 - `src/domain/release-construction/compare-resolved-public-entries.ts` — Shared material-activity ordering comparator.
 - `src/domain/release-construction/compare-resolved-topic-trail-entries.ts` — Topic Trail latest-update comparator with the material-title tie-breaker.
 - `src/domain/release-construction/derive-changelog.ts` — Material-event projection, derived calendar dates, and uniform timestamp/type/title/identity ordering.
@@ -198,8 +203,9 @@ Check:
 - Whether Topic Trail resolution still uses material activity, Date Added, the retained material title, and immutable Entry ID without mutating `current_entries`.
 - Whether release resolution and Dataset generation still share the public source comparator while canonical and snapshot arrays remain untouched.
 - Whether production descriptor loading still uses the exact reserved path and fails instead of falling back to fixed metadata.
+- Whether the release UUIDv7 still participates in the global durable-ID collision check.
 - Whether route and alias checks run before absolute URL generation.
 - Whether every page-facing value still comes from the shared release model.
 - Whether dataset behavior belongs in [Dataset Generation](dataset-generation.md) rather than the release constructor.
-- Whether a proposed filesystem, environment, clock, logging, or output side effect belongs in an adapter or later release command instead of the domain constructor.
+- Whether a proposed filesystem, environment, clock, logging, or output side effect belongs in an adapter or the release gate instead of the domain constructor.
 - Whether tests cover both strict production rejection and diagnostic preview behavior.
