@@ -232,6 +232,11 @@ describe("canonical Stage 1 seed content", () => {
 
   test("constructs the complete production release with URLs, relationships, and activity dates", () => {
     expect(release.current_entries).toHaveLength(3);
+    expect(release.current_entries.map(({ entry }) => entry.id)).toEqual([
+      SEEDS.dreamer.entry_id,
+      SEEDS.gdmi.entry_id,
+      SEEDS.metr.entry_id,
+    ]);
     expect(release.topic_trails).toHaveLength(3);
     expect(release.topic_trails.every(({ entry_count }) => entry_count === 1)).toBe(true);
 
