@@ -8,10 +8,11 @@ label: Home
 
 VyDex is a versioned evidence ledger for threshold-crossing claims in AI, science, and technology.
 
-These docs cover the current Homepage, public Entry and Topic Trail pages, material Changelog, versioned Methodology rulebook, About and Scope Limits page, and Export JSON page. They also explain the evidence-record, dataset, and release systems behind those surfaces, the Frontier Atlas interface, repository boundaries, and the commands used to run and validate VyDex.
+These docs cover the public VyDex pages, the evidence and release systems behind them, local setup, and the Cloudflare Pages publication workflow.
 
 ## Choose a Path
 
 - [I want to run VyDex](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)
 - [I want to understand VyDex](concepts/)
 - [I want to use VyDex](guides.md)
+- [I want to contribute to the codebase](https://github.com/Vyce101/VyDex)

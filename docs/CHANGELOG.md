@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added Git-integrated Cloudflare Pages previews and a gated GitHub Actions production deployment that publishes only the complete validated `dist/` artifact.
+- Added committed Stage 1 release identity and manifest state for reproducible clean-runner builds and operational rollback.
 - Added the atomic `npm run release:stage-1` gate with durable descriptor creation, isolated static generation, full-surface verification, internal manifests, Cloudflare redirect output, rotating private logs, and rollback-safe promotion to `dist/`.
 - Added the public Export JSON page with exact release scope, Entry count, generation date, Methodology-version metadata, responsive field index, and a direct immutable dataset download.
 - Added the static material Changelog page with exact-date grouping, a ruled Change Type Key, deterministic release ordering, validated affected-record links, responsive date-rail composition, and accessible no-JavaScript rendering.
@@ -31,6 +33,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Required production and preview builds to use the validated `PUBLIC_SITE_ORIGIN`, with strict descriptor, manifest, origin, and byte-identical inventory checks in CI.
+- Routed production publication through the Cloudflare Pages project `vydex` while keeping canonical records, snapshots, and release metadata authoritative in the repository.
 - Expanded the atomic Stage 1 release gate to run the complete Playwright suite against the exact staged Cloudflare Pages output before manifest creation or promotion, with complete ignored browser output and rollback-safe failure handling.
 - Included release descriptor UUIDv7 values in the global durable-ID collision check used by production release validation.
 - Derived immutable dataset filenames from each release descriptor's UTC generation date while retaining the Release ID directory and stable convenience path.
@@ -47,11 +51,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed Stage 1 release subprocesses on Windows by invoking npm's JavaScript CLI through the active Node.js runtime.
 - Fixed the Homepage heading hierarchy by making Latest Update an H2 parent for Entry Preview headings.
 - Fixed the Frontier Delta directional connector and aligned public Entry sections to one full-width maintained-record layout across supported viewports.
 
 ### Removed
 
+- Removed the Cloudflare Workers deployment configuration and revoked the former Workers production origin.
 ### Security
 
 - Pinned Ajv's transitive `fast-uri` parser to patched version `3.1.4`.
