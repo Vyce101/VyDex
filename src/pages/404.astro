@@ -1,0 +1,13 @@
+---
+// Renders the generic static not-found page through the shared site shell.
+import { STAGE_ONE_FIXED_PUBLIC_PATHS } from "../domain";
+import FoundationLayout from "../layouts/FoundationLayout.astro";
+---
+
+<FoundationLayout title="Page Not Found — VyDex">
+  <section class="atlas-stack atlas-prose" aria-labelledby="not-found-heading">
+    <h1 id="not-found-heading" class="atlas-type-entry-title">Page not found</h1>
+    <p class="atlas-type-interface">The page you requested could not be found.</p>
+    <a href={STAGE_ONE_FIXED_PUBLIC_PATHS.home}>Return to the Homepage</a>
+  </section>
+</FoundationLayout>
