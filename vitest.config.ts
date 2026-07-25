@@ -7,6 +7,7 @@ export default defineConfig({
     include: [
       "tests/adapters/**/*.test.ts",
       "tests/components/**/*.test.ts",
+      "tests/features/**/*.test.ts",
       "tests/foundation/**/*.test.ts",
       "tests/domain/**/*.test.ts",
     ],

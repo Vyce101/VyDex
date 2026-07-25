@@ -49,7 +49,7 @@ function getModuleSpecifiers(sourceText: string, fileName: string): string[] {
 
 function isForbiddenDomainImport(specifier: string, fileName: string): boolean {
   const normalizedSpecifier = specifier.replaceAll("\\", "/");
-  const importsUiModule = ["pages", "components", "layouts"].some(
+  const importsUiModule = ["pages", "components", "features", "layouts"].some(
     (directory) =>
       normalizedSpecifier === directory ||
       normalizedSpecifier.startsWith(`${directory}/`) ||
@@ -107,13 +107,15 @@ describe("domain module boundaries", () => {
     expect(isForbiddenDomainImport("@/components/Card.astro", sampleFile)).toBe(true);
   });
 
-  test("has the Astro fixture consume the domain public entry point", () => {
+  test("has the Homepage consume only application and feature entry points", () => {
     const pageSource = readFileSync(FOUNDATION_PAGE, "utf8");
-    expect(pageSource).toContain('import { entrySchema } from "@domain";');
+    expect(pageSource).toContain("loadPersistedProductionApplicationRelease");
+    expect(pageSource).toContain("createHomepagePresentationModel");
+    expect(pageSource).not.toContain("data/canonical-records");
   });
 
   test("keeps authoring-file parsing behind the canonical loader", () => {
-    const presentationDirectories = ["pages", "components"].map((directory) =>
+    const presentationDirectories = ["pages", "components", "features"].map((directory) =>
       join(PROJECT_ROOT, "src", directory),
     );
     const presentationFiles = presentationDirectories.flatMap((directory) =>

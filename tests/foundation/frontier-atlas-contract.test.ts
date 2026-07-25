@@ -10,6 +10,7 @@ const TOKENS_SOURCE = readFileSync(TOKENS_PATH, "utf8");
 const PRESENTATION_ROOTS = [
   STYLES_ROOT,
   join(PROJECT_ROOT, "src", "components"),
+  join(PROJECT_ROOT, "src", "features"),
   join(PROJECT_ROOT, "src", "layouts"),
   join(PROJECT_ROOT, "src", "pages"),
 ];
