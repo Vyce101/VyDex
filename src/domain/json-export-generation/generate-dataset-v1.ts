@@ -5,13 +5,13 @@ import {
   DOMAINS,
   EVIDENCE_STRENGTH_SCORES,
   EVIDENCE_TYPES,
-  SOURCE_ROLES,
   SOURCE_ROLE_LABELS,
   releaseMetadataSchema,
   type Domain,
   type EntrySourceCitation,
   type EvidenceType,
 } from "../canonical-records";
+import { orderEntrySourcesForPublicDisplay } from "../source-ordering";
 import type { ValidationDiagnostic, ValidationResult } from "../cross-record-validation";
 import type { ReleaseModel, ResolvedPublicEntry } from "../release-construction";
 import {
@@ -53,11 +53,6 @@ function lexicalCompare(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-function compareSourceTitles(left: EntrySourceCitation, right: EntrySourceCitation): number {
-  const roleOrder = SOURCE_ROLES.indexOf(left.source_role) - SOURCE_ROLES.indexOf(right.source_role);
-  return roleOrder !== 0 ? roleOrder : left.title.localeCompare(right.title, "en");
-}
-
 function sortControlledValues<Value extends string>(
   values: readonly Value[],
   order: readonly Value[],
@@ -94,7 +89,7 @@ function deriveEvidenceTypes(sources: readonly ExportSourceV1[]): EvidenceType[]
 
 function projectEntry(resolved: ResolvedPublicEntry): ExportEntryV1 {
   const { entry, snapshot, activity } = resolved;
-  const sources = [...entry.sources].sort(compareSourceTitles).map(projectSource);
+  const sources = orderEntrySourcesForPublicDisplay(entry.sources).map(projectSource);
   const secondaryTopicTrails = [...resolved.secondary_topic_trails]
     .sort((left, right) => lexicalCompare(left.slug, right.slug))
     .map(projectTopicTrail);

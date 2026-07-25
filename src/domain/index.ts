@@ -6,3 +6,4 @@ export * from "./material-activity";
 export * from "./publication-revisions";
 export * from "./release-construction";
 export * from "./route-generation";
+export * from "./source-ordering";

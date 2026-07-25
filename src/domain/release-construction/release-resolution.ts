@@ -4,6 +4,7 @@ import type { ValidationDiagnostic } from "../cross-record-validation";
 import { toCanonicalUrl, type PublicRouteRegistry, type SiteOrigin } from "../route-generation";
 import { compareResolvedPublicEntriesByLatestMaterialActivity } from "./compare-resolved-public-entries";
 import { createReleaseDiagnostic } from "./release-diagnostics";
+import { orderEntrySourcesForPublicDisplay } from "../source-ordering";
 import type { ValidatedHistory, ValidatedInputs } from "./release-input-validation";
 import type {
   EntryChangelogEvent,
@@ -28,7 +29,11 @@ export function resolveEntries(input: {
     const history = input.histories.get(canonicalEntry.id);
     if (!history) continue;
     const snapshot = history.snapshots.at(-1)!;
-    const entry = snapshot.entry;
+    const snapshotEntry = snapshot.entry;
+    const entry = {
+      ...snapshotEntry,
+      sources: orderEntrySourcesForPublicDisplay(snapshotEntry.sources),
+    };
     const entryPath = input.routes.entries[entry.id];
     const primaryTrail = trailsById.get(entry.primary_topic_trail_id);
     const secondaryTrails = entry.secondary_topic_trail_ids.map((id) => trailsById.get(id));
