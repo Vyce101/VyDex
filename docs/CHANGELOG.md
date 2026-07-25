@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added automatic verification of each hosted Cloudflare Pages production deployment and a protected rollback rehearsal that verifies rollback, restores the intended deployment, and retains recovery evidence.
 - Added Git-integrated Cloudflare Pages previews and a gated GitHub Actions production deployment that publishes only the complete validated `dist/` artifact.
 - Added committed Stage 1 release identity and manifest state for reproducible clean-runner builds and operational rollback.
 - Added the atomic `npm run release:stage-1` gate with durable descriptor creation, isolated static generation, full-surface verification, internal manifests, Cloudflare redirect output, rotating private logs, and rollback-safe promotion to `dist/`.

@@ -4,46 +4,62 @@ label: How To Redeploy A Complete Stage 1 Release
 
 # How To Redeploy A Complete Stage 1 Release
 
-Use this guide when the current production site must return to a previously successful Stage 1 deployment. You need maintainer access to the Cloudflare Pages project `vydex`.
+Use this guide to restore a known-good VyDex production deployment after an unsuccessful release or failed automatic restoration. You need maintainer access to the Cloudflare Pages project `vydex` and the matching repository release state.
+
+This is an emergency recovery task. To test rollback and restoration under normal conditions, use [How To Rehearse The Production Rollback](how-to-rehearse-production-rollback.md).
 
 ## Before You Start
 
-- Confirm that the target is a successful **Production** deployment. Cloudflare Pages cannot roll production back to a preview deployment.
-- Identify the deployment's commit hash in Cloudflare Pages.
-- Open that commit in GitHub and inspect `generated/release-data/release.json` and `generated/release-data/release-manifest.json`.
-- Confirm that both files describe the release you intend to restore. The manifest contains the release ID, canonical origin, immutable export filename, routes, redirects, and file inventory.
+- Stop other production deployments and rollback attempts.
+- Find the exact intended Cloudflare deployment ID in the failed GitHub Actions run or its `vydex-rollback-evidence-*` artifact.
+- Confirm that the target is a successful **Production** deployment for the Pages project `vydex`. Never select a preview deployment.
+- Match the deployment's commit to `generated/release-data/release.json` and `generated/release-data/release-manifest.json` in GitHub.
+- Confirm the expected VyDex Release ID, canonical origin, Entry count, immutable Dataset path, routes, redirects, and file inventory before changing production.
+- In a clean checkout of the matching commit, run `npm ci` and install the pinned Chromium runtime with `npm run test:browser:install` before using the hosted verifier.
 
-Do not use a deployment merely because its page looks correct. A valid rollback target must correspond to complete committed release state and a successful production deployment.
+Do not choose a deployment because its Homepage looks correct. The target must represent one complete committed release. Cloudflare deployment IDs may differ while the VyDex Release ID and artifact bytes remain the same.
 
 ## Restore The Deployment
 
 1. Open the Cloudflare dashboard and select **Workers & Pages**.
 2. Open the Pages project named **vydex**, then open **Deployments**.
-3. Find the successful production deployment whose commit hash matches the release you verified.
-4. Open the three-dot actions menu for that deployment.
-5. Select **Rollback to this deployment**.
-6. Review the confirmation window, then confirm the rollback.
-7. Wait for Cloudflare Pages to make the selected deployment current.
+3. Find the successful production deployment with the intended deployment ID and matching commit.
+4. Open that deployment's actions menu and select **Rollback to this deployment**.
+5. Review the target ID before you confirm. This action changes the live production site.
+6. Confirm the rollback, then wait until Cloudflare marks the selected deployment as the current production deployment.
 
-Cloudflare changes the hosted production deployment; it does not rewrite Git history, canonical records, snapshots, the release descriptor, or the release manifest. A later successful deployment from `main` can replace the rollback.
+If the failed workflow printed a manual recovery command, you may use that command instead of the dashboard. Keep `$CLOUDFLARE_ACCOUNT_ID` and `$CLOUDFLARE_API_TOKEN` as environment-provided values; do not paste either secret into a tracked file, issue, report, or chat message.
 
-## Confirm It Worked
+## Confirm The Restored Release
 
-1. Open [https://vydex.pages.dev](https://vydex.pages.dev).
-2. Open the [Export JSON page](https://vydex.pages.dev/export/).
-3. Confirm that the immutable download URL contains the expected release ID and export filename from the selected manifest.
-4. Open the download and confirm that it returns JSON rather than an error page.
+1. Confirm in Cloudflare that `canonical_deployment.id` matches the intended deployment ID.
+2. Open [https://vydex.pages.dev](https://vydex.pages.dev) and confirm that the Homepage loads.
+3. Open the [Export JSON page](https://vydex.pages.dev/export/) and confirm that its Release ID, Entry count, and immutable download URL match the selected manifest.
+4. Open the immutable Dataset and Schema URLs from the manifest. Confirm that each returns JSON rather than an error page.
+5. Use the matching repository commit to run the hosted verifier with `VYDEX_EXPECTED_DEPLOYMENT_ID` set to the restored Cloudflare deployment ID:
+
+   ```powershell
+   $env:PUBLIC_SITE_ORIGIN = "https://vydex.pages.dev"
+   $env:VYDEX_EXPECTED_DEPLOYMENT_ID = "replace-with-production-deployment-id"
+   npm run verify:hosted-stage-1
+   ```
+
+The command also requires the Cloudflare Pages environment values described in `.env.example`. Success means the HTTP checks and the hosted Playwright and Axe suite pass against the real production origin.
 
 ## If Something Goes Wrong
 
-Stop if the target is a preview, a failed build, or cannot be matched to committed release state. Review the Cloudflare deployment details and the corresponding GitHub Actions run before choosing another target.
+Do not repeatedly choose different deployments. Preserve the intended deployment ID and the failed workflow artifacts, then check whether the target is a successful production record for the correct project and commit.
 
-Cloudflare deployment history and retained GitHub workflow artifacts are short-term operational support. They are not the permanent evidence archive; canonical records, immutable snapshots, and committed release metadata remain authoritative.
+If Cloudflare cannot make the intended ID canonical, keep the production incident open and do not start the rollback rehearsal. The [Hosted Release Verification](concepts/hosted-release-verification.md) concept explains the evidence and restoration contract; the [Cloudflare Pages Deployment](concepts/cloudflare-pages-deployment.md) concept explains deployment selection and identity boundaries.
 
-For Cloudflare's current dashboard behavior, see [Rollbacks in Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/rollbacks/).
+## Next Steps
+
+After production is restored and complete hosted verification passes, record the recovered deployment ID and retain the GitHub Actions evidence. Run a new rehearsal only when the deployment and rollback mechanism are stable and another rehearsal is explicitly needed.
 
 ## Related Pages
 
+- [How To Rehearse The Production Rollback](how-to-rehearse-production-rollback.md)
+- [Hosted Release Verification](concepts/hosted-release-verification.md)
 - [Cloudflare Pages Deployment](concepts/cloudflare-pages-deployment.md)
 - [Stage 1 Release Gate](concepts/stage-1-release-gate.md)
 - [Quickstart](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)

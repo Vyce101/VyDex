@@ -40,7 +40,7 @@ Important frontier claims are often scattered across announcements, papers, arti
 
 **Produces deterministic data releases.** Each dataset release has a fixed release identity, an immutable Schema and export path, and a complete file manifest. A stable convenience URL can point to the latest immutable artifact without replacing it.
 
-**Validates the whole release before publication.** Type checking, unit tests, release validation, static generation, Playwright journeys, and Axe checks must all pass before the same validated artifact can be deployed to Cloudflare Pages.
+**Checks the release before and after publication.** Type checking, unit tests, release validation, static generation, Playwright journeys, and Axe checks must pass before deployment. The production workflow then checks the actual Pages routes, redirects, headers, canonical URLs, Dataset, Schema, accessibility behavior, and no-JavaScript journeys.
 
 Search, filtering, public Entry revision browsing, and exact historical citation remain planned capabilities rather than current Stage 1 behavior.
 
@@ -62,13 +62,15 @@ The initial Stage 1 release is represented by the committed descriptor and manif
 
 The release gate validates canonical records and snapshots, constructs one release model, builds into isolated runtime storage, verifies the Schema, export, routes, redirects, links, counts, and navigation, then runs the complete Playwright and Axe matrix against that exact staged output. Promotion replaces local `dist/` and the manifest only after every check succeeds.
 
-Git-integrated Cloudflare Pages previews are enabled for repository changes. Production-branch automatic deployment is disabled in Cloudflare; the gated GitHub Actions workflow instead regenerates the committed release byte-for-byte, uploads the complete `dist/` artifact, verifies it again in the deployment job, and deploys it through Wrangler. A failed check or deployment cannot intentionally replace the current production release.
+Git-integrated Cloudflare Pages previews are enabled for repository changes. Production-branch automatic deployment is disabled in Cloudflare; the gated GitHub Actions workflow instead regenerates the committed release byte-for-byte, uploads the complete `dist/` artifact, waits for the matching Cloudflare production deployment to become canonical, and verifies `https://vydex.pages.dev`. If that hosted check fails and the previous deployment was verified as a matching known-good release, the workflow restores and verifies it.
 
-The first production publication is confirmed only after the main-branch deployment workflow succeeds. Public Entry revision browsing and search remain later work.
+A separate manually dispatched workflow rehearses production rollback under the protected GitHub `production` environment. It records two successful production deployment IDs for the same persisted release, verifies the earlier deployment after rollback, restores the intended deployment in unconditional cleanup, and verifies production again. It does not create another VyDex release identity.
+
+The first production publication is confirmed only after the main-branch hosted verification and the protected rollback-and-restoration rehearsal both succeed. Public Entry revision browsing and search remain later work.
 
 ## Major Milestones Roadmap
 
-- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface, public pages, JSON export, release identity, and gated Cloudflare Pages deployment path are implemented. Production publication is verified separately by the main-branch workflow.
+- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface, public pages, JSON export, release identity, gated Cloudflare Pages deployment, hosted verification, and protected rollback rehearsal are implemented. Live acceptance remains separate from local implementation.
 - **Stage 2 — Searchable Evidence Database.** Users can search real Entries, filter by evidence fields, and understand why results are ordered as they are.
 - **Stage 3 — Versioned Ledger and Citation.** Users can inspect Entry history, open older versions, see what changed, and cite an exact version with its applicable Methodology.
 
