@@ -101,7 +101,7 @@ test("applies the approved typography roles at mobile, tablet, and desktop width
       "font-weight",
       "line-height",
     ]);
-    const card = await getStyles(page.locator(".atlas-type-entry-card-title"), [
+    const card = await getStyles(page.locator("#card-heading"), [
       "font-family",
       "font-size",
       "font-weight",
@@ -143,7 +143,7 @@ test("applies the approved typography roles at mobile, tablet, and desktop width
     expect(evidence["font-family"]).toContain("Source Serif 4 Variable");
   }
 
-  const editorial = await getStyles(page.locator(".atlas-type-editorial-lead"), [
+  const editorial = await getStyles(page.locator("header .atlas-type-editorial-lead"), [
     "font-family",
     "font-size",
     "font-weight",

@@ -145,7 +145,7 @@ test("moves focus through the skip link and shell regions in document order", as
 
     await page.goto("/");
     const visitedRegions: string[] = [];
-    for (let index = 0; index < 20; index += 1) {
+    for (let index = 0; index < 50; index += 1) {
       await page.keyboard.press("Tab");
       const region = await page.evaluate(() => {
         const active = document.activeElement;
