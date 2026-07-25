@@ -214,7 +214,11 @@ function validateReleaseMetadata(
   return result.data;
 }
 
-function addAggregateDiagnostics(parsed: ValidatedInputs, diagnostics: ValidationDiagnostic[]): boolean {
+function addAggregateDiagnostics(
+  parsed: ValidatedInputs,
+  releaseMetadata: ReleaseMetadata | undefined,
+  diagnostics: ValidationDiagnostic[],
+): boolean {
   const result = validateCanonicalRecordSet(
     {
       entries: parsed.entries.map(({ data, source }) => ({ value: data, filename: source.filename })),
@@ -224,7 +228,7 @@ function addAggregateDiagnostics(parsed: ValidatedInputs, diagnostics: Validatio
         value: data,
         filename: source.filename,
       })),
-      release_metadata: [],
+      release_metadata: releaseMetadata ? [{ value: releaseMetadata }] : [],
     },
     "stage_1_production",
   );
@@ -384,7 +388,7 @@ export function validateReleaseInputs(
   const releaseMetadata = validateReleaseMetadata(input.release_metadata, diagnostics);
   const originResult = validateSiteOrigin(input.site_origin, input.mode);
   if (!originResult.success) diagnostics.push(...originResult.diagnostics);
-  const aggregateValid = addAggregateDiagnostics(parsed, diagnostics);
+  const aggregateValid = addAggregateDiagnostics(parsed, releaseMetadata, diagnostics);
   const stageOneReferencesValid = validateStageOneMethodologyReferences(
     parsed,
     singletonState.methodology,
