@@ -4,8 +4,9 @@ label: Guides
 
 # Guides
 
-VyDex does not have an end-user product workflow yet. The current guide covers running and validating the static application foundation.
+VyDex does not yet have a normal-user task that requires a separate step-by-step guide. The Stage 1 Homepage is designed to be read and navigated directly.
 
-- [Install and run VyDex](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)
+- [Open the VyDex Homepage](https://vydex.vyce.workers.dev)
+- [Install, run, and validate VyDex locally](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)
 
-Additional guides will be added only when their corresponding user-facing workflows are implemented.
+Entry, Methodology, About, Changelog, and export destinations remain separate Stage 1 work. Task guides will be added when VyDex introduces a normal-user workflow that needs ordered steps, decisions, or warnings. QUICKSTART remains setup documentation rather than a normal-user task guide.

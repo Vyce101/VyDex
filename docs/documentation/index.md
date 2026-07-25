@@ -4,11 +4,11 @@ label: Home
 
 <h1 align="center">VyDex Documentation</h1>
 
-![VyDex versioned evidence preview|900](https://raw.githubusercontent.com/Vyce101/VyDex/main/docs/assets/Social%20Preview%20%28186KB%29.jpg)
+![VyDex Stage 1 Homepage showing the Hero, Latest Update, and Recent Entries|900](https://raw.githubusercontent.com/Vyce101/VyDex/main/docs/assets/stage-1-homepage.png)
 
 VyDex is a versioned evidence ledger for threshold-crossing claims in AI, science, and technology.
 
-These docs cover the current application foundation, Frontier Atlas design system, canonical records, publication revisions, release construction, deterministic dataset generation, and the boundaries between them. User guides and public Methodology documentation will appear when those workflows exist.
+These docs explain the current Homepage, evidence-record and release systems, Frontier Atlas interface, repository boundaries, and the commands used to run and validate the project.
 
 ## Choose a Path
 
