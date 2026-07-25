@@ -11,7 +11,7 @@ import {
   type Entry,
   type ResolvedPublicEntry,
 } from "../../domain";
-import { renderEntryPreviewInlineMarkdown } from "./render-inline-markdown";
+import { renderEntryInlineMarkdown } from "../../shared/entry-markdown";
 
 export type EntryPreviewSource = {
   entry: Pick<
@@ -86,7 +86,7 @@ export function projectEntryPreview(source: EntryPreviewSource): EntryPreviewVie
     domain_label: DOMAIN_LABELS[domain],
     date_updated: dateUpdated.data,
     title: requirePlainText(source.entry?.title, "an Entry title"),
-    claim_html: renderEntryPreviewInlineMarkdown(claim.data),
+    claim_html: renderEntryInlineMarkdown(claim.data),
     claim_status: requireMappedLabel(
       source.entry?.claim_status,
       CLAIM_STATUS_LABELS,
