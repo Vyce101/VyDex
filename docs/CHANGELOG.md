@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added a reusable responsive Entry preview that presents its Domain, update date, claim, statuses, Topic Trail, and accessible Entry links consistently across list contexts.
 - Added the shared Stage 1 site shell with canonical navigation, responsive Header and Footer components, a no-JavaScript mobile menu, skip navigation, route-derived active states, and keyboard accessibility checks.
 - Added the light-only Frontier Atlas design system with shared responsive typography, layouts, controls, claim statuses, tables, and accessibility checks.
 - Added the real Stage 1 seed ledger with three Entries, Topic Trails, and immutable initial publication snapshots.

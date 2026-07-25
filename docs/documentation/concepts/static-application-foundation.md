@@ -1,6 +1,6 @@
 ---
 label: Static Application Foundation
-order: 600
+order: 800
 ---
 
 # Static Application Foundation
@@ -50,6 +50,8 @@ The Dataset Schema route is a thin Astro endpoint over the shared Schema generat
 
 The application release adapter composes the read-only canonical loader with the framework-independent constructor. It reads `PUBLIC_SITE_ORIGIN` at the application boundary and defaults private preview to `http://localhost:4321`. Astro pages and components must use this shared release entry point rather than parse authoring files directly.
 
+The current technical fixture uses that adapter in preview mode to obtain a validated seed Entry for the [Entry Preview](entry-preview.md) conformance examples. The preview module receives resolved data through the Astro boundary; it does not load files, access the environment, or create a public route.
+
 The repository also reserves separate locations for canonical records, publication snapshots, generated release data, and static output. Storage and generation behavior remain separate from the application foundation.
 
 Retype is an independent npm project under `docs/documentation/`. It publishes documentation to GitHub Pages; its base path, dependencies, and output do not apply to the Astro application.
@@ -60,10 +62,10 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 
 ## Internal Edge Cases
 
-- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. A placeholder import in the Frontier Atlas fixture still verifies the allowed dependency direction.
+- The domain entry exports canonical records, cross-record validation, publication revisions, material activity, route generation, Dataset `1.0.0` generation, and release construction. The technical fixture imports canonical validation through that public domain entry and obtains release data through the application adapter, preserving the allowed dependency direction.
 - TypeScript is pinned to `6.0.3` because the pinned Astro checker accepts TypeScript 5 or 6, not TypeScript 7.
 - The application base path is `/`, and `.env.example` documents `PUBLIC_SITE_ORIGIN`. Production code does not hardcode a hostname; tests and CI use the reserved `https://vydex.example` origin.
-- The repository now has a complete validated Stage 1 seed record set, and an integration test constructs a successful production release from it using fixed test-only metadata. The current fixture still does not call strict release construction because no genuine release descriptor is persisted and the public rendering flow is not connected to the release model. It does publish the Dataset Schema because Schema generation needs an origin rather than public Entry content.
+- The repository now has a complete validated Stage 1 seed record set, and an integration test constructs a successful production release from it using fixed test-only metadata. The current fixture calls the application release adapter in preview mode to obtain a real seed Entry for Entry Preview conformance. Without genuine release metadata it remains non-promotable, does not invoke strict production construction, and does not make its fixture hosts public pages. It publishes the Dataset Schema because Schema generation needs an origin rather than public Entry content.
 - Vitest runs both foundation architecture tests and domain validation tests in a Node environment.
 - Ajv validates generated datasets against the exact draft 2020-12 Schema. The pinned `fast-uri` override keeps Ajv's URI parser on its patched compatible release.
 
@@ -97,6 +99,7 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - `src/adapters/dataset-artifact-writer/` — Injected immutable dataset filesystem emission.
 - `src/pages/` and `src/layouts/` — Astro-owned page and document rendering boundary.
 - `src/components/site-shell/` — Shared Header, Footer, navigation model, and progressive enhancement.
+- `src/components/entry-preview/` — Reusable static Entry projection and presentation boundary.
 - `src/pages/schemas/` and `public/_headers` — Static Dataset Schema publication and hosting metadata.
 - `src/styles/` — Frontier Atlas tokens, base styles, type roles, layouts, components, and the global stylesheet entry point.
 - `tests/foundation/` — Architecture checks.
@@ -111,6 +114,7 @@ Check:
 - Whether a dependency would introduce a UI framework, runtime service, or external content dependency.
 - Whether a presentation change preserves the [Frontier Atlas](frontier-atlas-design-system.md) ownership boundary and accessibility invariants.
 - Whether a page or layout change preserves the [Stage 1 Site Shell](stage-1-site-shell.md) order, navigation, and no-JavaScript behavior.
+- Whether an Entry list integration preserves the [Entry Preview](entry-preview.md) projection, sequence, and context-free presentation contract.
 - Whether a domain import points toward Astro or another presentation module.
 - Whether new browser JavaScript is genuine progressive enhancement.
 - Whether a data location mixes canonical, immutable, generated-release, or static-build concerns.

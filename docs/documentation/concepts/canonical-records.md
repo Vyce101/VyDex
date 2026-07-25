@@ -97,17 +97,18 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - The schema recognizes `removed` for durable compatibility. Stage 1 production validation rejects it only for current public Entries, not for historical snapshot payloads.
 - The canonical loader retains filenames and raw invalid JSON for preview diagnostics, but filesystem access stays in the adapter boundary.
 - Release construction may combine valid canonical records into resolved public data, but it must not repair or widen the stored contracts. [Dataset Generation](dataset-generation.md) narrows that resolved state into the separate public Dataset `1.0.0` contract.
+- The [Entry Preview](entry-preview.md) consumes validated current Entry fields and the exhaustive public-label maps. It displays only the first authored Domain as preview priority without changing the ordered array or the full Entry and Dataset representations.
 
 ## Invariants
 
-- Stable machine values remain lowercase `snake_case`; public labels come from exhaustive framework-independent maps.
+- Stable machine values remain lowercase `snake_case`; Claim Status, Evidence Strength, Review Status, Domain, Evidence Type, and Source Role public labels come from exhaustive framework-independent maps rather than presentation-layer string conversion.
 - Evidence Strength is not probability, confidence, importance, quality, or ranking.
 - Review Status describes maintenance need, not claim truth.
 - Entry State remains separate from Claim Status.
 - Caveats remain separate from status, strength, Frontier Delta, and Significance.
 - Sources remain embedded in Entries during Stage 1.
 - Structured relationships use durable IDs, while slugs remain public routing identifiers.
-- Every Domain attached to an Entry remains ordered authored data. Dataset generation applies its controlled public ordering without changing the canonical record.
+- Every Domain attached to an Entry remains ordered authored data. Entry Preview uses the first value only as display priority, not as a semantic primary Domain, while Dataset generation applies its controlled public ordering without changing the canonical record.
 - Domain validation does not depend on Astro, filesystem access, or logging.
 
 ## Implementation Landmarks
@@ -126,6 +127,7 @@ Check:
 - Whether a field belongs to the authored record or should be derived by publication, release, routing, or export code.
 - Whether a new relationship uses a durable UUID rather than a public label or slug.
 - Whether a controlled value change also requires exhaustive label maps, Methodology definition keys, conditional rules, and tests to change.
+- Whether an Entry Preview change preserves authored Domain order and full Entry and Dataset Domain output.
 - Whether a prose change preserves the distinction between plain text, inline Markdown, Entry block Markdown, and Methodology Markdown.
 - Whether an aggregate rule can report the record, path, invalid value, violated rule, and related identity without filesystem access.
 - Whether singleton content should remain outside the durable UUID namespace.

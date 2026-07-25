@@ -1,6 +1,6 @@
 ---
 label: Frontier Atlas Design System
-order: 300
+order: 400
 ---
 
 # Frontier Atlas Design System
@@ -32,10 +32,10 @@ It does not own:
 1. `FoundationLayout.astro` loads the project-owned Source Sans 3 and Source Serif 4 files, then imports `src/styles/global.css`.
 2. `global.css` imports the token, base, typography, layout, component, and site-shell stylesheets in a stable order.
 3. Mobile tokens apply by default. Media queries change the grid and approved type roles at 768px, 1024px, and 1312px; viewports below 400px use the smaller mobile page margin.
-4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](stage-1-site-shell.md) composes those primitives for shared navigation and page structure.
+4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](stage-1-site-shell.md) composes those primitives for shared navigation and page structure, while the [Entry Preview](entry-preview.md) composes them for one reusable record summary.
 5. Vitest checks the token and source contract. Playwright checks representative computed styles, responsive layouts, interaction states, reduced motion, grayscale-readable states, accessibility, and horizontal overflow.
 
-The current `/` route is a technical conformance fixture. It demonstrates the primitives but is not the Stage 1 homepage or a public evidence record.
+The current `/` route is a technical conformance fixture. It demonstrates the primitives and renders the same Entry Preview beneath three external host headings, but it is not the Stage 1 homepage, a Topic Trail page, or a public evidence record.
 
 ## Presentation Contracts
 
@@ -75,6 +75,7 @@ Under `prefers-reduced-motion: reduce`, non-essential transitions and disclosure
 ## Cross-System Edge Cases
 
 - [Canonical Records](canonical-records.md) owns claim-status machine values and public labels. Frontier Atlas only maps those machine values to presentation treatments.
+- The [Entry Preview](entry-preview.md) owns its field sequence, typed projection, and feature layout. Frontier Atlas supplies the sheet, rules, typography, status treatments, focus behavior, spacing, and responsive breakpoint used by that component.
 - The [Stage 1 Site Shell](stage-1-site-shell.md) owns shared navigation behavior and page structure. Frontier Atlas supplies its tokens, focus treatment, responsive breakpoint, and page alignment primitive.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro shell, local font loading, static build, and validation commands. Frontier Atlas owns the presentation contract loaded by that shell.
 - Later page modules may choose which real record information to show, but annotations may only repeat or emphasize that information. A page cannot move an essential value exclusively into an annotation.
@@ -104,9 +105,11 @@ Design-system review fails when presentation code introduces a local color, larg
 - `src/styles/base.css` and `src/styles/typography.css` — Document defaults, interaction behavior, and type roles.
 - `src/styles/layout.css` and `src/styles/components.css` — Responsive layouts and shared presentation primitives.
 - `src/styles/site-shell.css` — Frontier Atlas presentation for the shared Stage 1 Header, Footer, mobile disclosure, and skip link.
+- `src/components/entry-preview/` — Feature-owned composition of Atlas primitives for the Entry Preview.
 - `src/pages/index.astro` — Non-product conformance fixture.
 - `tests/foundation/frontier-atlas-contract.test.ts` — Source and token safeguards.
 - `tests/browser/frontier-atlas.spec.ts` — Computed-style, responsive, motion, grayscale, and accessibility checks.
+- `tests/browser/entry-preview.spec.ts` — Preview-specific responsive, focus, status, overflow, and accessibility checks.
 
 ## Before Changing Frontier Atlas
 
@@ -118,6 +121,6 @@ Check:
 - Whether mobile tables retain visible definition labels and desktop table semantics.
 - Whether reduced-motion and dark operating-system preferences preserve the approved static states and light palette.
 - Whether a page ticket predates the compact-metadata accessibility adjustment. If it conflicts, preserve the Secondary Ink rule unless the project owner explicitly approves a tested accessible replacement.
-- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](stage-1-site-shell.md), or a page-owned content module.
+- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](stage-1-site-shell.md), the [Entry Preview](entry-preview.md), or a page-owned content module.
 
 Read [Stage 1 Site Shell](stage-1-site-shell.md) before changing shared navigation or page structure, and read [Static Application Foundation](static-application-foundation.md) before changing global imports, font loading, test commands, or the Astro presentation boundary.

@@ -1,6 +1,6 @@
 ---
 label: Release Construction
-order: 500
+order: 600
 ---
 
 # Release Construction
@@ -123,9 +123,10 @@ The loader and constructor return diagnostics without writing to standard output
 - [Canonical Records](canonical-records.md) owns stored shapes and record-local rules. Release construction consumes those schemas rather than widening or repairing them.
 - [Publication Revisions](publication-revisions.md) owns snapshot creation, history semantics, and material activity. Release construction validates complete stored histories and selects their current state.
 - [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
+- The [Entry Preview](entry-preview.md) consumes a typed subset of `ResolvedPublicEntry`. It must use resolved dates, Topic Trail data, and canonical URLs rather than load, infer, or repair authoring records.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader. Rebuilding the same release with the same explicit metadata preserves its ID and generation timestamp.
-- The repository contains the complete Stage 1 seed record set: About content, Methodology `1.0.0`, its publication event, three Entries, three non-empty Topic Trails, and three initial publication snapshots. An integration test supplies fixed test-only release metadata and the approved site origin to prove that these records construct one valid production release with three derived Added events. This does not create or persist a genuine release. The current Astro fixture still does not invoke strict production construction, and public pages, genuine dataset emission, release-descriptor persistence, and deployment redirects remain future work. The versioned Schema is already published statically.
+- The repository contains the complete Stage 1 seed record set: About content, Methodology `1.0.0`, its publication event, three Entries, three non-empty Topic Trails, and three initial publication snapshots. An integration test supplies fixed test-only release metadata and the approved site origin to prove that these records construct one valid production release with three derived Added events. This does not create or persist a genuine release. The current Astro fixture separately calls the application release adapter in preview mode to obtain a validated seed Entry for Entry Preview conformance. Missing genuine release metadata keeps that fixture non-promotable; it does not invoke strict production construction, turn its hosts into public pages, emit a genuine dataset, persist a release descriptor, or emit deployment redirects. The versioned Schema is already published statically.
 
 ## Invariants
 
