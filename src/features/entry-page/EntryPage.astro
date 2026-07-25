@@ -1,0 +1,222 @@
+---
+// Renders one complete static public Entry record.
+import type { ResolvedPublicEntry } from "../../domain";
+import { createEntryPageViewModel } from "./create-entry-page-view-model";
+import "./entry-page.css";
+
+interface Props {
+  entry: ResolvedPublicEntry;
+}
+
+const model = createEntryPageViewModel(Astro.props.entry);
+---
+
+<div class="entry-page" data-entry-page>
+  <a class="entry-page__back-link" href="/#latest">← Back to Latest</a>
+
+  <article class="entry-page__sheet atlas-sheet">
+    <header class="entry-header" data-entry-section="header">
+      <div class="entry-header__metadata-band">
+        <ul class="entry-header__domains" aria-label="Domains">
+          {model.domains.map((domain) => <li>{domain}</li>)}
+        </ul>
+        <p class="entry-header__updated atlas-type-metadata">
+          Updated <time datetime={model.date_updated.iso}>{model.date_updated.label}</time>
+        </p>
+      </div>
+
+      <div class="entry-header__body">
+        <h1 class="atlas-type-entry-title">{model.title}</h1>
+        <p class="entry-header__claim atlas-type-editorial-lead" set:html={model.claim_html} />
+        <div class="entry-header__trails atlas-type-supporting">
+          <p>
+            <span>Topic Trail:</span>{" "}
+            <a href={model.primary_topic_trail.url}>{model.primary_topic_trail.label}</a>
+          </p>
+          {
+            model.secondary_topic_trails.length > 0 && (
+              <p>
+                <span>Also in:</span>{" "}
+                {model.secondary_topic_trails.map((trail, index) => (
+                  <>
+                    {index > 0 && ", "}
+                    <a href={trail.url}>{trail.label}</a>
+                  </>
+                ))}
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </header>
+
+    <div class="entry-status-summary" data-entry-section="status-summary">
+      <div class="entry-status-summary__tabs">
+        <span class="atlas-status-tab" data-status={model.claim_status.value}>
+          Claim: {model.claim_status.label}
+        </span>
+        <span class="atlas-status-tab">Evidence: {model.evidence_strength_label}</span>
+        <span class="atlas-status-tab">Review: {model.review_status_label}</span>
+        <span class="atlas-status-tab">State: Main Entry</span>
+      </div>
+      <a class="entry-status-summary__methodology" href={model.methodology.url}>
+        Methodology: v{model.methodology.version}
+      </a>
+      {
+        model.review_reason && (
+          <div class="entry-status-summary__review atlas-type-supporting">
+            <p><strong>Review reason:</strong> {model.review_reason}</p>
+            {
+              model.next_check_date && (
+                <p>
+                  <strong>Next check:</strong>{" "}
+                  <time datetime={model.next_check_date.iso}>{model.next_check_date.label}</time>
+                </p>
+              )
+            }
+          </div>
+        )
+      }
+    </div>
+
+    {
+      model.caution_notice && (
+        <aside
+          class="entry-caution entry-reading-column atlas-type-interface"
+          data-entry-section="caution"
+          data-status={model.claim_status.value}
+          role="note"
+        >
+          {model.caution_notice}
+        </aside>
+      )
+    }
+
+    <section class="entry-section entry-frontier" data-entry-section="frontier-delta">
+      <h2 class="atlas-type-major-heading">Frontier Delta</h2>
+      <div class="entry-frontier__field">
+        <div class="entry-frontier__state">
+          <h3 class="atlas-type-subsection-heading">Previous Frontier</h3>
+          <div class="entry-prose" set:html={model.frontier_delta.previous_frontier_html} />
+        </div>
+        <span class="entry-frontier__connector" aria-hidden="true"></span>
+        <div class="entry-frontier__state">
+          <h3 class="atlas-type-subsection-heading">New Claim / Result</h3>
+          <div class="entry-prose" set:html={model.frontier_delta.new_claim_result_html} />
+        </div>
+        <div class="entry-frontier__delta">
+          <h3 class="atlas-type-subsection-heading">Delta</h3>
+          <div class="entry-prose" set:html={model.frontier_delta.delta_html} />
+        </div>
+      </div>
+    </section>
+
+    <section class="entry-section entry-details" data-entry-section="details">
+      <h2 class="atlas-type-major-heading">Details</h2>
+      <div class="entry-details__item">
+        <h3 class="atlas-type-subsection-heading">What Happened?</h3>
+        <div class="entry-prose" set:html={model.details.what_happened_html} />
+      </div>
+      <div class="entry-details__item">
+        <h3 class="atlas-type-subsection-heading">What Does the Evidence Show?</h3>
+        <div class="entry-prose" set:html={model.details.what_evidence_shows_html} />
+      </div>
+      <div class="entry-details__item">
+        <h3 class="atlas-type-subsection-heading">What Context Changes Interpretation?</h3>
+        <div class="entry-prose" set:html={model.details.context_changes_interpretation_html} />
+      </div>
+      <div class="entry-details__item">
+        <h3 class="atlas-type-subsection-heading">What Should the Reader Take From It?</h3>
+        <div class="entry-prose" set:html={model.details.reader_takeaway_html} />
+      </div>
+    </section>
+
+    <section class="entry-section entry-significance" data-entry-section="significance">
+      <h2 class="atlas-type-major-heading">Significance</h2>
+      <div class="entry-significance__plate">
+        <h3 class="atlas-type-subsection-heading">Confirmed Significance</h3>
+        <div class="entry-prose" set:html={model.confirmed_significance_html} />
+      </div>
+      {
+        model.potential_significance_html && (
+          <div class="entry-significance__plate entry-significance__plate--potential">
+            <h3 class="atlas-type-subsection-heading">Potential Significance If Confirmed</h3>
+            <div class="entry-prose" set:html={model.potential_significance_html} />
+          </div>
+        )
+      }
+    </section>
+
+    <section class="entry-section entry-caveats" data-entry-section="caveats">
+      <h2 class="atlas-type-major-heading">Caveats</h2>
+      {
+        model.caveats_html.length === 1 ? (
+          <div class="entry-caveats__content entry-prose" set:html={model.caveats_html[0]} />
+        ) : (
+          <ul class="entry-caveats__content">
+            {model.caveats_html.map((caveat) => <li set:html={caveat} />)}
+          </ul>
+        )
+      }
+    </section>
+
+    <section class="entry-section entry-metadata" data-entry-section="dates-and-metadata">
+      <h2 class="atlas-type-major-heading">Dates and Metadata</h2>
+      <dl class="entry-metadata__list">
+        <div><dt>Date Happened</dt><dd>{model.metadata.date_happened ? <time datetime={model.metadata.date_happened.iso}>{model.metadata.date_happened.label}</time> : "Unknown"}</dd></div>
+        <div><dt>Date Disclosed</dt><dd>{model.metadata.date_disclosed ? <time datetime={model.metadata.date_disclosed.iso}>{model.metadata.date_disclosed.label}</time> : "Unknown"}</dd></div>
+        <div><dt>Date Added</dt><dd><time datetime={model.metadata.date_added.iso}>{model.metadata.date_added.label}</time></dd></div>
+        <div><dt>Date Updated</dt><dd><time datetime={model.metadata.date_updated.iso}>{model.metadata.date_updated.label}</time></dd></div>
+        <div><dt>Date Last Checked</dt><dd><time datetime={model.metadata.date_last_checked.iso}>{model.metadata.date_last_checked.label}</time></dd></div>
+        <div><dt>Next Check Date</dt><dd>{model.metadata.next_check_date ? <time datetime={model.metadata.next_check_date.iso}>{model.metadata.next_check_date.label}</time> : "None scheduled"}</dd></div>
+        <div><dt>Entry State</dt><dd>{model.metadata.entry_state_label}</dd></div>
+        <div><dt>Domain</dt><dd>{model.domains.join(", ")}</dd></div>
+        <div>
+          <dt>Topic Trail</dt>
+          <dd>
+            <a href={model.primary_topic_trail.url}>{model.primary_topic_trail.label}</a>
+            {model.secondary_topic_trails.length > 0 && <span>; Also in: </span>}
+            {model.secondary_topic_trails.map((trail, index) => (
+              <>
+                {index > 0 && ", "}
+                <a href={trail.url}>{trail.label}</a>
+              </>
+            ))}
+          </dd>
+        </div>
+        <div><dt>Evidence Type</dt><dd>{model.metadata.evidence_type_labels.join(", ")}</dd></div>
+      </dl>
+    </section>
+
+    <section class="entry-section entry-sources" data-entry-section="sources">
+      <h2 class="atlas-type-major-heading">Sources</h2>
+      <div class="entry-sources__list">
+        {
+          model.sources.map((source) => (
+            <article class="entry-source" data-citation-id={source.citation_id}>
+              <h3 class="atlas-type-subsection-heading">{source.title}</h3>
+              <p class="entry-source__publisher atlas-type-supporting">{source.publisher_or_domain}</p>
+              <dl class="entry-source__metadata">
+                <div><dt>Source Role</dt><dd>{source.source_role_label}</dd></div>
+                <div><dt>Evidence Type</dt><dd>{source.evidence_type_labels.join(", ")}</dd></div>
+              </dl>
+              <div class="entry-source__used-for">
+                <div class="entry-source__used-for-label">
+                  <strong>Used For</strong><span aria-hidden="true"></span>
+                </div>
+                <p>{source.used_for}</p>
+              </div>
+              <a href={source.url}>Open source: {source.title} →</a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="entry-methodology" data-entry-section="methodology-used">
+      <h2 class="atlas-type-major-heading">Methodology Used</h2>
+      <p>This entry uses Methodology v{model.methodology.version}.</p>
+      <a href={model.methodology.url}>View Methodology v{model.methodology.version} →</a>
+    </section>
+  </article>
+</div>
