@@ -15,6 +15,7 @@ The Entry Page gives every validated current public Entry one consistent evidenc
 - The exact public section and heading order.
 - Presentation of every Domain, the primary Topic Trail, and all secondary Topic Trails.
 - Status wording, conditional caution notices, follow-up context, and null-date fallbacks.
+- Version-specific Methodology help links on explanatory field labels.
 - The responsive Entry Sheet, Frontier Delta transformation, source-record layout, focus behavior, and overflow protection.
 - Static generation of one canonical route for every current public Main Entry.
 - The generic static not-found page used when a route was not generated.
@@ -24,7 +25,7 @@ It does not own:
 - Canonical Entry validation, Source Role definitions, or public label maps.
 - Snapshot publication, materiality, Date Added, Date Updated, or current-revision selection.
 - Public source ordering. [Release Construction](release-construction.md) supplies an already ordered copied Entry.
-- Topic Trail or Methodology destination-page implementation.
+- Topic Trail destination-page implementation.
 - The shared Header, Footer, document structure, or Frontier Atlas tokens.
 - Client-side fetching, loading states, browser recovery, telemetry, or logging.
 
@@ -32,7 +33,7 @@ It does not own:
 
 The feature accepts one complete `ResolvedPublicEntry` from the application release boundary. That value contains the selected current snapshot, derived activity dates, canonical Entry URL, resolved Topic Trails, resolved Methodology, and sources in public display order.
 
-`createEntryPageViewModel` returns presentation-only values. It maps controlled values to public labels, formats calendar dates for display while preserving exact ISO values, renders validated Markdown, derives Entry-level Evidence Types from the ordered sources, and validates canonical relationship URLs. It does not change the resolved Entry.
+`createEntryPageViewModel` returns presentation-only values. It maps controlled values to public labels, formats calendar dates for display while preserving exact ISO values, renders validated Markdown, derives Entry-level Evidence Types from the ordered sources, validates canonical relationship URLs, and builds help links from the resolved version-specific Methodology URL. It does not change the resolved Entry.
 
 `EntryPage.astro` renders the view model as static semantic HTML. The route passes that component through `FoundationLayout.astro`, so every generated Entry has the shared skip link, Header, Main region, and Footer.
 
@@ -83,7 +84,7 @@ Potential Significance If Confirmed is omitted when its canonical value is null.
 
 ## Markdown and Escaping
 
-Entry Preview and Entry Page presentation share the Entry Markdown renderer. The inline profile is used for claims and individual caveats. The block profile supports paragraphs, inline formatting, safe links, lists, blockquotes, tables, and code blocks.
+Entry Preview and Entry Page presentation retain Entry-specific Markdown APIs over the shared canonical Markdown renderer. The inline profile is used for claims and individual caveats. The block profile supports paragraphs, inline formatting, safe links, lists, blockquotes, tables, and code blocks.
 
 Text, URLs, titles, and code are escaped before HTML is emitted. Links allow only HTTP, HTTPS, mailto, or relative destinations. Images, raw HTML, headings inside authored fields, unsafe protocols, unresolved references, and other unsupported nodes fail the build instead of producing partial or unsafe markup.
 
@@ -105,11 +106,13 @@ Projection throws a build error when it receives a non-Main Entry, an invalid re
 
 Unknown slugs are not represented as incomplete Entries. They receive the generic static not-found page with one H1, neutral wording, the shared Header and Footer, and a normal Homepage link.
 
-Methodology and Topic Trail links use their canonical destinations even while those destination pages remain unimplemented. The later atomic release gate, not the Entry Page, owns the requirement that production publication resolve every required public link.
+Methodology links resolve to the implemented immutable version route, while Topic Trail links continue to use their canonical destinations even though Topic Trail pages remain unimplemented. The later atomic release gate, not the Entry Page, owns the requirement that production publication resolve every required public link.
 
 ## Internal Edge Cases
 
 - Every associated Domain is displayed with equal weight; the full page never silently selects only the first Domain.
+- Methodology help links wrap explanatory labels rather than Domain values, Evidence Type values, Source Role values, or Topic Trail names.
+- Every Methodology help fragment uses the resolved version-specific URL. The Entry Page does not hardcode a Methodology version or substitute the current route.
 - The primary Topic Trail keeps its visible label, and secondary Topic Trails appear under `Also in`.
 - Human-readable dates use UTC formatting so build-machine time zones cannot shift the displayed day.
 - Entry-level Evidence Types are unique and follow canonical Evidence Type order rather than first-source encounter order.
@@ -125,6 +128,7 @@ Methodology and Topic Trail links use their canonical destinations even while th
 - [Release Construction](release-construction.md) owns current snapshot selection, source ordering, relationships, routes, canonical URLs, and production validity.
 - [Entry Preview](entry-preview.md) uses the same inline Markdown renderer but intentionally shows a smaller field subset and only its display-priority Domain and primary Topic Trail.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns tokens, typography roles, focus treatment, status treatments, and responsive primitives. The Entry Page owns only their feature-specific composition.
+- The [Stage 1 Methodology Page](stage-1-methodology-page.md) owns the public definitions and anchor destinations. The Entry Page consumes the shared anchor contract without owning the rulebook.
 - [Stage 1 Site Shell](stage-1-site-shell.md) owns the shared document order and navigation. Entry routes have no active Header item.
 - [Static Application Foundation](static-application-foundation.md) owns Astro's static build, application-release adapter boundary, and browser-test environment.
 
@@ -136,6 +140,7 @@ Methodology and Topic Trail links use their canonical destinations even while th
 - Title, claim, statuses, Methodology, and Frontier Delta appear before long Details content.
 - Frontier Delta, Details, Caveats, metadata, sources, and Methodology remain visible without tabs, accordions, or client JavaScript.
 - Every Domain and Topic Trail association remains inspectable.
+- Explanatory Methodology links remain separate from record values and relationship destinations.
 - Source order comes from the resolved Entry and stays consistent with Dataset generation.
 - Caveats remain visible before Sources, and confirmed and potential significance remain separate.
 - The page remains one maintained record without a sidebar, nested generic cards, hero media, scoring, or article-style embellishment.
@@ -147,7 +152,9 @@ Methodology and Topic Trail links use their canonical destinations even while th
 - `src/features/entry-page/` — View-model projection, Astro record rendering, and feature-owned responsive styles.
 - `src/pages/entries/[slug].astro` — Thin static route generation over the selected application release.
 - `src/pages/404.astro` — Generic static not-found page.
-- `src/shared/entry-markdown/` — Shared safe inline and block Entry Markdown rendering.
+- `src/shared/entry-markdown/` — Entry-specific inline and block Markdown APIs.
+- `src/shared/canonical-markdown/` — Shared safe Markdown parsing, escaping, and semantic rendering.
+- `src/shared/methodology-navigation/` — Stable Methodology fragments and version-specific help-link construction.
 - `src/domain/source-ordering/` — Pure public source comparator and copied-array ordering helper.
 - `src/adapters/application-release/` — Named production and fixed-metadata development/test release sources.
 - `tests/features/`, `tests/components/`, `tests/domain/`, and `tests/browser/` — Projection, Markdown, source-ordering, route, responsive, 404, and accessibility coverage.
@@ -162,6 +169,8 @@ Check:
 - Whether canonical records and immutable snapshots remain unchanged by public ordering or projection.
 - Whether heading and section order, conditional content, null fallbacks, and status wording remain exact.
 - Whether every Domain, primary Topic Trail, and secondary Topic Trail remains visible.
+- Whether Methodology help remains attached to labels only and uses the Entry's resolved immutable version URL.
+- Whether every help fragment resolves on both current and version-specific Methodology pages.
 - Whether Markdown changes preserve escaping, safe link protocols, supported semantics, and Entry Preview behavior.
 - Whether desktop, tablet, and mobile layouts retain visible focus, grayscale meaning, and no horizontal overflow.
 - Whether unknown slugs remain absent from static paths and return the generic static `404.html`.

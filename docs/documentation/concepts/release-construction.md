@@ -43,7 +43,7 @@ The canonical loader receives an injectable repository root and reads the approv
 - An explicit public site origin.
 - Either `production` or `preview` mode.
 
-A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
+A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
@@ -92,6 +92,8 @@ Stage 1 production rejects `removed` on either the editable canonical Entry or t
 
 Route collision checks operate on normalized root-relative pathnames before the constructor creates absolute URLs. The registry owns the homepage and `#latest` anchor, current Entry and Topic Trail routes, current and versioned Methodology routes, About, Changelog, export landing, dataset Schema, stable-latest dataset, and release-specific dataset artifact paths.
 
+The resolved Methodology pairs the validated canonical record with separate current and immutable absolute URLs. The Methodology Page consumes those URLs directly for route-specific canonical metadata; Entry records continue to carry the immutable version URL assigned by their published snapshot.
+
 Entry and Topic Trail aliases produce permanent `301` redirects. The stable-latest dataset path is not an alias and does not use that contract; [Dataset Generation](dataset-generation.md) returns a separate `302` descriptor whose destination changes with each release.
 
 Current slugs create canonical routes. Historical aliases create `301` redirect descriptors that point directly to the current route. Redirect sources must be unique, cannot collide with current routes, and cannot form loops or chains. This system returns descriptors only; a later static-site integration will translate them into a deployment artifact.
@@ -137,6 +139,7 @@ The loader and constructor return diagnostics without writing to standard output
 - [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
 - The [Entry Preview](entry-preview.md) consumes a typed subset of `ResolvedPublicEntry`. It must use resolved dates, Topic Trail data, and canonical URLs rather than load, infer, or repair authoring records.
 - The [Stage 1 Entry Page](stage-1-entry-page.md) consumes the complete `ResolvedPublicEntry`, including its publicly ordered sources. It must not introduce a page-local comparator.
+- The [Stage 1 Methodology Page](stage-1-methodology-page.md) consumes `ResolvedMethodology`, including its current and version-specific canonical URLs. It must not reconstruct those URLs from the request pathname.
 - The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.

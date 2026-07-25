@@ -16,6 +16,7 @@ These pages explain the system contracts that exist in VyDex today. They are wri
 - [Release Construction](release-construction.md) — Read-only loading, strict and preview releases, resolved public data, routes, and Changelog events.
 - [Stage 1 Entry Page](stage-1-entry-page.md) — Static route generation, complete record projection, responsive presentation, source context, and not-found behavior.
 - [Stage 1 Homepage](stage-1-homepage.md) — Static release selection, latest-material-activity ordering, page composition, and production release loading.
+- [Stage 1 Methodology Page](stage-1-methodology-page.md) — Canonical rulebook projection, current and immutable static routes, stable anchors, and Entry help links.
 - [Stage 1 Site Shell](stage-1-site-shell.md) — Shared page structure, canonical navigation, progressive mobile disclosure, and focus behavior.
 - [Static Application Foundation](static-application-foundation.md) — Static Astro build, domain separation, Schema publication, and test boundaries.
 
