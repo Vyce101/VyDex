@@ -65,9 +65,9 @@ A later `material_update` needs an automatically material difference or at least
 - Date Added is the UTC date portion of revision 1's publication timestamp.
 - Date Updated is the UTC date portion of the newest material revision.
 - Current revision ID, number, and update summary come from the newest revision.
-- Latest meaningful activity contains the newest material revision's ID, number, timestamp, category, and update summary.
+- Latest meaningful activity contains the newest material revision's ID, number, timestamp, category, update summary, and Entry title.
 
-A non-material revision becomes current but does not move Date Updated or replace latest meaningful activity. Dates never come from file modification time, Git history, build time, or local timezone conversion.
+A non-material revision becomes current but does not move Date Updated or replace latest meaningful activity. Its current title may differ from the title retained with latest meaningful activity; [Topic Trail pages](stage-1-topic-trail-page.md) use the retained material title for deterministic ordering. Dates never come from file modification time, Git history, build time, or local timezone conversion.
 
 ## Failure Behavior
 
@@ -81,6 +81,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format th
 - Revision number is the authoritative sequence, but timestamps must agree with that order and cannot be equal.
 - An empty history is valid only while proposing the initial publication. Standalone activity derivation rejects an empty sequence.
 - Stored material updates may have depended on a transient semantic declaration. Historical validation verifies objective contradictions but does not try to reconstruct that earlier editorial judgment.
+- A non-material title correction changes the selected current Entry but leaves the retained material title unchanged.
 - When a published slug changes, the newest snapshot must retain every earlier published slug as a direct alias. Release construction uses those aliases for direct permanent-redirect descriptors.
 - A source selector must use a valid non-numeric citation ID. Array indices, malformed selectors, unknown fields, duplicate paths, and declarations for unchanged fields fail validation.
 
@@ -91,6 +92,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format th
 - Aggregate canonical validation can validate repository-wide identities and relationships. The publication operation validates only the complete referenced Methodology set supplied for one Entry history.
 - Repository persistence remains separate. A successful return does not mean a snapshot file exists or that a release includes it.
 - [Release Construction](release-construction.md) validates complete stored histories, selects the newest snapshot, and derives public routes and Changelog events. [Dataset Generation](dataset-generation.md) projects the selected current snapshots into the public export contract.
+- [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) depends on the retained material title so current display wording and ordering history cannot drift together after a non-material correction.
 - Historical public browsing remains future Stage 3 work; retained snapshots have no public revision route yet.
 
 ## Invariants
@@ -104,6 +106,7 @@ The domain returns `ValidationDiagnostic` values. A future command may format th
 - Update summaries must be non-empty plain text and provide the permanent public explanation of what changed.
 - Previously published slugs remain direct aliases of the current published slug.
 - Date Added and Date Updated come only from stored publication timestamps.
+- Latest meaningful activity retains the material revision's Entry title without replacing the current snapshot title.
 - Domain operations remain free of filesystem, logging, clock, randomness, and UI behavior.
 
 ## Implementation Landmarks
@@ -121,6 +124,7 @@ Check:
 - Whether a rule can be validated objectively or must remain an explicit maintainer declaration.
 - Whether snapshot compatibility or older Methodology references would be broken.
 - Whether revision order, timestamp order, and material activity still agree.
+- Whether a non-material title correction leaves the retained material title and Topic Trail order unchanged.
 - Whether a new source path remains stable when sources are reordered.
 - Whether a change introduces filesystem, clock, randomness, logging, or UI behavior into the domain boundary.
 - Whether tests cover old snapshot readability, contradictory materiality, and non-material activity ordering.

@@ -5,7 +5,7 @@ order: 800
 
 # Stage 1 Site Shell
 
-The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It owns the navigation behavior shared by the implemented [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Methodology Page](stage-1-methodology-page.md), and generic not-found page. This page is for maintainers and coding agents changing shared layout, navigation, document metadata, or page-level accessibility.
+The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It owns the navigation behavior shared by the implemented [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Methodology Page](stage-1-methodology-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page. This page is for maintainers and coding agents changing shared layout, navigation, document metadata, or page-level accessibility.
 
 ## Purpose and Ownership
 
@@ -69,7 +69,7 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 - [Static Application Foundation](static-application-foundation.md) owns the Astro document boundary and build process. The shell is rendered through that boundary and remains static-first.
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) supplies different self-canonical URLs for its current and immutable routes while reusing the same shell and active navigation state.
 - The [Stage 1 About Page](stage-1-about-page.md) supplies its self-canonical URL and uses the route-derived active About state on `/about/`.
-- The [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 Entry Page](stage-1-entry-page.md), and generic not-found page use no active navigation item. Changelog, Export, and Topic Trail pages remain future page work even though the shell already links to their canonical destinations.
+- The [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page use no active navigation item. Changelog and Export remain future page work even though the shell already links to their canonical destinations.
 - The future atomic release gate must reject unresolved navigation destinations before production. The shell does not weaken that release requirement during the current intermediate development state.
 
 ## Failure Behavior

@@ -43,7 +43,7 @@ The canonical loader receives an injectable repository root and reads the approv
 - An explicit public site origin.
 - Either `production` or `preview` mode.
 
-A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md) and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
+A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
@@ -56,7 +56,7 @@ The application boundary exposes two named release sources. `loadPersistedProduc
 3. Record schemas validate Entries, Topic Trails, Methodologies, About content, Methodology publication events, and snapshots. Aggregate validation checks identities, slug namespaces, and relationships.
 4. Snapshots are grouped by Entry ID. Each history is ordered by validated revision number and checked for numbering, chronology, materiality, Methodology references, and retained historical slugs.
 5. The newest valid snapshot becomes the public Entry. Release resolution clones that Entry and orders its copied source array for public display; the immutable snapshot and editable canonical Entry remain unchanged.
-6. The constructor resolves routes, Topic Trail membership, Methodology and About links, derived dates, latest meaningful activity, trail counts, and trail Last Activity.
+6. The constructor resolves routes, Topic Trail membership, Methodology and About links, derived dates, latest meaningful activity, trail counts, and trail Last Activity. Each trail receives its own copied Entry list in latest-update order.
 7. Material snapshots and the Methodology publication event form the public Changelog.
 8. Production returns the release only when no blocking diagnostic remains. Preview returns trustworthy partial results, invalid source records, and all diagnostics. Dataset projection happens only after a successful production result.
 
@@ -76,7 +76,7 @@ Production requires a root-only HTTPS origin, valid release metadata, one comple
 
 Preview may use an explicitly supplied HTTPS origin or HTTP localhost. The application adapter defaults an omitted preview origin to `http://localhost:4321`, even when a production origin exists in the environment. Missing release metadata keeps release-independent information available, but the preview is non-promotable and cannot expose a release-specific dataset artifact path or enter dataset generation.
 
-Invalid preview records are not repaired. The preview keeps their record type, recoverable ID, filename, raw or partial value, field diagnostics, and unresolved relationship diagnostics. `Missing Required Field` is a future presentation fallback, not canonical data, and the constructor never inserts it into records, routes, Changelog events, or exports.
+Invalid preview records are not repaired. The preview keeps their record type, recoverable ID, filename, raw or partial value, field diagnostics, and unresolved relationship diagnostics. The Topic Trail page may present `Missing Required Field` and `Last Activity: Unknown`, but the constructor never inserts those fallbacks into records, resolved release values, routes, Changelog events, or exports.
 
 Any blocking diagnostic sets `promotable: false`. A loader-invalid source may appear in diagnostics, but it cannot contribute to public selection, counts, ordering, routes, Changelog events, or export records.
 
@@ -84,7 +84,11 @@ Any blocking diagnostic sets `promotable: false`. A loader-invalid source may ap
 
 Every canonical Entry must have a valid snapshot history, and every history must match one canonical Entry by stable ID. The current public state comes from the newest snapshot, not the editable Entry. This allows unpublished edits to exist without leaking into a release.
 
-Date Added comes from the first publication timestamp. Date Updated and latest meaningful activity come from the newest material revision. Resolved public Entries sort by latest meaningful activity timestamp descending, Date Added descending, then immutable Entry ID ascending. The shared pure comparator is also used by the [Stage 1 Homepage](stage-1-homepage.md), so a non-material correction or title-only change cannot move an Entry in either list.
+Date Added comes from the first publication timestamp. Date Updated and latest meaningful activity come from the newest material revision. Latest meaningful activity also retains the Entry title from that material snapshot.
+
+Resolved public Entries sort by latest meaningful activity timestamp descending, Date Added descending, then immutable Entry ID ascending. The shared pure comparator is also used by the [Stage 1 Homepage](stage-1-homepage.md), so a non-material correction or title-only change cannot move an Entry in either list.
+
+Each resolved Topic Trail has a separate latest-update comparator. It uses latest meaningful activity timestamp descending, Date Added descending, the retained material title alphabetically in English, then immutable Entry ID ascending. This extra title key applies only inside Topic Trail lists. A later non-material title correction may change the displayed current title but cannot change trail order or Last Activity.
 
 Stage 1 production rejects `removed` on either the editable canonical Entry or the selected snapshot. Historical removal data remains schema-readable, but the release constructor does not create a public Removed Entry route.
 
@@ -131,7 +135,8 @@ The loader and constructor return diagnostics without writing to standard output
 - Snapshot directory and filename metadata must agree with the parsed snapshot, but revision ordering comes from validated contents.
 - Standard URL parsing can normalize invalid-looking paths; origin validation also checks the supplied syntax so query delimiters, fragments, and non-root paths remain invalid.
 - An invalid record with a recoverable ID remains visible in preview but cannot make an incomplete aggregate appear authoritative.
-- Topic Trail membership includes both primary and secondary relationships. Every loaded trail must contain at least one selected public Entry.
+- Topic Trail membership includes both primary and secondary relationships. Every loaded trail must contain at least one selected public Entry, and sorting a trail does not reorder `current_entries`.
+- The current Entry title and retained material title may differ after a non-material correction. Trail ordering uses the retained material title; public Entry content continues to use the selected current snapshot.
 - Public source ordering never mutates the canonical Entry, an immutable snapshot, or its source objects. Source labels, Evidence Types, URLs, publishers, and `used_for` values remain attached to the same citation after sorting.
 
 ## Cross-System Edge Cases
@@ -144,6 +149,7 @@ The loader and constructor return diagnostics without writing to standard output
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) consumes `ResolvedMethodology`, including its current and version-specific canonical URLs. It must not reconstruct those URLs from the request pathname.
 - The [Stage 1 About Page](stage-1-about-page.md) consumes `ResolvedAboutRecord`. It must not load authoring JSON, repair missing content, or reconstruct Related Link destinations.
 - The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
+- The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.
 - The repository contains the complete Stage 1 seed record set. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting a genuine release. Normal production remains blocked until the later atomic release command creates the descriptor.
@@ -154,7 +160,7 @@ The loader and constructor return diagnostics without writing to standard output
 - Invalid records are never silently omitted, repaired, or promoted into authoritative derived values.
 - Public Entry state and relationships come from immutable snapshots; editable differences remain unpublished.
 - Resolved current Entries expose sources in deterministic public order without changing canonical records or immutable snapshots.
-- Non-material revisions do not change material activity ordering or public Changelog events.
+- Non-material revisions do not change material activity ordering, Topic Trail ordering, Trail Last Activity, or public Changelog events.
 - Stable IDs resolve relationships; filenames and slugs do not.
 - Canonical URLs come from a validated explicit origin and the route registry.
 - Release metadata is supplied unchanged and is never generated or inferred.
@@ -169,6 +175,7 @@ The loader and constructor return diagnostics without writing to standard output
 - `src/adapters/persisted-release-descriptor/` — Exact-path descriptor reading, JSON parsing, and Schema validation.
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
 - `src/domain/release-construction/compare-resolved-public-entries.ts` — Shared material-activity ordering comparator.
+- `src/domain/release-construction/compare-resolved-topic-trail-entries.ts` — Topic Trail latest-update comparator with the material-title tie-breaker.
 - `src/domain/source-ordering/` — Shared public source comparator and copied-array ordering helper.
 - `src/domain/route-generation/` — Origin, route-registry, canonical URL, and redirect contracts.
 - `src/domain/json-export-generation/` — Post-release Dataset `1.0.0` projection, Schema, validation, and serialization.
@@ -183,6 +190,7 @@ Check:
 - Whether public Entry selection still ignores unpublished editable differences.
 - Whether material activity remains separate from the current revision after a non-material update.
 - Whether release resolution and Homepage selection still share the same material-activity, Date Added, and immutable-ID comparator.
+- Whether Topic Trail resolution still uses material activity, Date Added, the retained material title, and immutable Entry ID without mutating `current_entries`.
 - Whether release resolution and Dataset generation still share the public source comparator while canonical and snapshot arrays remain untouched.
 - Whether production descriptor loading still uses the exact reserved path and fails instead of falling back to fixed metadata.
 - Whether route and alias checks run before absolute URL generation.

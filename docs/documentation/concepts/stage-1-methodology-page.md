@@ -79,7 +79,7 @@ The Entry Page links these explanatory labels:
 - `Potential Significance If Confirmed` to `#significance`.
 - `Review Reason` to `#review-status`.
 
-Only the label becomes Methodology help. Domain values remain text, and Topic Trail names retain their links to Topic Trail pages. This keeps explanatory navigation separate from record relationships.
+Only the label becomes Methodology help. Domain values remain text, and Topic Trail names retain their links to the generated [Stage 1 Topic Trail pages](stage-1-topic-trail-page.md). This keeps explanatory navigation separate from record relationships.
 
 ## User-Facing Behavior
 

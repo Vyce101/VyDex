@@ -19,6 +19,7 @@ These pages explain the system contracts that exist in VyDex today. They are wri
 - [Stage 1 Homepage](stage-1-homepage.md) — Static release selection, latest-material-activity ordering, page composition, and production release loading.
 - [Stage 1 Methodology Page](stage-1-methodology-page.md) — Canonical rulebook projection, current and immutable static routes, stable anchors, and Entry help links.
 - [Stage 1 Site Shell](stage-1-site-shell.md) — Shared page structure, canonical navigation, progressive mobile disclosure, and focus behavior.
+- [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) — Generated trail routes, derived activity metadata, deterministic Entry ordering, and preview failure boundaries.
 - [Static Application Foundation](static-application-foundation.md) — Static Astro build, domain separation, Schema publication, and test boundaries.
 
 Concept pages describe current behavior and ownership. Step-by-step user workflows belong in [Guides](../guides.md), and planned capabilities remain identified as future work until their implementation exists.

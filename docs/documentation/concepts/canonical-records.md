@@ -98,6 +98,7 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - The canonical loader retains filenames and raw invalid JSON for preview diagnostics, but filesystem access stays in the adapter boundary.
 - Release construction may combine valid canonical records into resolved public data, but it must not repair or widen the stored contracts. [Dataset Generation](dataset-generation.md) narrows that resolved state into the separate public Dataset `1.0.0` contract.
 - The [Entry Preview](entry-preview.md) consumes validated current Entry fields and the exhaustive public-label maps. It displays only the first authored Domain as preview priority without changing the ordered array or the full Entry and Dataset representations.
+- The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes resolved Trail Names, descriptions, slugs, and Entry relationships. It does not load canonical records directly or derive membership from filenames.
 
 ## Invariants
 
