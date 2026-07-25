@@ -1,0 +1,44 @@
+// Defines the shared desktop and mobile Playwright projects for Stage 1 browser checks.
+import { defineConfig, type PlaywrightTestConfig } from "@playwright/test";
+import { resolve } from "node:path";
+
+export const BROWSER_TEST_HOST = "127.0.0.1";
+export const BROWSER_TEST_PORT = 4322;
+export const BROWSER_TEST_URL = `http://${BROWSER_TEST_HOST}:${BROWSER_TEST_PORT}`;
+export const EXPECTED_SITE_ORIGIN = process.env.PUBLIC_SITE_ORIGIN ?? "https://vydex.example";
+
+export function createStageOnePlaywrightConfig(
+  webServer?: PlaywrightTestConfig["webServer"],
+): PlaywrightTestConfig {
+  return defineConfig({
+    testDir: resolve(import.meta.dirname),
+    fullyParallel: true,
+    forbidOnly: Boolean(process.env.CI),
+    retries: process.env.CI ? 2 : 0,
+    reporter: "list",
+    use: {
+      baseURL: BROWSER_TEST_URL,
+      screenshot: "only-on-failure",
+      trace: "retain-on-failure",
+    },
+    projects: [
+      {
+        name: "desktop-chromium",
+        use: {
+          browserName: "chromium",
+          viewport: { width: 1440, height: 900 },
+        },
+      },
+      {
+        name: "mobile-chromium",
+        use: {
+          browserName: "chromium",
+          hasTouch: true,
+          isMobile: true,
+          viewport: { width: 375, height: 812 },
+        },
+      },
+    ],
+    ...(webServer ? { webServer } : {}),
+  });
+}
