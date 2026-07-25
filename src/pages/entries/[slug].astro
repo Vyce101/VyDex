@@ -1,0 +1,35 @@
+---
+// Generates one static route for each resolved current public Main Entry.
+import type { GetStaticPaths } from "astro";
+import {
+  loadFixedMetadataDevelopmentApplicationRelease,
+  loadPersistedProductionApplicationRelease,
+} from "../../adapters/application-release";
+import EntryPage from "../../features/entry-page/EntryPage.astro";
+import FoundationLayout from "../../layouts/FoundationLayout.astro";
+import type { ResolvedPublicEntry } from "../../domain";
+
+export const getStaticPaths = (async () => {
+  const usesFixedNonProductionMetadata = import.meta.env.DEV || import.meta.env.MODE === "test";
+  const release = usesFixedNonProductionMetadata
+    ? await loadFixedMetadataDevelopmentApplicationRelease({ filesystem_root: process.cwd() })
+    : await loadPersistedProductionApplicationRelease({ filesystem_root: process.cwd() });
+
+  return release.current_entries
+    .filter(({ entry }) => entry.entry_state === "main_entry")
+    .map((entry) => ({
+      params: { slug: entry.entry.slug },
+      props: { entry },
+    }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: ResolvedPublicEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<FoundationLayout title={`${entry.entry.title} — VyDex`}>
+  <EntryPage entry={entry} />
+</FoundationLayout>
