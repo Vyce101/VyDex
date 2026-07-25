@@ -1,0 +1,106 @@
+---
+// Renders the static material Changelog from resolved release events.
+import type { PublicChangelogEvent } from "../../domain";
+import { createChangelogPageViewModel } from "./create-changelog-page-view-model";
+import "./changelog-page.css";
+
+interface Props {
+  events: readonly PublicChangelogEvent[];
+}
+
+const model = createChangelogPageViewModel(Astro.props.events);
+---
+
+<div class="changelog-page" data-changelog-page>
+  <header class="changelog-header" data-changelog-section="header">
+    <h1 class="atlas-type-entry-title">{model.title}</h1>
+    <p class="changelog-header__intro atlas-type-editorial-lead">{model.intro}</p>
+    <p class="changelog-header__explanation atlas-type-interface">{model.explanation}</p>
+  </header>
+
+  <section
+    class="changelog-section changelog-change-types"
+    data-changelog-section="change-types"
+    aria-labelledby="change-types-heading"
+  >
+    <h2 id="change-types-heading" class="atlas-type-major-heading">Change Types</h2>
+    <dl class="changelog-change-types__band">
+      {
+        model.change_types.map((changeType) => (
+          <div class="changelog-change-types__cell">
+            <dt>
+              <span
+                class="atlas-status-tab changelog-type-tab"
+                data-change-type={changeType.type}
+              >
+                {changeType.label}
+              </span>
+            </dt>
+            <dd class="atlas-type-supporting">{changeType.description}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section
+    class="changelog-section changelog-changes"
+    data-changelog-section="changes"
+    aria-labelledby="changes-heading"
+  >
+    <h2 id="changes-heading" class="atlas-type-major-heading">Changes</h2>
+    <div class="changelog-date-groups">
+      {
+        model.date_groups.map((group, groupIndex) => (
+          <section
+            class="changelog-date-group"
+            data-changelog-date-group
+            aria-labelledby={`changelog-date-${groupIndex}`}
+          >
+            <h3
+              id={`changelog-date-${groupIndex}`}
+              class="changelog-date-group__date atlas-type-metadata"
+            >
+              <time datetime={group.date}>{group.date}</time>
+            </h3>
+            <ol class="changelog-records">
+              {group.records.map((record, recordIndex) => (
+                <li>
+                  <article
+                    class="changelog-record"
+                    data-changelog-record
+                    data-change-type={record.type}
+                    aria-labelledby={`changelog-record-${groupIndex}-${recordIndex}`}
+                  >
+                    <span
+                      class="atlas-status-tab changelog-type-tab"
+                      data-change-type={record.type}
+                    >
+                      {record.type_label}
+                    </span>
+                    <h4
+                      id={`changelog-record-${groupIndex}-${recordIndex}`}
+                      class="atlas-type-subsection-heading"
+                    >
+                      {record.title}
+                    </h4>
+                    <p class="changelog-record__summary atlas-type-interface">{record.summary}</p>
+                    {record.link && (
+                      <a
+                        class="changelog-record__link atlas-type-control"
+                        href={record.link.href}
+                        aria-label={record.link.accessible_name}
+                      >
+                        {record.link.label}
+                      </a>
+                    )}
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+</div>

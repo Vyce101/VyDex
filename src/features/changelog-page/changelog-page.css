@@ -1,0 +1,159 @@
+/* Composes Frontier Atlas primitives into the responsive material Changelog. */
+.changelog-page,
+.changelog-header,
+.changelog-section,
+.changelog-change-types__band,
+.changelog-change-types__cell,
+.changelog-date-groups,
+.changelog-date-group,
+.changelog-records,
+.changelog-record {
+  min-inline-size: 0;
+}
+
+.changelog-page,
+.changelog-header,
+.changelog-section,
+.changelog-change-types__cell,
+.changelog-date-groups,
+.changelog-record {
+  display: flex;
+  flex-direction: column;
+}
+
+.changelog-page {
+  gap: var(--atlas-space-80);
+}
+
+.changelog-header {
+  gap: var(--atlas-space-16);
+}
+
+.changelog-header__intro,
+.changelog-header__explanation {
+  max-inline-size: var(--atlas-reading-measure);
+}
+
+.changelog-header__explanation {
+  color: var(--atlas-color-ink-secondary);
+}
+
+.changelog-section {
+  gap: var(--atlas-space-24);
+}
+
+.changelog-change-types__band {
+  border-block: 1px solid var(--atlas-color-rule-strong);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+}
+
+.changelog-change-types__cell {
+  gap: var(--atlas-space-12);
+  padding-block: var(--atlas-space-20);
+}
+
+.changelog-change-types__cell + .changelog-change-types__cell {
+  border-block-start: 1px solid var(--atlas-color-rule-record);
+}
+
+.changelog-change-types__cell dd {
+  margin: 0;
+}
+
+.changelog-type-tab {
+  align-self: flex-start;
+}
+
+.changelog-type-tab[data-change-type="removed"] {
+  background: var(--atlas-color-status-failed-background);
+  border-color: var(--atlas-color-status-failed-border);
+  color: var(--atlas-color-status-failed-text);
+}
+
+.changelog-date-groups {
+  gap: var(--atlas-space-48);
+}
+
+.changelog-date-group {
+  display: grid;
+  gap: var(--atlas-space-20);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.changelog-date-group__date {
+  color: var(--atlas-color-ink-secondary);
+}
+
+.changelog-records {
+  border-block-start: 1px solid var(--atlas-color-rule-strong);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.changelog-records > li {
+  border-block-end: 1px solid var(--atlas-color-rule-record);
+}
+
+.changelog-record {
+  align-items: flex-start;
+  gap: var(--atlas-space-12);
+  padding-block: var(--atlas-space-20);
+}
+
+.changelog-record__summary {
+  max-inline-size: var(--atlas-reading-measure);
+}
+
+.changelog-record__link {
+  margin-block-start: var(--atlas-space-4);
+}
+
+@media (min-width: 768px) {
+  .changelog-page {
+    gap: var(--atlas-space-96);
+  }
+
+  .changelog-change-types__band {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .changelog-change-types__cell {
+    padding: var(--atlas-space-24);
+  }
+
+  .changelog-change-types__cell:first-child {
+    padding-inline-start: 0;
+  }
+
+  .changelog-change-types__cell:last-child {
+    padding-inline-end: 0;
+  }
+
+  .changelog-change-types__cell + .changelog-change-types__cell {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--atlas-color-rule-record);
+  }
+
+  .changelog-record {
+    padding-block: var(--atlas-space-24);
+  }
+}
+
+@media (min-width: 1024px) {
+  .changelog-date-group {
+    gap: var(--atlas-grid-gutter);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .changelog-date-group__date {
+    grid-column: span 3;
+    padding-block-start: var(--atlas-space-24);
+  }
+
+  .changelog-records {
+    grid-column: span 9;
+  }
+}
