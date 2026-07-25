@@ -1,0 +1,294 @@
+---
+// Renders the complete static Methodology rulebook from one resolved canonical record.
+import type { ResolvedMethodology } from "../../domain";
+import { createMethodologyPageViewModel } from "./create-methodology-page-view-model";
+import "./methodology-page.css";
+
+interface Props {
+  methodology: ResolvedMethodology;
+}
+
+const model = createMethodologyPageViewModel(Astro.props.methodology);
+---
+
+<article class="methodology-page" data-methodology-page>
+  <header class="methodology-header">
+    <h1 class="atlas-type-entry-title">{model.title}</h1>
+    <div class="methodology-header__intro atlas-type-editorial-lead" set:html={model.intro_html} />
+  </header>
+
+  <dl class="methodology-version-strip" aria-label="Methodology version">
+    <div>
+      <dt>Current Version</dt>
+      <dd><a href={model.version.url}>{model.version.label}</a></dd>
+    </div>
+    <div>
+      <dt>Effective From</dt>
+      <dd><time datetime={model.version.effective_date}>{model.version.effective_date}</time></dd>
+    </div>
+    <div>
+      <dt>Version Type</dt>
+      <dd>{model.version.type_label}</dd>
+    </div>
+    <div class="methodology-version-strip__note">
+      <dt>Entry linkage</dt>
+      <dd>Entry pages link to the Methodology Version used for that entry record.</dd>
+    </div>
+  </dl>
+
+  <section class="methodology-inclusion-rule atlas-sheet" aria-labelledby="inclusion-rule">
+    <h2 id="inclusion-rule" class="atlas-type-major-heading">Inclusion Rule</h2>
+    <div class="methodology-prose atlas-prose">
+      {model.inclusion_rule_html.map((paragraph) => <div set:html={paragraph} />)}
+    </div>
+  </section>
+
+  <nav class="methodology-jump" aria-labelledby="jump-to">
+    <h2 id="jump-to" class="atlas-type-major-heading">Jump To</h2>
+    <ol>
+      {model.jump_links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+    </ol>
+  </nav>
+
+  <section id={model.section_ids.inclusionStandard} class="methodology-section">
+    <h2 class="atlas-type-major-heading">Inclusion Standard</h2>
+    <div class="methodology-prose atlas-prose" set:html={model.inclusion_standard.opening_html} />
+    <ul class="methodology-list methodology-prose atlas-prose">
+      {model.inclusion_standard.checks_html.map((check) => <li set:html={check} />)}
+    </ul>
+    <dl class="methodology-examples methodology-prose atlas-prose">
+      <div><dt>Included Example</dt><dd set:html={model.inclusion_standard.included_example_html} /></div>
+      <div><dt>Excluded Example</dt><dd set:html={model.inclusion_standard.excluded_example_html} /></div>
+    </dl>
+  </section>
+
+  <section id={model.section_ids.claimAppraisal} class="methodology-section">
+    <h2 class="atlas-type-major-heading">Claim Appraisal</h2>
+    <div class="methodology-prose atlas-prose" set:html={model.claim_appraisal.opening_html} />
+    <ol class="methodology-list methodology-prose atlas-prose">
+      {model.claim_appraisal.questions_html.map((question) => <li set:html={question} />)}
+    </ol>
+  </section>
+
+  <section class="methodology-section methodology-public-labels" aria-labelledby="public-labels">
+    <h2 id="public-labels" class="atlas-type-major-heading">Public Labels</h2>
+    <div class="methodology-prose atlas-prose" set:html={model.public_labels.intro_html} />
+
+    <section id={model.section_ids.claimStatus} class="methodology-subsection">
+      <h3 id="claim-status-heading" class="atlas-type-subsection-heading">Claim Status</h3>
+      <table class="atlas-table methodology-table" aria-labelledby="claim-status-heading">
+        <thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">UI Treatment</th></tr></thead>
+        <tbody>
+          {model.public_labels.claim_statuses.map((status) => (
+            <tr data-status={status.value}>
+              <td data-label="Status">{status.label}</td>
+              <td data-label="Meaning" set:html={status.meaning_html} />
+              <td data-label="UI Treatment" class="methodology-table__treatment">{status.ui_treatment}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section id={model.section_ids.evidenceStrength} class="methodology-subsection">
+      <h3 id="evidence-strength-heading" class="atlas-type-subsection-heading">Evidence Strength</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.public_labels.evidence_strength_intro_html} />
+      <table class="atlas-table methodology-table" aria-labelledby="evidence-strength-heading">
+        <thead><tr><th scope="col">Level</th><th scope="col">Score</th><th scope="col">Meaning</th><th scope="col">Typical Evidence</th></tr></thead>
+        <tbody>
+          {model.public_labels.evidence_strengths.map((strength) => (
+            <tr>
+              <td data-label="Level">{strength.label}</td>
+              <td data-label="Score">{strength.score}</td>
+              <td data-label="Meaning" set:html={strength.meaning_html} />
+              <td data-label="Typical Evidence" set:html={strength.typical_evidence_html} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section id={model.section_ids.reviewStatus} class="methodology-subsection">
+      <h3 id="review-status-heading" class="atlas-type-subsection-heading">Review Status</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.public_labels.review_status_intro_html} />
+      <table class="atlas-table methodology-table" aria-labelledby="review-status-heading">
+        <thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">When Used</th></tr></thead>
+        <tbody>
+          {model.public_labels.review_statuses.map((status) => (
+            <tr>
+              <td data-label="Status">{status.label}</td>
+              <td data-label="Meaning" set:html={status.meaning_html} />
+              <td data-label="When Used" set:html={status.when_used_html} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <dl class="methodology-single-definition methodology-prose atlas-prose">
+        <div><dt>Review Reason</dt><dd set:html={model.public_labels.review_reason_html} /></div>
+      </dl>
+    </section>
+
+    <section id={model.section_ids.entryState} class="methodology-subsection">
+      <h3 id="entry-state-heading" class="atlas-type-subsection-heading">Entry State</h3>
+      <table class="atlas-table methodology-table" aria-labelledby="entry-state-heading">
+        <thead><tr><th scope="col">State</th><th scope="col">Meaning</th></tr></thead>
+        <tbody>
+          {model.public_labels.entry_states.map((state) => (
+            <tr><td data-label="State">{state.label}</td><td data-label="Meaning" set:html={state.meaning_html} /></tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+  <section class="methodology-section methodology-entry-fields" aria-labelledby="entry-fields">
+    <h2 id="entry-fields" class="atlas-type-major-heading">Entry Fields</h2>
+
+    <section id={model.section_ids.frontierDelta} class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Frontier Delta</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.entry_fields.frontier_delta.definition_html} />
+      <dl class="methodology-delta">
+        <div><dt>Previous Frontier</dt><dd set:html={model.entry_fields.frontier_delta.previous_frontier_html} /></div>
+        <div><dt>New Claim / Result</dt><dd set:html={model.entry_fields.frontier_delta.new_claim_result_html} /></div>
+        <div><dt>Delta</dt><dd set:html={model.entry_fields.frontier_delta.delta_html} /></div>
+      </dl>
+    </section>
+
+    <section id={model.section_ids.significance} class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Significance</h3>
+      <dl class="methodology-significance atlas-sheet">
+        <div><dt>Confirmed Significance</dt><dd set:html={model.entry_fields.significance.confirmed_html} /></div>
+        <div><dt>Potential Significance If Confirmed</dt><dd set:html={model.entry_fields.significance.potential_html} /></div>
+      </dl>
+    </section>
+
+    <section id={model.section_ids.caveats} class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Caveats</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.entry_fields.caveats.definition_html} />
+      <ul class="methodology-list methodology-prose atlas-prose">
+        {model.entry_fields.caveats.examples_html.map((example) => <li set:html={example} />)}
+      </ul>
+    </section>
+  </section>
+
+  <section id={model.section_ids.sourcesAndEvidenceTypes} class="methodology-section">
+    <h2 class="atlas-type-major-heading">Sources and Evidence Types</h2>
+    <div class="methodology-prose atlas-prose" set:html={model.sources.intro_html} />
+
+    <section id={model.section_ids.evidenceTypes} class="methodology-subsection">
+      <h3 id="evidence-types-heading" class="atlas-type-subsection-heading">Evidence Types</h3>
+      <table class="atlas-table methodology-table" aria-labelledby="evidence-types-heading">
+        <thead><tr><th scope="col">Evidence Type</th><th scope="col">Meaning</th></tr></thead>
+        <tbody>
+          {model.sources.evidence_types.map((evidenceType) => (
+            <tr><td data-label="Evidence Type">{evidenceType.label}</td><td data-label="Meaning" set:html={evidenceType.meaning_html} /></tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section id={model.section_ids.usedFor} class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Used For</h3>
+      <dl class="methodology-definition-records methodology-prose atlas-prose">
+        <div><dt>Definition</dt><dd set:html={model.sources.used_for.definition_html} /></div>
+        <div><dt>Public Statement</dt><dd set:html={model.sources.used_for.public_statement_html} /></div>
+        <div><dt>Example</dt><dd set:html={model.sources.used_for.example_html} /></div>
+      </dl>
+    </section>
+
+    <section id={model.section_ids.sourceRoles} class="methodology-subsection">
+      <h3 id="source-roles-heading" class="atlas-type-subsection-heading">Source Roles</h3>
+      <table class="atlas-table methodology-table" aria-labelledby="source-roles-heading">
+        <thead><tr><th scope="col">Source Role</th><th scope="col">Meaning</th></tr></thead>
+        <tbody>
+          {model.sources.source_roles.map((sourceRole) => (
+            <tr><td data-label="Source Role">{sourceRole.label}</td><td data-label="Meaning" set:html={sourceRole.meaning_html} /></tr>
+          ))}
+        </tbody>
+      </table>
+      <div class="methodology-prose atlas-prose" set:html={model.sources.source_role_distinction_html} />
+    </section>
+
+    <section id="source-ordering" class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Source Ordering</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.sources.source_ordering_html} />
+    </section>
+  </section>
+
+  <section id={model.section_ids.datesAndEvidenceMonitoring} class="methodology-section">
+    <h2 class="atlas-type-major-heading">Dates and Evidence Monitoring</h2>
+
+    <section id="date-fields" class="methodology-subsection">
+      <h3 id="date-fields-heading" class="atlas-type-subsection-heading">Date Fields</h3>
+      <table class="atlas-table methodology-table" aria-labelledby="date-fields-heading">
+        <thead><tr><th scope="col">Field</th><th scope="col">Meaning</th></tr></thead>
+        <tbody>
+          {model.dates.fields.map((field) => (
+            <tr><td data-label="Field">{field.label}</td><td data-label="Meaning" set:html={field.meaning_html} /></tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="evidence-monitoring" class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Evidence Monitoring</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.dates.evidence_monitoring_html} />
+      <ul class="methodology-list methodology-prose atlas-prose">
+        {model.dates.review_triggers_html.map((trigger) => <li set:html={trigger} />)}
+      </ul>
+    </section>
+  </section>
+
+  <section class="methodology-section" aria-labelledby="topic-trails-and-domains">
+    <h2 id="topic-trails-and-domains" class="atlas-type-major-heading">Topic Trails and Domains</h2>
+
+    <section id={model.section_ids.topicTrails} class="methodology-subsection">
+      <h3 class="atlas-type-subsection-heading">Topic Trails</h3>
+      <div class="methodology-prose atlas-prose" set:html={model.taxonomy.topic_trails.definition_html} />
+      <ul class="methodology-list methodology-prose atlas-prose">
+        {model.taxonomy.topic_trails.rules_html.map((rule) => <li set:html={rule} />)}
+      </ul>
+      <dl class="methodology-definition-records methodology-prose atlas-prose">
+        <div><dt>Naming Rule</dt><dd set:html={model.taxonomy.topic_trails.naming_rule_html} /></div>
+        <div><dt>Good Examples</dt><dd><ul>{model.taxonomy.topic_trails.good_examples_html.map((example) => <li set:html={example} />)}</ul></dd></div>
+        <div><dt>Bad Examples</dt><dd><ul>{model.taxonomy.topic_trails.bad_examples_html.map((example) => <li set:html={example} />)}</ul></dd></div>
+      </dl>
+    </section>
+
+    <section id={model.section_ids.domains} class="methodology-subsection">
+      <h3 id="domains-heading" class="atlas-type-subsection-heading">Domains</h3>
+      <table class="atlas-table methodology-table" aria-labelledby="domains-heading">
+        <thead><tr><th scope="col">Domain</th><th scope="col">Scope</th></tr></thead>
+        <tbody>
+          {model.taxonomy.domains.map((domain) => (
+            <tr><td data-label="Domain">{domain.label}</td><td data-label="Scope" set:html={domain.meaning_html} /></tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+  <section id={model.section_ids.entryTitles} class="methodology-section">
+    <h2 class="atlas-type-major-heading">Entry Titles</h2>
+    <dl class="methodology-definition-records methodology-prose atlas-prose">
+      <div><dt>Rule</dt><dd set:html={model.entry_titles.rule_html} /></div>
+      <div><dt>Pattern</dt><dd set:html={model.entry_titles.pattern_html} /></div>
+      <div><dt>Hype-Word Rule</dt><dd set:html={model.entry_titles.hype_word_rule_html} /></div>
+      <div><dt>Examples</dt><dd><ul>{model.entry_titles.examples_html.map((example) => <li set:html={example} />)}</ul></dd></div>
+    </dl>
+  </section>
+
+  <section id={model.section_ids.versioning} class="methodology-section">
+    <h2 id="versioning-heading" class="atlas-type-major-heading">Versioning</h2>
+    <div class="methodology-prose atlas-prose" set:html={model.versioning.introduction_html} />
+    <table class="atlas-table methodology-table" aria-labelledby="versioning-heading">
+      <thead><tr><th scope="col">Change Type</th><th scope="col">When It Changes</th></tr></thead>
+      <tbody>
+        {model.versioning.definitions.map((definition) => (
+          <tr><td data-label="Change Type">{definition.label}</td><td data-label="When It Changes" set:html={definition.meaning_html} /></tr>
+        ))}
+      </tbody>
+    </table>
+    <div class="methodology-versioning__closing methodology-prose atlas-prose" set:html={model.versioning.closing_line_html} />
+  </section>
+</article>
