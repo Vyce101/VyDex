@@ -14,6 +14,7 @@ These pages explain the system contracts that exist in VyDex today. They are wri
 - [Frontier Atlas Design System](frontier-atlas-design-system.md) — Shared visual tokens, typography, responsive layouts, components, and accessibility invariants.
 - [Publication Revisions](publication-revisions.md) — Immutable Entry snapshots, revision history, materiality rules, and derived activity.
 - [Release Construction](release-construction.md) — Read-only loading, strict and preview releases, resolved public data, routes, and Changelog events.
+- [Stage 1 Entry Page](stage-1-entry-page.md) — Static route generation, complete record projection, responsive presentation, source context, and not-found behavior.
 - [Stage 1 Homepage](stage-1-homepage.md) — Static release selection, latest-material-activity ordering, page composition, and production release loading.
 - [Stage 1 Site Shell](stage-1-site-shell.md) — Shared page structure, canonical navigation, progressive mobile disclosure, and focus behavior.
 - [Static Application Foundation](static-application-foundation.md) — Static Astro build, domain separation, Schema publication, and test boundaries.

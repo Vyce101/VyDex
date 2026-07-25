@@ -15,7 +15,7 @@ The system keeps every public dataset consumer on one versioned contract without
 - The origin-specific draft 2020-12 JSON Schema and its canonical identity.
 - Projection of current public Entries from a validated production release.
 - Derived public labels, Evidence Strength scores, dates, Evidence Types, and relationship references.
-- Deterministic array ordering, property construction, indentation, UTF-8 text, and final-newline behavior.
+- Deterministic array ordering, including defensive reuse of the domain-owned public source order, plus stable property construction, indentation, UTF-8 text, and final-newline behavior.
 - Validation of serialized dataset content against the exact public Schema.
 - Immutable artifact paths and the stable-latest redirect descriptor.
 - Structured generation diagnostics.
@@ -52,7 +52,7 @@ The generator returns:
 1. [Release Construction](release-construction.md) validates repository records, selects each Entry's newest published snapshot, resolves relationships and routes, and returns one complete production release.
 2. The dataset generator rechecks the release discriminator, persisted metadata, production origin, required dataset routes, public Entry state, unique Entry identities, Methodology version, and canonical relationship URLs.
 3. Each current public Entry is projected from its selected snapshot. Editable canonical differences and historical snapshots are not input collections and cannot become separate export records.
-4. The generator derives public values and applies the Dataset `1.0.0` ordering rules without mutating the release.
+4. The generator derives public values and applies the Dataset `1.0.0` ordering rules without mutating the release. Sources are reordered from a copy through the same helper used by release resolution.
 5. It builds the Schema from the same validated site origin used by the release. The Schema `$id` and dataset `$schema` must be the same absolute canonical URL.
 6. The dataset is serialized with two-space indentation and exactly one final newline, parsed again, and validated with Ajv in strict draft-2020-12 mode.
 7. A successful result can be passed to the dataset artifact writer. Generation itself performs no filesystem, environment, clock, randomness, or logging work.
@@ -62,7 +62,7 @@ The generator returns:
 The public dataset uses explicit ordering so unchanged release inputs produce byte-identical output:
 
 - Entries sort by slug.
-- Sources sort by Source Role order and then by source title in English alphabetical order. Equal keys retain their existing order.
+- Sources use the domain-owned public cascade: Primary Evidence, Independent Replication, Official Record, Strong Artifact, Context Source, and Media Report. Source title in English alphabetical order is the final fallback.
 - Domains and Evidence Types follow their controlled-value order.
 - Secondary Topic Trails sort by slug.
 - Methodology versions sort numerically by semantic version.
@@ -70,7 +70,7 @@ The public dataset uses explicit ordering so unchanged release inputs produce by
 
 Source Role labels come from the exhaustive `SOURCE_ROLE_LABELS` map. Entry-level Evidence Types are derived from the unique Evidence Types on exported Sources; there is no authored Entry-level Evidence Type list.
 
-These arrays are deterministic traversal structures. Their position does not communicate importance, recency, confidence, or ranking.
+Release resolution already supplies sources in this order for page consumers. Dataset generation defensively reapplies the shared copied-array helper rather than trusting caller order or maintaining a private comparator. These arrays are deterministic traversal structures; their position does not communicate recency, confidence, popularity, or a numeric ranking.
 
 ## Schema Identity and Static Publication
 
@@ -118,6 +118,7 @@ Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collisio
 - [Canonical Records](canonical-records.md) owns authored Entry and Source validation. Dataset generation narrows those records into a separate immutable public contract.
 - [Publication Revisions](publication-revisions.md) owns snapshot history and revision activity. Dataset generation receives only the current snapshot selected by release construction.
 - [Release Construction](release-construction.md) owns production validity, relationship resolution, canonical URLs, and route registration. Dataset generation rejects disagreements rather than rebuilding those decisions.
+- The domain-owned source-ordering module is shared with release resolution. Dataset generation may defensively reorder copied input, but it must not introduce a second role cascade or mutate resolved sources.
 - [Static Application Foundation](static-application-foundation.md) owns Astro publication, configured environment access, Cloudflare response metadata, pinned dependencies, and CI execution.
 - The future atomic release command will own descriptor persistence, writer invocation, deployment redirects, and deployed-target verification. Those capabilities are not implemented by this system.
 
@@ -131,10 +132,12 @@ Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collisio
 - Identical releases, site origins, dependencies, and generator code produce byte-identical Schema and dataset text.
 - The immutable writer never overwrites different bytes.
 - Pure generation remains free of filesystem, environment, logging, clock, and randomness side effects.
+- Release resolution, Entry pages, and Dataset generation agree on public source order and preserve every source's attached fields.
 
 ## Implementation Landmarks
 
 - `src/domain/json-export-generation/` — Versioned public types, Schema construction, projection, validation, and serialization.
+- `src/domain/source-ordering/` — Shared public Source Role and title ordering contract.
 - `src/adapters/dataset-artifact-writer/` — Injected filesystem emission and collision protection.
 - `src/pages/schemas/vydex-dataset/` — Thin static Schema publication route.
 - `src/domain/route-generation/` — Schema, stable-latest, and immutable artifact route ownership.
@@ -147,6 +150,7 @@ Check:
 - Whether the change is compatible with the immutable Dataset `1.0.0` contract or requires a new major dataset version.
 - Whether every public field is projected from the selected snapshot or resolved release relationship rather than editable authoring state.
 - Whether array ordering and property construction remain deterministic across supported Node.js environments.
+- Whether public source order still matches release resolution and preserves citation IDs, labels, Evidence Types, URLs, publishers, and `used_for` values.
 - Whether Schema `$id`, dataset `$schema`, route registration, and public publication still agree.
 - Whether nullable meanings, Source Role labels, Evidence Strength scores, and derived Evidence Types remain exact.
 - Whether two identical generations still produce identical bytes and exactly one final newline.

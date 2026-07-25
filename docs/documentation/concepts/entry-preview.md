@@ -14,7 +14,7 @@ The preview keeps projection rules and presentation behavior in one feature-owne
 - The typed `EntryPreviewSource` to `EntryPreviewViewModel` projection.
 - Selection of the first authored Domain for preview display and mapping through the canonical public label map.
 - The exact sequence of Domain, Date Updated, title, claim, three statuses, Topic Trail, and Read Entry link.
-- Safe rendering of the validated inline-Markdown claim.
+- Safe rendering of the validated inline-Markdown claim through the shared Entry Markdown presentation module.
 - The responsive Atlas Sheet layout, text clamping, status treatment, and link accessibility behavior.
 - Closed failure when a required preview value is absent, invalid, or unmapped.
 
@@ -23,7 +23,7 @@ It does not own:
 - Canonical Entry schemas, validation, controlled values, or the authored order of Domains.
 - Snapshot selection, material activity, Topic Trail resolution, canonical URLs, or release promotion.
 - Host headings, page layout, Entry ordering, Homepage sections, or Topic Trail pages.
-- Full Entry Page or Dataset export presentation, both of which retain every attached Domain.
+- [Stage 1 Entry Page](stage-1-entry-page.md) or Dataset export presentation, both of which retain every attached Domain.
 - Logging, telemetry, client-side state, or a runtime backend.
 
 ## Inputs and Outputs
@@ -36,7 +36,7 @@ The public `EntryPreview.astro` component accepts that source, calls `projectEnt
 
 1. A host obtains a validated resolved Entry through [Release Construction](release-construction.md) and the application release adapter.
 2. The host passes the required subset to `EntryPreview.astro`; it does not pass a Latest, recent, or Topic Trail visual variant.
-3. `projectEntryPreview` validates every required display value, selects `domains[0]`, maps controlled values to public labels, and renders the claim through the approved inline-Markdown profile.
+3. `projectEntryPreview` validates every required display value, selects `domains[0]`, maps controlled values to public labels, and renders the claim through the shared renderer's approved inline-Markdown profile.
 4. The component renders the metadata band, editorial body, status row, and footer in a fixed order.
 5. Frontier Atlas tokens and primitives supply the sheet, rules, type roles, focus treatment, status colors, spacing, and responsive breakpoint. Feature-owned CSS arranges those primitives for this component.
 
@@ -68,6 +68,7 @@ The projection throws a normal build error when the source is missing, the Domai
 
 - The preview reads only `domains[0]` and never sorts or mutates the source Domain array. This is display priority only and does not make that Domain semantically primary.
 - Inline Markdown is parsed into an allowed set of text, emphasis, strong, deletion, inline code, break, and safe link nodes. Generated HTML and link attributes are escaped; unsafe protocols and unsupported nodes fail closed.
+- The shared renderer also provides block Markdown for the full Entry Page. Preview projection must continue to call only the inline entry point so its one-paragraph contract does not widen.
 - The title clamp applies to the anchor itself so its visible focus outline follows the rendered title area.
 - A claim temporarily removes its clamp while one of its inline links has focus. This prevents a keyboard-focusable link from remaining hidden; the claim clamps again after focus leaves.
 - `data-status` appears only on Claim Status. Evidence Strength and Review Status use the neutral tab treatment even when their machine values resemble another status name.
@@ -79,6 +80,7 @@ The projection throws a normal build error when the source is missing, the Domai
 - [Release Construction](release-construction.md) owns current snapshot selection, Date Updated, resolved Topic Trail data, and canonical URLs. The preview must not load or repair authoring records itself.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns the Atlas Sheet, Record Rules, typography roles, neutral and exceptional status treatments, focus behavior, spacing tokens, and 768px breakpoint. The preview owns only their feature-specific composition.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro boundary, static build, and test harness. The preview adds no client script or runtime data dependency.
+- The [Stage 1 Entry Page](stage-1-entry-page.md) shares the Markdown renderer but owns its complete record projection, block profile, source presentation, and page hierarchy.
 - The [Stage 1 Homepage](stage-1-homepage.md) owns latest and recent selection, section headings, and page placement. It uses the same preview for both contexts and intentionally repeats the Latest Update Entry as the first recent Entry.
 - Hosts own their headings and record selection. They cannot make Latest look more important by passing a component variant because no such public interface exists.
 
@@ -95,7 +97,8 @@ The projection throws a normal build error when the source is missing, the Domai
 
 ## Implementation Landmarks
 
-- `src/components/entry-preview/` — Public Astro component, typed projection, inline-Markdown rendering, and feature-owned styles.
+- `src/components/entry-preview/` — Public Astro component, typed projection, and feature-owned styles.
+- `src/shared/entry-markdown/` — Safe inline and block Markdown rendering shared with the Stage 1 Entry Page.
 - `src/domain/canonical-records/controlled-values.ts` — Exhaustive status and Domain public-label maps.
 - `src/features/homepage/` — Current public host for Latest Update and Recent Entries previews.
 - `tests/components/entry-preview.test.ts` — Projection, label mapping, Markdown safety, immutability, and failure coverage.
@@ -112,6 +115,7 @@ Check:
 - Whether only Claim Status receives exceptional presentation through `data-status`.
 - Whether the title, claim, statuses, links, and mobile order remain exact.
 - Whether clamping leaves every inline claim link visible while focused and returns after focus leaves.
+- Whether Markdown changes preserve both the preview's inline-only contract and the Entry Page's supported block profile.
 - Whether long labels and URLs wrap without shrinking compact metadata or causing horizontal overflow.
 - Whether every host uses the same context-free component and keeps its heading outside the sheet.
 - Whether component, browser, keyboard, and Axe tests cover the changed behavior.

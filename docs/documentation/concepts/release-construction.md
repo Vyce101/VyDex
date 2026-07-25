@@ -14,6 +14,7 @@ The system prevents pages, components, and exports from assembling their own int
 - Read-only loading of canonical JSON records and Entry publication snapshots.
 - Validation of complete record collections, histories, relationships, Stage 1 content, and release inputs.
 - Selection of each Entry's newest valid published snapshot.
+- Deterministic public ordering of a copied source array on each resolved current Entry.
 - Resolution of Topic Trail membership, Methodology references, About links, dates, activity, and counts.
 - Construction of canonical paths, absolute URLs, and permanent alias-redirect descriptors.
 - Derivation of material public Changelog events.
@@ -54,7 +55,7 @@ The application boundary exposes two named release sources. `loadPersistedProduc
 2. The application supplies release metadata and a site origin. Production reads metadata from the persisted descriptor; development and explicit test mode inject fixed non-production metadata. The framework-independent constructor does not read environment variables or files.
 3. Record schemas validate Entries, Topic Trails, Methodologies, About content, Methodology publication events, and snapshots. Aggregate validation checks identities, slug namespaces, and relationships.
 4. Snapshots are grouped by Entry ID. Each history is ordered by validated revision number and checked for numbering, chronology, materiality, Methodology references, and retained historical slugs.
-5. The newest valid snapshot becomes the public Entry. Editable canonical Entry differences remain unpublished and cannot affect public content, routes, membership, activity, Changelog events, or exports.
+5. The newest valid snapshot becomes the public Entry. Release resolution clones that Entry and orders its copied source array for public display; the immutable snapshot and editable canonical Entry remain unchanged.
 6. The constructor resolves routes, Topic Trail membership, Methodology and About links, derived dates, latest meaningful activity, trail counts, and trail Last Activity.
 7. Material snapshots and the Methodology publication event form the public Changelog.
 8. Production returns the release only when no blocking diagnostic remains. Preview returns trustworthy partial results, invalid source records, and all diagnostics. Dataset projection happens only after a successful production result.
@@ -107,9 +108,9 @@ Entry Changelog events come only from material snapshots:
 
 The separately authored Methodology publication event becomes `methodology_change`. Events sort by calendar date, exact timestamp when both events have one, the approved event-type order, public title, and stable source identity. Exact timestamps and tie-breakers are internal ordering data rather than public display fields.
 
-Release construction retains the selected snapshot, derived revision activity, canonical URL, and resolved Topic Trail and Methodology references for every current Entry. It does not create public export records. The separate dataset generator uses this resolved state so pages and exports cannot disagree about which revision or relationship is current.
+Release construction retains the selected snapshot, derived revision activity, canonical URL, resolved Topic Trail and Methodology references, and publicly ordered copied sources for every current Entry. It does not create public export records. The [Stage 1 Entry Page](stage-1-entry-page.md) renders that resolved order directly, while the separate dataset generator uses the same resolved state so pages and exports cannot disagree about which revision or relationship is current.
 
-Sources and Domains remain in their validated release-model form at this boundary. Dataset generation applies the public Dataset `1.0.0` ordering rules, derives labels and Evidence Types, validates the serialized result against its Schema, and returns immutable artifact metadata. The filesystem writer remains a separate adapter.
+The source-ordering module owns one pure comparator: Source Role follows the approved evidence-role cascade, and an English alphabetical title comparison breaks ties. Its ordering helper sorts a copied array. Dataset generation defensively reapplies that same helper to copied input, derives labels and Evidence Types, validates the serialized result against its Schema, and returns immutable artifact metadata. Domains retain their validated order. The filesystem writer remains a separate adapter.
 
 ## Failure Behavior
 
@@ -127,7 +128,7 @@ The loader and constructor return diagnostics without writing to standard output
 - Standard URL parsing can normalize invalid-looking paths; origin validation also checks the supplied syntax so query delimiters, fragments, and non-root paths remain invalid.
 - An invalid record with a recoverable ID remains visible in preview but cannot make an incomplete aggregate appear authoritative.
 - Topic Trail membership includes both primary and secondary relationships. Every loaded trail must contain at least one selected public Entry.
-- Entry-level Evidence Types are derived in controlled-value order, while embedded sources retain authored order.
+- Public source ordering never mutates the canonical Entry, an immutable snapshot, or its source objects. Source labels, Evidence Types, URLs, publishers, and `used_for` values remain attached to the same citation after sorting.
 
 ## Cross-System Edge Cases
 
@@ -135,16 +136,18 @@ The loader and constructor return diagnostics without writing to standard output
 - [Publication Revisions](publication-revisions.md) owns snapshot creation, history semantics, and material activity. Release construction validates complete stored histories and selects their current state.
 - [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
 - The [Entry Preview](entry-preview.md) consumes a typed subset of `ResolvedPublicEntry`. It must use resolved dates, Topic Trail data, and canonical URLs rather than load, infer, or repair authoring records.
+- The [Stage 1 Entry Page](stage-1-entry-page.md) consumes the complete `ResolvedPublicEntry`, including its publicly ordered sources. It must not introduce a page-local comparator.
 - The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.
-- The repository contains the complete Stage 1 seed record set. Tests and the Homepage's non-production modes inject fixed metadata to construct it without creating or persisting a genuine release. Normal production remains blocked until the later atomic release command creates the descriptor.
+- The repository contains the complete Stage 1 seed record set. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting a genuine release. Normal production remains blocked until the later atomic release command creates the descriptor.
 
 ## Invariants
 
 - One release model is the source for homepage, Entry, Topic Trail, Methodology, About, Changelog, route, redirect, and dataset consumers.
 - Invalid records are never silently omitted, repaired, or promoted into authoritative derived values.
 - Public Entry state and relationships come from immutable snapshots; editable differences remain unpublished.
+- Resolved current Entries expose sources in deterministic public order without changing canonical records or immutable snapshots.
 - Non-material revisions do not change material activity ordering or public Changelog events.
 - Stable IDs resolve relationships; filenames and slugs do not.
 - Canonical URLs come from a validated explicit origin and the route registry.
@@ -160,6 +163,7 @@ The loader and constructor return diagnostics without writing to standard output
 - `src/adapters/persisted-release-descriptor/` — Exact-path descriptor reading, JSON parsing, and Schema validation.
 - `src/domain/release-construction/` — Validation orchestration, preview handling, and resolved release models.
 - `src/domain/release-construction/compare-resolved-public-entries.ts` — Shared material-activity ordering comparator.
+- `src/domain/source-ordering/` — Shared public source comparator and copied-array ordering helper.
 - `src/domain/route-generation/` — Origin, route-registry, canonical URL, and redirect contracts.
 - `src/domain/json-export-generation/` — Post-release Dataset `1.0.0` projection, Schema, validation, and serialization.
 - `tests/adapters/` and `tests/domain/` — Loader, production, preview, routing, Changelog, dataset, and writer coverage.
@@ -173,6 +177,7 @@ Check:
 - Whether public Entry selection still ignores unpublished editable differences.
 - Whether material activity remains separate from the current revision after a non-material update.
 - Whether release resolution and Homepage selection still share the same material-activity, Date Added, and immutable-ID comparator.
+- Whether release resolution and Dataset generation still share the public source comparator while canonical and snapshot arrays remain untouched.
 - Whether production descriptor loading still uses the exact reserved path and fails instead of falling back to fixed metadata.
 - Whether route and alias checks run before absolute URL generation.
 - Whether every page-facing value still comes from the shared release model.
