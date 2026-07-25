@@ -16,6 +16,7 @@ import {
   releaseMetadataSchema,
   type ReleaseMetadata,
   type ReleaseModel,
+  type SiteOrigin,
 } from "../../domain";
 import type { ReleaseLogger } from "../../shared/release-logger";
 import { enrichValidationDiagnostic, releaseGateDiagnostic, type StageOneReleaseDiagnostic } from "./diagnostics";
@@ -24,16 +25,17 @@ import {
   parseExistingStageOneReleaseManifest,
   serializeStageOneReleaseManifest,
   STAGE_ONE_RELEASE_MANIFEST_PATH,
+  validateCommittedStageOneReleaseState,
   validateImmutableDatasetAgainstPreviousManifest,
+  validateReproducedStageOneReleaseManifest,
   type StageOneReleaseManifest,
 } from "./manifest";
 import { promoteStageOneReleaseOutput } from "./promotion";
 import { collectStageOneRedirects, serializeStageOneRedirects } from "./redirects";
 import { verifyStageOneStaticOutput } from "./static-output-verifier";
 
-export const STAGE_ONE_PUBLIC_SITE_ORIGIN = "https://vydex.vyce.workers.dev" as const;
-
 export type StageOneReleaseCommand = "typecheck" | "test" | "build" | "browser";
+export type StageOneReleaseStatePolicy = "bootstrap" | "existing_only";
 export type StageOneCommandResult = { exit_code: number; output: string };
 export type RunStageOneCommand = (input: {
   command: StageOneReleaseCommand;
@@ -98,13 +100,14 @@ function commandFailure(
 async function runQualityChecks(input: {
   filesystem_root: string;
   runtime_root: string;
+  site_origin: SiteOrigin;
   run_command: RunStageOneCommand;
   logger: ReleaseLogger;
 }): Promise<StageOneReleaseDiagnostic[]> {
   const environment = {
     ...process.env,
     ASTRO_TELEMETRY_DISABLED: "1",
-    PUBLIC_SITE_ORIGIN: STAGE_ONE_PUBLIC_SITE_ORIGIN,
+    PUBLIC_SITE_ORIGIN: input.site_origin,
   };
   await input.logger.info("Running strict TypeScript and Astro checks.");
   const typecheck = await input.run_command({
@@ -132,6 +135,7 @@ async function runBrowserChecks(input: {
   filesystem_root: string;
   runtime_root: string;
   output_directory: string;
+  site_origin: SiteOrigin;
   run_command: RunStageOneCommand;
   logger: ReleaseLogger;
 }): Promise<StageOneReleaseDiagnostic[]> {
@@ -143,7 +147,7 @@ async function runBrowserChecks(input: {
     environment: {
       ...process.env,
       ASTRO_TELEMETRY_DISABLED: "1",
-      PUBLIC_SITE_ORIGIN: STAGE_ONE_PUBLIC_SITE_ORIGIN,
+      PUBLIC_SITE_ORIGIN: input.site_origin,
     },
   });
   await writeFile(resolve(input.runtime_root, "browser-test-output.txt"), browser.output, "utf8");
@@ -165,13 +169,14 @@ function createCandidateMetadata(dependencies: StageOneReleaseDependencies): Rel
 function constructPreparedRelease(input: {
   records: Awaited<ReturnType<typeof loadCanonicalRecords>>;
   metadata: ReleaseMetadata;
+  site_origin: SiteOrigin;
 }):
   | { success: true; release: ReleaseModel; prepared_export: PreparedApplicationExport }
   | { success: false; diagnostics: StageOneReleaseDiagnostic[] } {
   const result = constructReleaseModel({
     records: input.records,
     release_metadata: input.metadata,
-    site_origin: STAGE_ONE_PUBLIC_SITE_ORIGIN,
+    site_origin: input.site_origin,
     mode: "production",
   });
   if (result.mode !== "production" || !result.success) {
@@ -251,6 +256,8 @@ async function fail(
 
 export async function runStageOneRelease(input: {
   filesystem_root: string;
+  site_origin: SiteOrigin;
+  release_state_policy: StageOneReleaseStatePolicy;
   dependencies?: Partial<StageOneReleaseDependencies>;
 }): Promise<RunStageOneReleaseResult> {
   const filesystemRoot = resolve(input.filesystem_root);
@@ -263,11 +270,14 @@ export async function runStageOneRelease(input: {
     logger: input.dependencies?.logger ?? NOOP_LOGGER,
   };
   const logger = dependencies.logger;
-  await logger.info(`Starting the Stage 1 release gate for ${STAGE_ONE_PUBLIC_SITE_ORIGIN}.`);
+  await logger.info(
+    `Starting the Stage 1 release gate for ${input.site_origin} with ${input.release_state_policy} release state.`,
+  );
 
   const qualityDiagnostics = await runQualityChecks({
     filesystem_root: filesystemRoot,
     runtime_root: runtimeRoot,
+    site_origin: input.site_origin,
     run_command: dependencies.run_command,
     logger,
   });
@@ -287,12 +297,59 @@ export async function runStageOneRelease(input: {
     ]);
   }
 
+  if (descriptorRead.status === "missing" && input.release_state_policy === "existing_only") {
+    return fail(logger, [
+      releaseGateDiagnostic({
+        code: "release_descriptor_required",
+        field: "generated/release-data/release.json",
+        rule: "Production CI requires the committed Stage 1 release descriptor and must never create one.",
+        generated_surfaces: ["All public routes", "JSON export", "Cloudflare Pages deployment"],
+      }),
+    ]);
+  }
+
+  let committedManifest: StageOneReleaseManifest | undefined;
+  if (input.release_state_policy === "existing_only") {
+    if (descriptorRead.status !== "existing") {
+      throw new Error("Existing-only release state reached descriptor validation without a descriptor.");
+    }
+    try {
+      committedManifest = await readPreviousManifest(filesystemRoot);
+    } catch (error) {
+      return fail(logger, [
+        releaseGateDiagnostic({
+          code: "previous_release_manifest_invalid",
+          field: STAGE_ONE_RELEASE_MANIFEST_PATH,
+          rule: error instanceof Error ? error.message : String(error),
+          generated_surfaces: ["Release manifest", "Cloudflare Pages deployment"],
+        }),
+      ]);
+    }
+    if (!committedManifest) {
+      return fail(logger, [
+        releaseGateDiagnostic({
+          code: "release_manifest_required",
+          field: STAGE_ONE_RELEASE_MANIFEST_PATH,
+          rule: "Production CI requires the committed Stage 1 release manifest.",
+          generated_surfaces: ["Promotable static output", "Cloudflare Pages deployment"],
+        }),
+      ]);
+    }
+    const committedStateDiagnostics = validateCommittedStageOneReleaseState({
+      descriptor: descriptorRead.descriptor,
+      manifest: committedManifest,
+      site_origin: input.site_origin,
+    });
+    if (committedStateDiagnostics.length > 0) return fail(logger, committedStateDiagnostics);
+    await logger.info("Validated the committed Stage 1 descriptor, manifest, and production origin.");
+  }
+
   const records = await loadCanonicalRecords({ filesystem_root: filesystemRoot });
   const inputFingerprint = canonicalInputFingerprint(records);
   let metadata = descriptorRead.status === "existing"
     ? descriptorRead.descriptor
     : createCandidateMetadata(dependencies);
-  let prepared = constructPreparedRelease({ records, metadata });
+  let prepared = constructPreparedRelease({ records, metadata, site_origin: input.site_origin });
   if (!prepared.success) return fail(logger, prepared.diagnostics);
 
   let descriptorStatus: "created" | "existing" = "existing";
@@ -316,7 +373,7 @@ export async function runStageOneRelease(input: {
       metadata.release_id !== prepared.release.release_metadata.release_id ||
       metadata.generated_at !== prepared.release.release_metadata.generated_at
     ) {
-      prepared = constructPreparedRelease({ records, metadata });
+      prepared = constructPreparedRelease({ records, metadata, site_origin: input.site_origin });
       if (!prepared.success) return fail(logger, prepared.diagnostics);
     }
     await logger.info(
@@ -339,7 +396,7 @@ export async function runStageOneRelease(input: {
       environment: {
         ...process.env,
         ASTRO_TELEMETRY_DISABLED: "1",
-        PUBLIC_SITE_ORIGIN: STAGE_ONE_PUBLIC_SITE_ORIGIN,
+        PUBLIC_SITE_ORIGIN: input.site_origin,
         VYDEX_ATOMIC_RELEASE_BUILD: "1",
       },
     });
@@ -379,6 +436,7 @@ export async function runStageOneRelease(input: {
       filesystem_root: filesystemRoot,
       runtime_root: runtimeRoot,
       output_directory: stagingOutput,
+      site_origin: input.site_origin,
       run_command: dependencies.run_command,
       logger,
     });
@@ -390,18 +448,28 @@ export async function runStageOneRelease(input: {
       prepared_export: prepared.prepared_export,
       generated_routes: verification.generated_routes,
     });
-    let previousManifest: StageOneReleaseManifest | undefined;
-    try {
-      previousManifest = await readPreviousManifest(filesystemRoot);
-    } catch (error) {
-      return fail(logger, [
-        releaseGateDiagnostic({
-          code: "previous_release_manifest_invalid",
-          field: STAGE_ONE_RELEASE_MANIFEST_PATH,
-          rule: error instanceof Error ? error.message : String(error),
-          generated_surfaces: ["Release manifest", "Promotable static output"],
-        }),
-      ]);
+    let previousManifest = committedManifest;
+    if (!previousManifest) {
+      try {
+        previousManifest = await readPreviousManifest(filesystemRoot);
+      } catch (error) {
+        return fail(logger, [
+          releaseGateDiagnostic({
+            code: "previous_release_manifest_invalid",
+            field: STAGE_ONE_RELEASE_MANIFEST_PATH,
+            rule: error instanceof Error ? error.message : String(error),
+            generated_surfaces: ["Release manifest", "Promotable static output"],
+          }),
+        ]);
+      }
+    }
+    if (previousManifest) {
+      const committedStateDiagnostics = validateCommittedStageOneReleaseState({
+        descriptor: metadata,
+        manifest: previousManifest,
+        site_origin: input.site_origin,
+      });
+      if (committedStateDiagnostics.length > 0) return fail(logger, committedStateDiagnostics);
     }
     const immutableDiagnostics = validateImmutableDatasetAgainstPreviousManifest({
       previous_manifest: previousManifest,
@@ -409,6 +477,14 @@ export async function runStageOneRelease(input: {
       export_public_path: prepared.prepared_export.artifact.public_path,
     });
     if (immutableDiagnostics.length > 0) return fail(logger, immutableDiagnostics);
+    if (committedManifest) {
+      const reproductionDiagnostics = validateReproducedStageOneReleaseManifest({
+        committed_manifest: committedManifest,
+        reproduced_manifest: manifest,
+      });
+      if (reproductionDiagnostics.length > 0) return fail(logger, reproductionDiagnostics);
+      await logger.info("Reproduced the committed Stage 1 manifest exactly.");
+    }
 
     await promoteStageOneReleaseOutput({
       filesystem_root: filesystemRoot,

@@ -7,6 +7,7 @@ import {
 } from "../../domain/release-construction";
 import { loadCanonicalRecords } from "../canonical-record-loader";
 import { loadPersistedReleaseDescriptor } from "../persisted-release-descriptor";
+import { parseRequiredPublicSiteOrigin } from "../public-site-origin";
 
 export type LoadApplicationReleaseInput = {
   filesystem_root: string;
@@ -19,9 +20,9 @@ export async function loadApplicationRelease(
   input: LoadApplicationReleaseInput,
 ): Promise<ConstructReleaseModelResult> {
   const records = await loadCanonicalRecords({ filesystem_root: input.filesystem_root });
-  const siteOrigin =
-    input.site_origin ??
-    (input.mode === "preview" ? "http://localhost:4321" : import.meta.env.PUBLIC_SITE_ORIGIN);
+  const siteOrigin = input.mode === "preview"
+    ? input.site_origin ?? "http://localhost:4321"
+    : parseRequiredPublicSiteOrigin(input.site_origin ?? import.meta.env.PUBLIC_SITE_ORIGIN);
   return constructReleaseModel({
     records,
     release_metadata: input.release_metadata,
