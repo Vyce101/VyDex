@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="#current-status"><img alt="Current status: Stage 1 Changelog implemented" src="https://img.shields.io/badge/status-Stage%201%20Changelog%20implemented-0892D0" /></a>
+  <a href="#current-status"><img alt="Current status: Stage 1 Export JSON implemented" src="https://img.shields.io/badge/status-Stage%201%20Export%20JSON%20implemented-0892D0" /></a>
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest and Playwright configured" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
@@ -44,7 +44,7 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **Versioned structured releases.** Each dataset release has an immutable Schema, release-specific path, fixed release metadata, and deterministic JSON. A stable convenience URL can point to the newest immutable artifact without replacing it.
 
-The repository now includes the static application foundation, Frontier Atlas design system, shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, the first three real evidence records, the Stage 1 Homepage, a complete static Entry Page for each public record, generated Topic Trail pages, the material Changelog, the current and immutable Methodology `1.0.0` pages, and the About and Scope Limits page. The export destination remains separate Stage 1 work.
+The repository now includes the static application foundation, Frontier Atlas design system, shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, the first three real evidence records, the Stage 1 Homepage, a complete static Entry Page for each public record, generated Topic Trail pages, the material Changelog, the current and immutable Methodology `1.0.0` pages, the About and Scope Limits page, and the Export JSON page with a release-specific immutable download.
 
 ## Why It Is Different
 
@@ -58,7 +58,7 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex now has a real Stage 1 Homepage, three statically generated public Entry pages, three generated Topic Trail pages, a static material Changelog, a complete public Methodology, and an About and Scope Limits page backed by the canonical seed ledger. The Homepage presents the latest and recent records. Each Entry Page exposes the maintained record: every Domain and Topic Trail, statuses, Frontier Delta, evidence-bounded details, separate significance fields, caveats, dates, ordered sources, and the Methodology used.
+VyDex now has a real Stage 1 Homepage, three statically generated public Entry pages, three generated Topic Trail pages, a static material Changelog, a complete public Methodology, an About and Scope Limits page, and an Export JSON page backed by the canonical seed ledger. The Homepage presents the latest and recent records. Each Entry Page exposes the maintained record: every Domain and Topic Trail, statuses, Frontier Delta, evidence-bounded details, separate significance fields, caveats, dates, ordered sources, and the Methodology used.
 
 The Methodology is available through a current route and an immutable `1.0.0` route with identical substantive content and route-specific canonical metadata. Entry field labels link to the matching definitions on the immutable version used by that record. These public surfaces use the shared Header, Footer, and Frontier Atlas contracts and remain readable without browser JavaScript.
 
@@ -68,17 +68,19 @@ Each Topic Trail page groups its current public Entries under the Trail Name and
 
 The Changelog presents every material launch event as a calm revision index grouped by exact calendar date. Entry and Methodology events share one exact publication-timestamp contract and deterministic timestamp, type, title, and immutable-identity ordering, while the public page displays dates rather than exact times. Non-material corrections remain excluded, and affected-record links are rendered only when a valid destination exists.
 
+The Export JSON page describes the exact current Dataset `1.0.0` artifact, including its scope, Entry count, UTC generation date, and represented Methodology versions. Its download links directly to a release-specific immutable path whose human-readable filename includes the UTC date from the validated release descriptor. Development and test builds generate the deterministic non-production artifact into static build output without creating a production descriptor.
+
 Entry ordering is deterministic across release resolution and the Homepage: latest material activity is dominant, Date Added breaks equal activity timestamps, and immutable Entry ID is the final fallback. Topic Trail lists add the title from the latest material revision as an alphabetical tie-breaker before Entry ID, so a later non-material title correction cannot move an Entry. Source ordering is also deterministic at the domain boundary, so Entry pages and Dataset generation receive the same evidence-role order without changing canonical records or immutable snapshots.
 
 Production release metadata now has an explicit read-only application boundary. A production build loads `generated/release-data/release.json` and fails closed when that persisted descriptor is absent or invalid. Development, unit tests, browser tests, and conformance builds use fixed non-production metadata without writing a descriptor, reading the clock, or generating an ID. The future atomic release command remains the only owner allowed to create genuine descriptor state.
 
 The repository also contains complete immutable Entry histories including Dreamer 4's Stable review update, the canonical About record, Methodology `1.0.0`, its publication event, deterministic release and Dataset `1.0.0` construction, the versioned Dataset Schema, a generic static not-found page, and automated unit, responsive browser, keyboard, reduced-motion, overflow, and accessibility checks.
 
-The Homepage, public Entry pages, Topic Trail pages, Changelog, Methodology pages, and About page are implemented on the latest branch, but the first genuine production descriptor and dataset artifact have not been created. The export page, publication persistence, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is reserved for the later launch release.
+The Homepage, public Entry pages, Topic Trail pages, Changelog, Methodology pages, About page, and Export JSON page are implemented on the latest branch, but the first genuine production descriptor and dataset artifact have not been created. Production publication persistence, stable-latest redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is reserved for the later launch release.
 
 ## Major Milestones Roadmap
 
-- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface foundation, shared site shell, reusable Entry Preview, Stage 1 Homepage, public Entry pages, Topic Trail pages, material Changelog, Methodology pages, About page, and static not-found page are complete. The export destination, genuine dataset release, atomic release command, and deployment integration still need to be completed.
+- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface foundation, shared site shell, reusable Entry Preview, Stage 1 Homepage, public Entry pages, Topic Trail pages, material Changelog, Methodology pages, About page, Export JSON page, and static not-found page are complete. The genuine dataset release, atomic release command, and deployment integration still need to be completed.
 - **Stage 2 — Searchable Evidence Database.** Users can search real entries, filter by the evidence fields that matter, and understand why results are ordered as they are.
 - **Stage 3 — Versioned Ledger and Citation.** Users can inspect entry history, open older versions, understand what changed, see which methodology version applied, and cite an exact version.
 
