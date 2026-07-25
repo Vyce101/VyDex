@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the static About and Scope Limits page with canonical project identity, maintainer profile links, explicit coverage limits, responsive ruled layouts, and release-blocking content validation.
 - Added current and immutable Methodology pages with the complete canonical `1.0.0` rulebook, stable section anchors, responsive definition records, route-specific canonical links, and accessible no-JavaScript rendering.
 - Added complete static public Entry pages for every current Main Entry, including the exact maintained-record hierarchy, responsive Frontier Delta, source context, canonical relationship links, and accessible no-JavaScript rendering.
 - Added a generic static not-found page that preserves genuine HTTP `404` responses for unknown Entry slugs.
