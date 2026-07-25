@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="#current-status"><img alt="Current status: Stage 1 foundations ready" src="https://img.shields.io/badge/status-Stage%201%20foundations%20ready-0892D0" /></a>
+  <a href="#current-status"><img alt="Current status: Stage 1 Homepage implemented" src="https://img.shields.io/badge/status-Stage%201%20Homepage%20implemented-0892D0" /></a>
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest and Playwright configured" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
@@ -44,7 +44,7 @@ VyDex is designed to preserve claims as evidence records rather than short-lived
 
 **Versioned structured releases.** Each dataset release has an immutable Schema, release-specific path, fixed release metadata, and deterministic JSON. A stable convenience URL can point to the newest immutable artifact without replacing it.
 
-These product capabilities describe the intended VyDex system. The repository now includes the static application foundation, the Frontier Atlas design system, the shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, and the first three real evidence records. It does not yet provide the complete Stage 1 public interface.
+The repository now includes the static application foundation, Frontier Atlas design system, shared Stage 1 site shell, canonical data contracts, immutable publication revisions, validated release construction, Dataset `1.0.0` generation, the first three real evidence records, and the Stage 1 Homepage that presents those records. Entry, Methodology, About, Changelog, and export destination pages remain separate Stage 1 work.
 
 ## Why It Is Different
 
@@ -58,23 +58,19 @@ VyDex is not intended to be a daily newsletter, prediction market, leaderboard, 
 
 ## Current Status
 
-VyDex has completed the Stage 1 data and interface foundations. The repository contains three real Entries, their three Topic Trails, and immutable revision-1 snapshots, alongside the canonical About record, Methodology `1.0.0`, and its publication event. The framework-independent domain layer defines strict contracts for those records, release metadata, and the public Dataset `1.0.0` format.
+VyDex now has a real Stage 1 Homepage backed by the three canonical seed Entries. It explains the product, presents the Entry with the latest material activity, repeats that record intentionally at the head of a recent list, and introduces the Claim, Evidence, and Caveat reading model. The responsive page uses the shared Header, Footer, Entry Preview, and Frontier Atlas contracts and remains readable without browser JavaScript.
 
-The light-only Frontier Atlas design system now provides the shared colors, typography, responsive grid, record layouts, controls, status treatments, tables, focus behavior, and reduced-motion rules for later public pages. Automated checks protect the token contract, responsive breakpoints, grayscale-readable states, contrast, and horizontal-overflow boundary.
+Entry ordering is deterministic across release resolution and the Homepage: latest material activity is dominant, Date Added breaks equal activity timestamps, and immutable Entry ID is the final fallback. Non-material revisions and title corrections do not move an Entry in these lists.
 
-The reusable Entry preview now projects validated release data into one text-first Atlas Sheet for Latest Update, Recent Entries and Evidence Updates, and Topic Trail lists. It preserves the required record sequence, displays the first authored Domain as preview priority without changing the Entry's full Domain list, and keeps status meaning, canonical links, keyboard focus, responsive stacking, and text clamping consistent in every host context.
+Production release metadata now has an explicit read-only application boundary. A production build loads `generated/release-data/release.json` and fails closed when that persisted descriptor is absent or invalid. Development, unit tests, browser tests, and conformance builds use fixed non-production metadata without writing a descriptor, reading the clock, or generating an ID. The future atomic release command remains the only owner allowed to create genuine descriptor state.
 
-The shared Stage 1 site shell now gives later public pages one Header, Main, and Footer structure. Its desktop navigation and native mobile disclosure use the canonical Stage 1 destinations, remain usable without JavaScript, and include skip navigation, route-derived active states, Escape closing, and focus return. The current technical fixture exercises this shell while the destination pages remain under development.
+The repository also contains three Topic Trails and immutable revision-1 snapshots, the canonical About record, Methodology `1.0.0`, its publication event, deterministic release and Dataset `1.0.0` construction, the versioned Dataset Schema, and automated unit, responsive browser, keyboard, reduced-motion, overflow, and accessibility checks.
 
-The read-only canonical loader and deterministic release constructor validate the repository records, select current published snapshots, resolve Topic Trail membership, construct canonical URLs and redirect descriptors, and derive the public Changelog. An integration test proves that the seed ledger can construct a complete production release using fixed test-only metadata and the approved site origin. Strict production still returns no release when a blocking diagnostic exists; private preview retains invalid source records without treating them as public data.
-
-Dataset generation now consumes only a validated production release. It projects current public Entries into deterministic JSON, validates the result against the origin-specific immutable Schema, derives the release artifact and stable-latest redirect descriptors, and can write the immutable file beneath an injected output root without overwriting different bytes. Astro publishes the versioned Schema at `/schemas/vydex-dataset/1.0.0.json`, and CI verifies the static output with a frozen dependency install.
-
-The current `/` route is still a technical fixture, not the Stage 1 homepage. It demonstrates Frontier Atlas, the shared site shell, and the same Entry preview beneath three external conformance headings. The fixture resolves a validated seed Entry in preview mode and derives its exceptional-status test state in memory; it does not publish that fixture as product content. No genuine release descriptor or dataset artifact has been published, and reusable publication persistence, public pages, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is configured for the later launch release.
+The Homepage is implemented on the latest branch, but the first genuine production descriptor and dataset artifact have not been created. Entry, Topic Trail, Methodology, About, Changelog, and export pages, publication persistence, deployment redirect emission, public revision browsing, and the atomic release command remain unimplemented. The [public site origin](https://vydex.vyce.workers.dev) is reserved for the later launch release.
 
 ## Major Milestones Roadmap
 
-- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, revision-1 snapshots, Frontier Atlas interface foundation, shared site shell, and reusable Entry preview are complete. Public pages, the genuine dataset release, and deployment integration remain to be completed.
+- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, revision-1 snapshots, Frontier Atlas interface foundation, shared site shell, reusable Entry Preview, and Stage 1 Homepage are complete. The remaining public destination pages, genuine dataset release, atomic release command, and deployment integration still need to be completed.
 - **Stage 2 — Searchable Evidence Database.** Users can search real entries, filter by the evidence fields that matter, and understand why results are ordered as they are.
 - **Stage 3 — Versioned Ledger and Citation.** Users can inspect entry history, open older versions, understand what changed, see which methodology version applied, and cite an exact version.
 
@@ -82,7 +78,7 @@ Roadmap wording describes direction, not released functionality. See the [change
 
 ## Links
 
-- [VyDex website](https://vydex.vyce.workers.dev) — The current public site; the Stage 1 interface remains under development.
+- [VyDex website](https://vydex.vyce.workers.dev) — The public origin reserved for the Stage 1 release; the latest branch may be ahead of the deployed site.
 - [Documentation](https://vyce101.github.io/VyDex/) — These docs track the latest `main` branch. Released app builds may not include every documented feature yet.
 - [Quickstart](docs/QUICKSTART.md)
 - [Changelog](docs/CHANGELOG.md) — Includes unreleased changes that are available only in the latest commits.

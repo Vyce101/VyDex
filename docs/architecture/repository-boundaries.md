@@ -28,13 +28,23 @@ The publication domain returns new immutable snapshots to its caller, but it doe
 
 ## Release Metadata and Generated Output
 
-`ReleaseMetadata` is an explicit release-constructor input. The canonical loader does not read, create, or persist a release descriptor, and neither the constructor nor the dataset generator creates a release ID or timestamp. A later atomic release command will own descriptor creation, reuse, and persistence.
+`PersistedReleaseDescriptor` is the application contract for the existing validated `ReleaseMetadata` shape. Its exact production path is:
+
+```text
+generated/release-data/release.json
+```
+
+The persisted-descriptor adapter resolves that path beneath an injected repository root, reads it without modification, parses JSON, and validates it with `releaseMetadataSchema`. Production fails closed when the file is missing, unreadable, malformed, or schema-invalid. The canonical loader and framework-independent release constructor do not read or write the descriptor, and no ordinary build, development start, page render, or test generates a release ID or timestamp.
+
+Development and explicit test-mode builds use a named adapter with stable non-production metadata. That adapter performs no writes, cannot be selected as a production fallback, and does not turn its constants into genuine release state. A later atomic release command remains the sole owner of creating or loading a genuine descriptor for a new release.
 
 The release constructor returns one validated in-memory release model. [Dataset Generation](../documentation/concepts/dataset-generation.md) consumes that model, validates the public Dataset `1.0.0` projection against its Schema, and returns deterministic JSON plus immutable and stable-latest descriptors.
 
 The dataset artifact writer accepts an explicit output root and writes only the immutable release-specific dataset file beneath it. It creates missing parent directories, treats identical existing bytes as idempotent success, and refuses to overwrite different bytes. The writer does not choose `generated/release-data/`, `dist/`, or another repository location on its own.
 
-`generated/release-data/` remains reserved for a future atomic release command to use as generated release output. That command will also own stable-latest deployment redirect emission and verification. The current writer does not create a mutable latest copy or a Cloudflare `_redirects` file.
+`generated/release-data/` is reserved for durable release state owned by the future atomic release command. The directory and descriptor path are not ignored as disposable cache. Once the command creates a genuine descriptor, it must remain available to clean clones, CI jobs, and later rebuilds; under the current architecture it remains eligible to be checked in with the release artifacts unless a separate durable artifact store is introduced.
+
+The future command will also own stable-latest deployment redirect emission and verification. The current writer does not create a mutable latest copy or a Cloudflare `_redirects` file.
 
 `dist/` contains generated Astro output. It must not be used as canonical, historical, or release-descriptor storage.
 
@@ -42,6 +52,8 @@ The dataset artifact writer accepts an explicit output root and writes only the 
 
 - Canonical editable records, immutable snapshots, release descriptors, generated release data, and `dist/` remain separate storage classes.
 - The canonical loader is read-only and accepts an injectable filesystem root for tests.
+- The production descriptor loader reads exactly `generated/release-data/release.json` and never creates or substitutes it.
+- Fixed development/test metadata remains non-production, deterministic, and write-free.
 - Missing directories behave as empty collections; syntax and path failures return structured diagnostics with filenames.
 - Current public Entry content comes from the newest valid immutable snapshot, not unpublished canonical Entry edits.
 - Generated output must not be written into canonical-record or snapshot directories.

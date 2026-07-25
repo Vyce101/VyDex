@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added the static Stage 1 Homepage with release-selected Latest Update and Recent Entries, responsive Frontier Atlas composition, canonical actions, and the Claim, Evidence, and Caveat reading band.
+- Added read-only production loading for the durable `generated/release-data/release.json` descriptor and deterministic fixed-metadata adapters for development and tests.
 - Added a reusable responsive Entry preview that presents its Domain, update date, claim, statuses, Topic Trail, and accessible Entry links consistently across list contexts.
 - Added the shared Stage 1 site shell with canonical navigation, responsive Header and Footer components, a no-JavaScript mobile menu, skip navigation, route-derived active states, and keyboard accessibility checks.
 - Added the light-only Frontier Atlas design system with shared responsive typography, layouts, controls, claim statuses, tables, and accessibility checks.
@@ -21,6 +23,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Replaced title-based Entry ordering with a shared comparator using latest material activity, Date Added, and immutable Entry ID.
+- Changed CI and browser validation to use the explicit fixed-metadata test build while keeping normal production builds descriptor-gated.
 - Moved dataset projection out of release construction so exports consume the same completed production release model as other public consumers.
 
 ### Fixed

@@ -8,6 +8,7 @@
 - **Local services:** None. VyDex does not require a backend, database, CMS, or external content service.
 - **API keys or model providers:** None.
 - **Public site origin:** Static builds require a root-only HTTPS `PUBLIC_SITE_ORIGIN` so the Dataset Schema can use its absolute canonical URL.
+- **Production release descriptor:** A genuine production build requires `generated/release-data/release.json`. The future atomic release command owns this durable file; local development and test builds do not create it.
 - **Hardware:** No special hardware is required. Browser testing downloads a local Chromium build and requires additional disk space.
 
 ## Git commands
@@ -63,17 +64,27 @@ npm run dev
 
 Open `http://127.0.0.1:4321/` in your browser.
 
+Development uses fixed non-production release metadata and the real canonical seed records. It does not write or imitate a genuine production descriptor.
+
 On Windows, you can run `setup_and_run.bat` instead. It installs dependencies when needed, starts Astro, waits for the page to respond, and opens it in your browser.
 
 ## Verify the installation
 
-Run type checking, unit tests, and the static production build:
+Run the explicit non-production validation build:
 
 ```powershell
-npm run typecheck
-npm test
+npm run build:test
+```
+
+`npm run build:test` runs type checking and unit tests before using fixed test-only release metadata to generate deterministic static output. It does not create `generated/release-data/release.json` or prove that a production release exists.
+
+The normal production command remains descriptor-gated:
+
+```powershell
 npm run build
 ```
+
+Until the atomic release command creates the first genuine descriptor, this command is expected to fail with a missing production release descriptor error. Do not create the descriptor manually or replace it with development/test metadata.
 
 Install Chromium once, then run the responsive browser and accessibility tests:
 
@@ -82,7 +93,7 @@ npm run test:browser:install
 npm run test:browser
 ```
 
-The browser-test command supplies `https://vydex.example` for its isolated static build, so it does not use a production hostname.
+The browser-test command supplies `https://vydex.example` and uses the explicit test-mode build, so it does not use a production hostname or descriptor.
 
 ## Downloading the latest installation
 
