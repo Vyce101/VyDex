@@ -12,9 +12,25 @@ export const CLAIM_STATUSES = [
 export const claimStatusSchema = z.enum(CLAIM_STATUSES);
 export type ClaimStatus = z.infer<typeof claimStatusSchema>;
 
+export const CLAIM_STATUS_LABELS = {
+  confirmed: "Confirmed",
+  supported: "Supported",
+  provisional: "Provisional",
+  reported_but_unverified: "Reported But Unverified",
+  disputed: "Disputed",
+  failed_retracted: "Failed / Retracted",
+} as const satisfies Record<ClaimStatus, string>;
+
 export const EVIDENCE_STRENGTHS = ["thin", "moderate", "strong", "very_strong"] as const;
 export const evidenceStrengthSchema = z.enum(EVIDENCE_STRENGTHS);
 export type EvidenceStrength = z.infer<typeof evidenceStrengthSchema>;
+
+export const EVIDENCE_STRENGTH_LABELS = {
+  thin: "Thin",
+  moderate: "Moderate",
+  strong: "Strong",
+  very_strong: "Very Strong",
+} as const satisfies Record<EvidenceStrength, string>;
 
 export const EVIDENCE_STRENGTH_SCORES = {
   thin: 1,
@@ -26,6 +42,11 @@ export const EVIDENCE_STRENGTH_SCORES = {
 export const REVIEW_STATUSES = ["stable", "follow_up_needed"] as const;
 export const reviewStatusSchema = z.enum(REVIEW_STATUSES);
 export type ReviewStatus = z.infer<typeof reviewStatusSchema>;
+
+export const REVIEW_STATUS_LABELS = {
+  stable: "Stable",
+  follow_up_needed: "Follow-Up Needed",
+} as const satisfies Record<ReviewStatus, string>;
 
 export const ENTRY_STATES = ["main_entry", "removed"] as const;
 export const entryStateSchema = z.enum(ENTRY_STATES);
