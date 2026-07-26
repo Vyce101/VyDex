@@ -22,6 +22,7 @@ const EXPECTED_BOUNDARIES = [
   "material-activity",
   "publication-revisions",
   "release-construction",
+  "release-history",
   "route-generation",
 ] as const;
 
