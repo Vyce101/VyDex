@@ -1,12 +1,14 @@
 // Verifies clean-branch capture and immutable source-commit ancestry checks.
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { describe, expect, test } from "vitest";
 import {
+  addDetachedReleaseWorktree,
   readGitHead,
+  removeDetachedReleaseWorktree,
   requireCleanReleaseGitState,
   requireCommitAncestor,
   requireReleaseStateUnchanged,
@@ -37,6 +39,23 @@ describe("release Git boundary", () => {
     expect(state.branch).toBe("main");
     expect(state.head).toBe(await readGitHead(root));
     await expect(requireCommitAncestor({ repository_root: root, source_commit: state.head, descendant_commit: state.head })).resolves.toBeUndefined();
+  });
+
+  test("checks out source worktrees with stable LF bytes when Git enables autocrlf", async () => {
+    const root = await repository();
+    await git(root, "config", "core.autocrlf", "true");
+    const worktree = await mkdtemp(join(tmpdir(), "vydex-release-source-"));
+    await rm(worktree, { recursive: true, force: true });
+    try {
+      await addDetachedReleaseWorktree({
+        repository_root: root,
+        worktree_root: worktree,
+        source_commit: await readGitHead(root),
+      });
+      await expect(readFile(join(worktree, "record.txt"), "utf8")).resolves.toBe("first\n");
+    } finally {
+      await removeDetachedReleaseWorktree({ repository_root: root, worktree_root: worktree }).catch(() => undefined);
+    }
   });
 
   test("rejects dirty and detached repositories", async () => {
