@@ -81,7 +81,7 @@ type FetchImplementation = typeof fetch;
 const CLOUDFLARE_API_ORIGIN = "https://api.cloudflare.com/client/v4";
 const DEFAULT_POLL_INTERVAL_MS = 1_000;
 const DEFAULT_TIMEOUT_MS = 120_000;
-const DEPLOYMENTS_PER_PAGE = 100;
+const DEPLOYMENTS_PER_PAGE = 10;
 
 function deploymentIsSuccessfulProduction(
   deployment: CloudflarePagesDeployment,
