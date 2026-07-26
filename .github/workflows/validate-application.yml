@@ -40,6 +40,9 @@ jobs:
       - name: Install immutable dependency tree
         run: npm ci
 
+      - name: Require active release selection to match current public output
+        run: npm run release:check
+
       - name: Install pinned Chromium runtime
         run: npx --no-install playwright install --with-deps chromium
 
