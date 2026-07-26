@@ -128,4 +128,29 @@ describe("Cloudflare Pages API adapter", () => {
     expect(error.message).not.toContain(ENVIRONMENT.api_token);
     expect(error.message).not.toContain(ENVIRONMENT.account_id);
   });
+
+  test("reports malformed response paths without including response values", async () => {
+    const api = createCloudflarePagesApi({
+      environment: ENVIRONMENT,
+      fetch: async () => jsonResponse({
+        success: true,
+        errors: [],
+        result: {
+          name: "vydex",
+          production_branch: "main",
+          canonical_deployment: {
+            id: "deployment",
+            created_on: "2026-07-26T00:00:00Z",
+            environment: "production",
+            project_name: "vydex",
+            url: "https://deployment.vydex.pages.dev",
+            secret_response_value: "must-not-appear",
+          },
+        },
+      }),
+    });
+
+    await expect(api.getProject()).rejects.toThrow("result.canonical_deployment.is_skipped:invalid_type");
+    await expect(api.getProject()).rejects.not.toThrow("must-not-appear");
+  });
 });
