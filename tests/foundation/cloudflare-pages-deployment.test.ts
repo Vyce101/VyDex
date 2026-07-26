@@ -11,14 +11,29 @@ describe("Cloudflare Pages deployment contract", () => {
   let wrangler: string;
   let packageJson: string;
   let gitignore: string;
+  let productionDeploymentScript: string;
+  let rehearsalScript: string;
+  let hostedVerificationScript: string;
 
   beforeAll(async () => {
-    [workflow, rehearsalWorkflow, wrangler, packageJson, gitignore] = await Promise.all([
+    [
+      workflow,
+      rehearsalWorkflow,
+      wrangler,
+      packageJson,
+      gitignore,
+      productionDeploymentScript,
+      rehearsalScript,
+      hostedVerificationScript,
+    ] = await Promise.all([
       readFile(resolve(PROJECT_ROOT, ".github/workflows/validate-application.yml"), "utf8"),
       readFile(resolve(PROJECT_ROOT, ".github/workflows/rehearse-production-rollback.yml"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "wrangler.jsonc"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "package.json"), "utf8"),
       readFile(resolve(PROJECT_ROOT, ".gitignore"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "scripts/deployment/deploy-and-verify-cloudflare-pages.ts"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "scripts/deployment/rehearse-cloudflare-pages-rollback.ts"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "scripts/deployment/verify-hosted-stage-one.ts"), "utf8"),
     ]);
   });
 
@@ -63,6 +78,12 @@ describe("Cloudflare Pages deployment contract", () => {
     expect(rehearsalWorkflow).toContain("npm run rehearse:pages-rollback");
     expect(rehearsalWorkflow).toContain("if: always()");
     expect(rehearsalWorkflow).not.toMatch(/wrangler deploy|workers_dev|pages functions/i);
+  });
+
+  test("retries complete hosted verification after canonical deployment switches", () => {
+    expect(productionDeploymentScript).toContain("runCompleteHostedVerificationAfterPropagation");
+    expect(rehearsalScript).toContain("runCompleteHostedVerificationAfterPropagation");
+    expect(hostedVerificationScript).toContain("runCompleteHostedVerificationAfterPropagation");
   });
 
   test("keeps generated output disposable and release state authoritative", () => {
