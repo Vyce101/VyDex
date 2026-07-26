@@ -11,6 +11,7 @@ describe("Cloudflare Pages deployment contract", () => {
   let wrangler: string;
   let packageJson: string;
   let gitignore: string;
+  let pagesDeploymentVerifier: string;
   let productionDeploymentScript: string;
   let rehearsalScript: string;
   let hostedVerificationScript: string;
@@ -25,6 +26,7 @@ describe("Cloudflare Pages deployment contract", () => {
       wrangler,
       packageJson,
       gitignore,
+      pagesDeploymentVerifier,
       productionDeploymentScript,
       rehearsalScript,
       hostedVerificationScript,
@@ -37,6 +39,7 @@ describe("Cloudflare Pages deployment contract", () => {
       readFile(resolve(PROJECT_ROOT, "wrangler.jsonc"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "package.json"), "utf8"),
       readFile(resolve(PROJECT_ROOT, ".gitignore"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "scripts/deployment/verify-cloudflare-pages-deployment.ts"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "scripts/deployment/deploy-and-verify-cloudflare-pages.ts"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "scripts/deployment/rehearse-cloudflare-pages-rollback.ts"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "scripts/deployment/verify-hosted-stage-one.ts"), "utf8"),
@@ -51,6 +54,7 @@ describe("Cloudflare Pages deployment contract", () => {
     expect(wrangler).toContain('"pages_build_output_dir": "./dist"');
     expect(wrangler).not.toMatch(/"(?:assets|main|workers_dev|d1_databases|kv_namespaces)"/);
     expect(packageJson).toContain('"build:pages-preview"');
+    expect(packageJson).toContain('"verify:production-sitemap"');
     expect(packageJson).not.toContain("wrangler deploy");
   });
 
@@ -69,6 +73,7 @@ describe("Cloudflare Pages deployment contract", () => {
     expect(workflow).toContain("actions/upload-artifact@v7");
     expect(workflow).toContain("actions/download-artifact@v7");
     expect(workflow).toContain("npm run verify:pages-deployment");
+    expect(pagesDeploymentVerifier).toContain("verifyProductionSitemapArtifact");
     expect(workflow).toContain("npm run deploy:pages-production");
     expect(workflow).toContain("vydex-hosted-verification-");
     expect(workflow).toContain("if: always()");

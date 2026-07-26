@@ -98,6 +98,10 @@ function createHostedFixture(): HostedFixture {
   const notFound = "<!doctype html><main><h1>Page not found</h1></main>";
   responses.set("/__vydex-hosted-verification-not-found__/", { body: notFound, status: 404 });
   responses.set("/search/", { body: notFound, status: 404 });
+  const sitemapIndex = `<?xml version="1.0"?><sitemapindex><sitemap><loc>${ORIGIN}/sitemap-0.xml</loc></sitemap></sitemapindex>`;
+  const sitemapChild = `<?xml version="1.0"?><urlset><url><loc>${ORIGIN}/</loc></url></urlset>`;
+  responses.set("/sitemap-index.xml", { body: sitemapIndex, status: 200, headers: { "Content-Type": "application/xml" } });
+  responses.set("/sitemap-0.xml", { body: sitemapChild, status: 200, headers: { "Content-Type": "application/xml" } });
   for (const entry of release.current_entries) {
     responses.set(`${release.routes.entries[entry.entry.id]}history/`, { body: notFound, status: 404 });
   }
@@ -114,6 +118,8 @@ function createHostedFixture(): HostedFixture {
       return { path: routeFile(route), bytes: Buffer.byteLength(body), sha256: sha256(body) };
     }),
     { path: "404.html", bytes: Buffer.byteLength(notFound), sha256: sha256(notFound) },
+    { path: "sitemap-0.xml", bytes: Buffer.byteLength(sitemapChild), sha256: sha256(sitemapChild) },
+    { path: "sitemap-index.xml", bytes: Buffer.byteLength(sitemapIndex), sha256: sha256(sitemapIndex) },
     { path: "_headers", bytes: 1, sha256: sha256("x") },
     { path: "_redirects", bytes: 1, sha256: sha256("x") },
   ].sort((left, right) => left.path.localeCompare(right.path));
@@ -196,6 +202,23 @@ describe("hosted Stage 1 verification", () => {
       expect.arrayContaining(["Dataset JSON content type", "Dataset immutable caching", "Dataset immutable bytes"]),
     );
   });
+
+  test.each(["/sitemap-index.xml", "/sitemap-0.xml"])(
+    "rejects HTTP 404 for hosted sitemap %s",
+    async (path) => {
+      const fixture = createHostedFixture();
+      const sitemap = fixture.responses.get(path)!;
+      fixture.responses.set(path, { ...sitemap, status: 404 });
+
+      const report = await verifyHostedStageOneRelease(fixture.input);
+
+      expect(report.success).toBe(false);
+      expect(report.checks).toContainEqual(expect.objectContaining({
+        name: `sitemap HTTP 200 ${path}`,
+        passed: false,
+      }));
+    },
+  );
 
   test("requires deployment-specific production URLs to remain non-indexable", async () => {
     const fixture = createHostedFixture();
