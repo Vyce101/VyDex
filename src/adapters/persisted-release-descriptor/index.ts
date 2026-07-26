@@ -1,6 +1,6 @@
 // Loads and validates the durable descriptor for an existing production release.
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 import {
   releaseMetadataSchema,
   type ReleaseMetadata,
@@ -20,7 +20,20 @@ export type LoadPersistedReleaseDescriptorInput = {
 export async function loadPersistedReleaseDescriptor(
   input: LoadPersistedReleaseDescriptorInput,
 ): Promise<PersistedReleaseDescriptor> {
-  const filename = resolve(input.filesystem_root, PERSISTED_RELEASE_DESCRIPTOR_PATH);
+  const configuredCandidatePath = process.env.VYDEX_RELEASE_DESCRIPTOR_PATH?.trim();
+  let filename = resolve(input.filesystem_root, PERSISTED_RELEASE_DESCRIPTOR_PATH);
+  if (configuredCandidatePath) {
+    if (process.env.VYDEX_ATOMIC_RELEASE_BUILD !== "1") {
+      throw new Error("A candidate descriptor may be selected only during an atomic release build.");
+    }
+    const candidateFilename = resolve(configuredCandidatePath);
+    const runtimeRoot = resolve(input.filesystem_root, "runtime");
+    const relativeCandidate = relative(runtimeRoot, candidateFilename);
+    if (relativeCandidate.startsWith("..") || isAbsolute(relativeCandidate)) {
+      throw new Error("The candidate descriptor must remain inside ignored runtime storage.");
+    }
+    filename = candidateFilename;
+  }
   const readTextFile = input.read_text_file ?? ((path: string) => readFile(path, "utf8"));
 
   let rawText: string;
@@ -28,7 +41,7 @@ export async function loadPersistedReleaseDescriptor(
     rawText = await readTextFile(filename);
   } catch (cause) {
     throw new Error(
-      `Production release descriptor is missing or unreadable at ${PERSISTED_RELEASE_DESCRIPTOR_PATH}.`,
+      `Production release descriptor is missing or unreadable at ${filename}.`,
       { cause },
     );
   }
@@ -38,7 +51,7 @@ export async function loadPersistedReleaseDescriptor(
     value = JSON.parse(rawText);
   } catch (cause) {
     throw new Error(
-      `Production release descriptor contains malformed JSON at ${PERSISTED_RELEASE_DESCRIPTOR_PATH}.`,
+      `Production release descriptor contains malformed JSON at ${filename}.`,
       { cause },
     );
   }
@@ -46,7 +59,7 @@ export async function loadPersistedReleaseDescriptor(
   const parsed = releaseMetadataSchema.safeParse(value);
   if (!parsed.success) {
     throw new Error(
-      `Production release descriptor is schema-invalid at ${PERSISTED_RELEASE_DESCRIPTOR_PATH}.`,
+      `Production release descriptor is schema-invalid at ${filename}.`,
       { cause: parsed.error },
     );
   }

@@ -362,9 +362,14 @@ export async function verifyStageOneStaticOutput(input: {
   output_root: string;
   release: ReleaseModel;
   prepared_export: PreparedApplicationExport;
+  retained_immutable_routes?: readonly string[];
 }): Promise<{ diagnostics: StageOneReleaseDiagnostic[]; generated_routes: string[] }> {
   const diagnostics: StageOneReleaseDiagnostic[] = [];
-  const expectedRoutes = expectedStageOneGeneratedRoutes(input.release);
+  const currentRoutes = expectedStageOneGeneratedRoutes(input.release);
+  const expectedRoutes = [...new Set([
+    ...currentRoutes,
+    ...(input.retained_immutable_routes ?? []),
+  ])].sort((left, right) => left.localeCompare(right, "en"));
   const files = await listStaticOutputFiles(input.output_root);
   const actualRoutes = files
     .map((filename) => staticFilenameToPublicRoute(input.output_root, filename))
@@ -374,7 +379,7 @@ export async function verifyStageOneStaticOutput(input: {
     ...compareExactValues(actualRoutes, expectedRoutes, "generated_route_set_mismatch", "Generated route list"),
   );
 
-  const htmlRoutes = expectedRoutes.filter((route) => route.endsWith("/"));
+  const htmlRoutes = currentRoutes.filter((route) => route.endsWith("/"));
   try {
     const homepage = await readHtml(input.output_root, input.release.routes.home);
     diagnostics.push(

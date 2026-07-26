@@ -1,4 +1,4 @@
-// Writes Stage 1 release progress to colored terminal output and rotating local log files.
+// Writes release lifecycle progress to colored terminal output and rotating local log files.
 import { appendFile, mkdir, rename, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
 
