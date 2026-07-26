@@ -2,7 +2,11 @@
 import { createCloudflarePagesApi } from "../../src/adapters/cloudflare-pages-api";
 import { loadCloudflarePagesDeploymentEnvironment } from "../../src/adapters/cloudflare-pages-environment";
 import { createReleaseLogger } from "../../src/shared/release-logger";
-import { deployPagesOutput, runCompleteHostedVerification } from "./hosted-verification-support";
+import {
+  deployPagesOutput,
+  runCompleteHostedVerification,
+  runCompleteHostedVerificationAfterPropagation,
+} from "./hosted-verification-support";
 
 function manualRecoveryCommand(deploymentId: string): string {
   return `curl --request POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/vydex/deployments/${deploymentId}/rollback" --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN"`;
@@ -51,7 +55,7 @@ async function main(): Promise<void> {
     });
     intendedDeploymentId = intendedDeployment.id;
     await logger.info(`Cloudflare Pages exposed deployment ${intendedDeployment.id} as canonical.`);
-    const intendedVerification = await runCompleteHostedVerification({
+    const intendedVerification = await runCompleteHostedVerificationAfterPropagation({
       filesystem_root: filesystemRoot,
       canonical_origin: environment.public_site_origin,
       request_origin: environment.public_site_origin,
@@ -79,7 +83,7 @@ async function main(): Promise<void> {
     await logger.warning(`Restoring known-good deployment ${previousDeployment.id}.`);
     await api.rollbackProductionTo(previousDeployment.id);
     await api.waitForCanonicalDeployment(previousDeployment.id);
-    const restored = await runCompleteHostedVerification({
+    const restored = await runCompleteHostedVerificationAfterPropagation({
       filesystem_root: filesystemRoot,
       canonical_origin: environment.public_site_origin,
       request_origin: environment.public_site_origin,

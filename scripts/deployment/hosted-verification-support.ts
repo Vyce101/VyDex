@@ -18,6 +18,25 @@ import {
 import type { ReleaseLogger } from "../../src/shared/release-logger";
 
 const require = createRequire(import.meta.url);
+const DEFAULT_PROPAGATION_ATTEMPTS = 3;
+const DEFAULT_PROPAGATION_RETRY_DELAY_MS = 30_000;
+
+type CompleteHostedVerificationInput = {
+  filesystem_root: string;
+  canonical_origin: string;
+  request_origin: string;
+  deployment_id: string;
+  phase: string;
+  logger: ReleaseLogger;
+  include_browser?: boolean;
+  environment?: NodeJS.ProcessEnv;
+  fetch?: typeof fetch;
+};
+
+type CompleteHostedVerificationResult = {
+  report: HostedVerificationReport;
+  report_filename: string;
+};
 
 function safePhaseName(phase: string): string {
   return phase.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "verification";
@@ -67,17 +86,9 @@ export async function deployPagesOutput(input: {
   if (exitCode !== 0) throw new Error(`Wrangler Pages deployment exited with code ${exitCode}.`);
 }
 
-export async function runCompleteHostedVerification(input: {
-  filesystem_root: string;
-  canonical_origin: string;
-  request_origin: string;
-  deployment_id: string;
-  phase: string;
-  logger: ReleaseLogger;
-  include_browser?: boolean;
-  environment?: NodeJS.ProcessEnv;
-  fetch?: typeof fetch;
-}): Promise<{ report: HostedVerificationReport; report_filename: string }> {
+export async function runCompleteHostedVerification(
+  input: CompleteHostedVerificationInput,
+): Promise<CompleteHostedVerificationResult> {
   const environment = input.environment ?? process.env;
   const manifestRaw = await readFile(
     resolve(input.filesystem_root, STAGE_ONE_RELEASE_MANIFEST_PATH),
@@ -162,4 +173,57 @@ export async function runCompleteHostedVerification(input: {
   if (report.success) await input.logger.info(`Hosted verification phase ${input.phase} succeeded.`);
   else await input.logger.error(`Hosted verification phase ${input.phase} failed; see ${reportFilename}.`);
   return { report, report_filename: reportFilename };
+}
+
+export async function runCompleteHostedVerificationAfterPropagation(
+  input: CompleteHostedVerificationInput & {
+    max_attempts?: number;
+    retry_delay_ms?: number;
+    sleep?: (milliseconds: number) => Promise<void>;
+    run_verification?: (
+      verificationInput: CompleteHostedVerificationInput,
+    ) => Promise<CompleteHostedVerificationResult>;
+  },
+): Promise<CompleteHostedVerificationResult> {
+  const {
+    max_attempts = DEFAULT_PROPAGATION_ATTEMPTS,
+    retry_delay_ms = DEFAULT_PROPAGATION_RETRY_DELAY_MS,
+    sleep = (milliseconds) => new Promise((complete) => setTimeout(complete, milliseconds)),
+    run_verification = runCompleteHostedVerification,
+    ...verificationInput
+  } = input;
+  if (!Number.isInteger(max_attempts) || max_attempts < 1) {
+    throw new Error("Hosted propagation verification requires at least one whole-number attempt.");
+  }
+  if (!Number.isFinite(retry_delay_ms) || retry_delay_ms < 0) {
+    throw new Error("Hosted propagation verification requires a non-negative retry delay.");
+  }
+
+  let lastResult: CompleteHostedVerificationResult | undefined;
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= max_attempts; attempt += 1) {
+    try {
+      lastResult = await run_verification(verificationInput);
+      if (lastResult.report.success) return lastResult;
+      lastError = undefined;
+    } catch (error) {
+      lastError = error;
+    }
+    if (attempt === max_attempts) break;
+
+    const failedChecks = lastResult?.report.checks
+      .filter(({ passed }) => !passed)
+      .map(({ name }) => name)
+      .join(", ");
+    await input.logger.warning(
+      failedChecks
+        ? `Hosted verification phase ${input.phase} attempt ${attempt}/${max_attempts} observed an incomplete Pages surface (${failedChecks}). Waiting ${retry_delay_ms}ms for edge propagation.`
+        : `Hosted verification phase ${input.phase} attempt ${attempt}/${max_attempts} could not complete. Waiting ${retry_delay_ms}ms for edge propagation.`,
+    );
+    await sleep(retry_delay_ms);
+  }
+
+  if (lastError) throw lastError;
+  if (lastResult) return lastResult;
+  throw new Error("Hosted propagation verification ended without an attempt result.");
 }

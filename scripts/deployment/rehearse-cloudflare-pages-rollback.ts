@@ -8,7 +8,11 @@ import {
   type RollbackRehearsalEvidence,
 } from "../../src/release/stage-one-hosted-verification";
 import { createReleaseLogger } from "../../src/shared/release-logger";
-import { deployPagesOutput, runCompleteHostedVerification } from "./hosted-verification-support";
+import {
+  deployPagesOutput,
+  runCompleteHostedVerification,
+  runCompleteHostedVerificationAfterPropagation,
+} from "./hosted-verification-support";
 
 function manualRecoveryCommand(deploymentId: string): string {
   return `curl --request POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/vydex/deployments/${deploymentId}/rollback" --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN"`;
@@ -32,7 +36,11 @@ async function main(): Promise<void> {
     api,
     logger,
     verify: async ({ deployment, request_origin, phase, include_browser }) => {
-      const verification = await runCompleteHostedVerification({
+      const verification = await (
+        request_origin === environment.public_site_origin
+          ? runCompleteHostedVerificationAfterPropagation
+          : runCompleteHostedVerification
+      )({
         filesystem_root: filesystemRoot,
         canonical_origin: environment.public_site_origin,
         request_origin,
