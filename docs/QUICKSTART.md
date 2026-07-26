@@ -100,7 +100,7 @@ On success, the terminal prints the release ID, generation timestamp, immutable 
 
 A failed release leaves the previous successful `dist/` and manifest unchanged. Private diagnostics appear in the terminal and rotating ignored files under `user/logs/`; complete test output remains under ignored `runtime/` storage.
 
-For production rollback instructions, see [How To Redeploy A Complete Stage 1 Release](documentation/how-to-redeploy-stage-1-release.md). For the hosting and validation boundaries, see [Cloudflare Pages Deployment](documentation/concepts/cloudflare-pages-deployment.md).
+For production rollback instructions, see [How To Redeploy A Complete Stage 1 Release](documentation/guides/how-to-redeploy-stage-1-release.md). For the hosting and validation boundaries, see [Cloudflare Pages Deployment](documentation/concepts/cloudflare-pages-deployment.md).
 
 ## Downloading The Latest Installation
 

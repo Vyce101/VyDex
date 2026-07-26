@@ -145,5 +145,5 @@ Check:
 
 - [Cloudflare Pages Deployment](cloudflare-pages-deployment.md)
 - [Stage 1 Release Gate](stage-1-release-gate.md)
-- [How To Rehearse The Production Rollback](../how-to-rehearse-production-rollback.md)
-- [How To Redeploy A Complete Stage 1 Release](../how-to-redeploy-stage-1-release.md)
+- [How To Rehearse The Production Rollback](../guides/how-to-rehearse-production-rollback.md)
+- [How To Redeploy A Complete Stage 1 Release](../guides/how-to-redeploy-stage-1-release.md)

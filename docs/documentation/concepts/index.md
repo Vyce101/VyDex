@@ -27,4 +27,4 @@ These pages explain the system contracts that exist in VyDex today. They are wri
 - [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) — Generated trail routes, derived activity metadata, deterministic Entry ordering, and preview failure boundaries.
 - [Static Application Foundation](static-application-foundation.md) — Static Astro build, domain separation, Schema publication, and test boundaries.
 
-Concept pages describe current behavior and ownership. Step-by-step user workflows belong in [Guides](../guides.md), and planned capabilities remain identified as future work until their implementation exists.
+Concept pages describe current behavior and ownership. Step-by-step user workflows belong in [Guides](../guides/), and planned capabilities remain identified as future work until their implementation exists.

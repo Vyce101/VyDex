@@ -50,7 +50,7 @@ The command also requires the Cloudflare Pages environment values described in `
 
 Do not repeatedly choose different deployments. Preserve the intended deployment ID and the failed workflow artifacts, then check whether the target is a successful production record for the correct project and commit.
 
-If Cloudflare cannot make the intended ID canonical, keep the production incident open and do not start the rollback rehearsal. The [Hosted Release Verification](concepts/hosted-release-verification.md) concept explains the evidence and restoration contract; the [Cloudflare Pages Deployment](concepts/cloudflare-pages-deployment.md) concept explains deployment selection and identity boundaries.
+If Cloudflare cannot make the intended ID canonical, keep the production incident open and do not start the rollback rehearsal. The [Hosted Release Verification](../concepts/hosted-release-verification.md) concept explains the evidence and restoration contract; the [Cloudflare Pages Deployment](../concepts/cloudflare-pages-deployment.md) concept explains deployment selection and identity boundaries.
 
 ## Next Steps
 
@@ -59,7 +59,7 @@ After production is restored and complete hosted verification passes, record the
 ## Related Pages
 
 - [How To Rehearse The Production Rollback](how-to-rehearse-production-rollback.md)
-- [Hosted Release Verification](concepts/hosted-release-verification.md)
-- [Cloudflare Pages Deployment](concepts/cloudflare-pages-deployment.md)
-- [Stage 1 Release Gate](concepts/stage-1-release-gate.md)
+- [Hosted Release Verification](../concepts/hosted-release-verification.md)
+- [Cloudflare Pages Deployment](../concepts/cloudflare-pages-deployment.md)
+- [Stage 1 Release Gate](../concepts/stage-1-release-gate.md)
 - [Quickstart](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)

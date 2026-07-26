@@ -14,5 +14,5 @@ These docs cover the public VyDex pages, the evidence and release systems behind
 
 - [I want to run VyDex](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)
 - [I want to understand VyDex](concepts/)
-- [I want to use VyDex](guides.md)
+- [I want to use VyDex](guides/)
 - [I want to contribute to the codebase](https://github.com/Vyce101/VyDex)
