@@ -16,6 +16,18 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
+test("includes exactly one Google Search Console verification element in the static head", async ({
+  page,
+}) => {
+  const verificationElement = page.locator('head meta[name="google-site-verification"]');
+
+  await expect(verificationElement).toHaveCount(1);
+  await expect(verificationElement).toHaveAttribute(
+    "content",
+    "_3xtwzAtvqGGFDG7AG3tJUnWFd3ZMP0PEhqIXQvyB-s",
+  );
+});
+
 test("renders the exact Homepage hierarchy, copy, actions, and section order", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
