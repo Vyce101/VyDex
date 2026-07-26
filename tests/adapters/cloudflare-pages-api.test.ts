@@ -62,7 +62,7 @@ describe("Cloudflare Pages API adapter", () => {
   });
 
   test("paginates and returns only successful production deployments", async () => {
-    const firstPage = Array.from({ length: 100 }, (_, index) =>
+    const firstPage = Array.from({ length: 10 }, (_, index) =>
       deployment(`production-${index.toString().padStart(3, "0")}`));
     firstPage[0] = deployment("preview", { environment: "preview" });
     firstPage[1] = deployment("failed", { latest_stage: { status: "failure" } });
@@ -77,7 +77,9 @@ describe("Cloudflare Pages API adapter", () => {
     const result = await api.listSuccessfulProductionDeployments();
 
     expect(request).toHaveBeenCalledTimes(2);
-    expect(result).toHaveLength(99);
+    expect(String(request.mock.calls[0]?.[0])).toContain("env=production&page=1&per_page=10");
+    expect(String(request.mock.calls[1]?.[0])).toContain("env=production&page=2&per_page=10");
+    expect(result).toHaveLength(9);
     expect(result.map(({ id }) => id)).not.toContain("preview");
     expect(result.map(({ id }) => id)).not.toContain("failed");
   });
