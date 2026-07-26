@@ -1,6 +1,7 @@
-// Verifies static Entry routes, complete record rendering, responsive behavior, and 404 handling.
+// Verifies static Entry routes, canonical metadata, complete rendering, responsive behavior, and 404 handling.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
 const ENTRY_PATHS = [
   "/entries/dreamer-4-offline-minecraft-diamonds/",
@@ -23,6 +24,10 @@ test("generates every genuine seed Entry as a successful static route", async ({
     expect(response?.status(), path).toBe(200);
     await expect(page.locator("[data-entry-page]")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      `${EXPECTED_SITE_ORIGIN}${path}`,
+    );
     expect(dynamicRequests).toEqual([]);
   }
 });
