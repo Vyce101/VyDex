@@ -14,6 +14,7 @@ import {
 } from "../../src/domain";
 
 const ROOT = resolve(import.meta.dirname, "../..");
+const STAGE_ONE_RELEASE_ID = "019f9b40-a3a8-75ad-b2b2-05a7100bcc34";
 const RELEASE_TWO_ID = "019fa000-0000-7000-8000-000000000001";
 const RELEASE_THREE_ID = "019fa000-0001-7000-8000-000000000001";
 const FOURTH_ENTRY_ID = "019f9fff-0000-7000-8000-000000000001";
@@ -117,7 +118,10 @@ describe("repeatable release sequence fixtures", () => {
 
   beforeAll(async () => {
     stageOneRecords = await loadCanonicalRecords({ filesystem_root: ROOT });
-    stageOneMetadata = JSON.parse(await readFile(resolve(ROOT, "generated/release-data/release.json"), "utf8")) as ReleaseMetadata;
+    stageOneMetadata = JSON.parse(await readFile(resolve(
+      ROOT,
+      `generated/release-data/releases/${STAGE_ONE_RELEASE_ID}/release.json`,
+    ), "utf8")) as ReleaseMetadata;
   });
 
   test("constructs Release 2 with a fourth Entry and more than one accepted Entry change", () => {
