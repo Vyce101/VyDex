@@ -8,8 +8,11 @@ import {
   type RollbackRehearsalEvidence,
 } from "../../src/release/stage-one-hosted-verification";
 import { createReleaseLogger } from "../../src/shared/release-logger";
+import { loadReleaseState } from "../../src/release/release-publication";
 import {
   deployPagesOutput,
+  discoverHostedReleaseId,
+  runArchivedHostedVerification,
   runCompleteHostedVerification,
   runCompleteHostedVerificationAfterPropagation,
 } from "./hosted-verification-support";
@@ -25,6 +28,9 @@ async function main(): Promise<void> {
   if (!commitSha) throw new Error("GITHUB_SHA is required for rollback rehearsal evidence.");
   const logger = await createReleaseLogger({ filesystem_root: filesystemRoot });
   const api = createCloudflarePagesApi({ environment });
+  const releaseState = await loadReleaseState(filesystemRoot);
+  const activeReleaseId = releaseState.descriptor.release_id;
+  const previousReleaseId = releaseState.history.releases.at(-2)?.release_id;
   const evidenceDirectory = resolve(filesystemRoot, "runtime/hosted-verification");
   await mkdir(evidenceDirectory, { recursive: true });
 
@@ -32,23 +38,41 @@ async function main(): Promise<void> {
     confirmation: process.env.ROLLBACK_CONFIRMATION?.trim() ?? "",
     branch: process.env.GITHUB_REF_NAME?.trim() ?? "",
     commit_sha: commitSha,
+    intended_release_id: activeReleaseId,
     public_origin: environment.public_site_origin,
     api,
     logger,
     verify: async ({ deployment, request_origin, phase, include_browser }) => {
-      const verification = await (
-        request_origin === environment.public_site_origin
-          ? runCompleteHostedVerificationAfterPropagation
-          : runCompleteHostedVerification
-      )({
-        filesystem_root: filesystemRoot,
-        canonical_origin: environment.public_site_origin,
+      const hostedReleaseId = await discoverHostedReleaseId({
         request_origin,
-        deployment_id: deployment.id,
-        phase,
-        include_browser,
-        logger,
+        known_release_ids: releaseState.history.releases.map(({ release_id }) => release_id),
       });
+      if (hostedReleaseId !== activeReleaseId && hostedReleaseId !== previousReleaseId) {
+        throw new Error(`Deployment ${deployment.id} exposes archived release ${hostedReleaseId}, not the active release or its immediate predecessor.`);
+      }
+      const verification = hostedReleaseId === activeReleaseId
+        ? await (
+            request_origin === environment.public_site_origin
+              ? runCompleteHostedVerificationAfterPropagation
+              : runCompleteHostedVerification
+          )({
+            filesystem_root: filesystemRoot,
+            canonical_origin: environment.public_site_origin,
+            request_origin,
+            deployment_id: deployment.id,
+            phase,
+            include_browser,
+            logger,
+          })
+        : await runArchivedHostedVerification({
+            filesystem_root: filesystemRoot,
+            canonical_origin: environment.public_site_origin,
+            request_origin,
+            deployment_id: deployment.id,
+            release_id: hostedReleaseId,
+            phase,
+            logger,
+          });
       return verification.report;
     },
     create_byte_identical_deployment: async (previousDeploymentId) => {

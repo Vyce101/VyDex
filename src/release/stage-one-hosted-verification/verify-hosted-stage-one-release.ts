@@ -10,12 +10,13 @@ export async function verifyHostedStageOneRelease(
   const checks = await runHostedHttpChecks(input);
   const checksums = hostedEvidenceChecksums(input);
   return {
-    report_version: "1.0.0",
+    report_version: "2.0.0",
     phase: input.phase,
     request_origin: input.request_origin,
     canonical_origin: input.canonical_origin,
     deployment_id: input.deployment_id,
     release_id: input.manifest.release_id,
+    source_commit: input.manifest.source_commit,
     ...checksums,
     commit_sha: input.commit_sha ?? "local",
     workflow_run_id: input.workflow_run_id ?? "local",

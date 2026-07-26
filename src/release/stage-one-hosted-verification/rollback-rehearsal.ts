@@ -9,13 +9,19 @@ import type { HostedVerificationReport } from "./types";
 export const PRODUCTION_ROLLBACK_CONFIRMATION = "REHEARSE_PRODUCTION_ROLLBACK" as const;
 
 export type RollbackRehearsalEvidence = {
-  evidence_version: "1.0.0";
+  evidence_version: "2.0.0";
   earlier_deployment_id: string;
   intended_deployment_id: string;
-  release_id: string;
-  manifest_sha256: string;
-  dataset_sha256: string;
-  artifact_inventory_sha256: string;
+  earlier_release_id: string;
+  intended_release_id: string;
+  earlier_source_commit: string;
+  intended_source_commit: string;
+  earlier_manifest_sha256: string;
+  intended_manifest_sha256: string;
+  earlier_dataset_sha256: string;
+  intended_dataset_sha256: string;
+  earlier_artifact_inventory_sha256: string;
+  intended_artifact_inventory_sha256: string;
   commit_sha: string;
   workflow_run_id: string;
   workflow_run_attempt: string;
@@ -31,6 +37,7 @@ export async function runStageOneRollbackRehearsal(input: {
   confirmation: string;
   branch: string;
   commit_sha: string;
+  intended_release_id: string;
   public_origin: string;
   api: CloudflarePagesApi;
   logger: ReleaseLogger;
@@ -72,6 +79,9 @@ export async function runStageOneRollbackRehearsal(input: {
   if (!initialVerification.success) {
     throw new Error("The intended current deployment failed verification before rollback mutation.");
   }
+  if (initialVerification.release_id !== input.intended_release_id) {
+    throw new Error("The canonical production deployment does not expose the intended active VyDex release.");
+  }
 
   const restoreInitialAfterRedeploymentFailure = async (): Promise<void> => {
     await input.api.rollbackProductionTo(initialCurrent.id);
@@ -87,6 +97,9 @@ export async function runStageOneRollbackRehearsal(input: {
 
   const deployments = await input.api.listSuccessfulProductionDeployments();
   let earlierDeployment: CloudflarePagesDeployment | undefined;
+  let earlierVerification: HostedVerificationReport | undefined;
+  let sameReleaseDeployment: CloudflarePagesDeployment | undefined;
+  let sameReleaseVerification: HostedVerificationReport | undefined;
   for (const candidate of deployments.filter(
     ({ id, created_on }) => id !== initialCurrent.id && created_on < initialCurrent.created_on,
   )) {
@@ -97,9 +110,14 @@ export async function runStageOneRollbackRehearsal(input: {
         phase: `rehearsal-candidate-${candidate.id}`,
         include_browser: false,
       });
-      if (candidateVerification.success) {
+      if (candidateVerification.success && candidateVerification.release_id !== initialVerification.release_id) {
         earlierDeployment = candidate;
+        earlierVerification = candidateVerification;
         break;
+      }
+      if (candidateVerification.success && !sameReleaseDeployment) {
+        sameReleaseDeployment = candidate;
+        sameReleaseVerification = candidateVerification;
       }
     } catch (error) {
       await input.logger.warning(
@@ -110,6 +128,10 @@ export async function runStageOneRollbackRehearsal(input: {
 
   let intendedDeployment = initialCurrent;
   let intendedVerification = initialVerification;
+  if (!earlierDeployment && sameReleaseDeployment && sameReleaseVerification) {
+    earlierDeployment = sameReleaseDeployment;
+    earlierVerification = sameReleaseVerification;
+  }
   if (!earlierDeployment) {
     await input.logger.info("No earlier matching production deployment exists; creating one byte-identical deployment record.");
     try {
@@ -124,6 +146,7 @@ export async function runStageOneRollbackRehearsal(input: {
         throw new Error("The byte-identical redeployment failed hosted verification.");
       }
       earlierDeployment = initialCurrent;
+      earlierVerification = initialVerification;
     } catch (redeploymentError) {
       try {
         await restoreInitialAfterRedeploymentFailure();
@@ -144,13 +167,19 @@ export async function runStageOneRollbackRehearsal(input: {
   }
 
   const evidence: RollbackRehearsalEvidence = {
-    evidence_version: "1.0.0",
+    evidence_version: "2.0.0",
     earlier_deployment_id: earlierDeployment.id,
     intended_deployment_id: intendedDeployment.id,
-    release_id: intendedVerification.release_id,
-    manifest_sha256: intendedVerification.manifest_sha256,
-    dataset_sha256: intendedVerification.dataset_sha256,
-    artifact_inventory_sha256: intendedVerification.artifact_inventory_sha256,
+    earlier_release_id: earlierVerification!.release_id,
+    intended_release_id: intendedVerification.release_id,
+    earlier_source_commit: earlierVerification!.source_commit,
+    intended_source_commit: intendedVerification.source_commit,
+    earlier_manifest_sha256: earlierVerification!.manifest_sha256,
+    intended_manifest_sha256: intendedVerification.manifest_sha256,
+    earlier_dataset_sha256: earlierVerification!.dataset_sha256,
+    intended_dataset_sha256: intendedVerification.dataset_sha256,
+    earlier_artifact_inventory_sha256: earlierVerification!.artifact_inventory_sha256,
+    intended_artifact_inventory_sha256: intendedVerification.artifact_inventory_sha256,
     commit_sha: intendedVerification.commit_sha,
     workflow_run_id: intendedVerification.workflow_run_id,
     workflow_run_attempt: intendedVerification.workflow_run_attempt,
