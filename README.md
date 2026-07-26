@@ -58,7 +58,7 @@ VyDex is not a daily newsletter, prediction market, leaderboard, or general tech
 
 Stage 1 contains the Homepage, three public Entry pages, three Topic Trail pages, the material Changelog, Methodology `1.0.0`, the About and Scope Limits page, the Export JSON page, and a static not-found page. These surfaces share the Frontier Atlas design system and remain readable without browser JavaScript.
 
-The initial Stage 1 release is represented by the committed descriptor and manifest under `generated/release-data/`. Its release ID is `019f9b40-a3a8-75ad-b2b2-05a7100bcc34`, its canonical origin is `https://vydex.pages.dev`, and its immutable export filename is `vydex-latest-entry-versions-v1-0-0-2026-07-25.json`.
+The initial Stage 1 release is represented by the committed descriptor, manifest, history, and immutable archive under `generated/release-data/`. Its release ID is `019f9b40-a3a8-75ad-b2b2-05a7100bcc34`, its canonical origin is `https://vydex.pages.dev`, and its immutable export filename is `vydex-latest-entry-versions-v1-0-0-2026-07-25.json`.
 
 The release gate validates canonical records and snapshots, constructs one release model, builds into isolated runtime storage, verifies the Schema, export, routes, redirects, links, counts, and navigation, then runs the complete Playwright and Axe matrix against that exact staged output. Promotion replaces local `dist/` and the manifest only after every check succeeds.
 

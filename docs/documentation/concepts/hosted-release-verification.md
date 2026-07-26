@@ -5,7 +5,7 @@ order: 550
 
 # Hosted Release Verification
 
-Hosted release verification compares the live Cloudflare Pages site with the committed Stage 1 release. It runs after deployment because local builds cannot prove that Cloudflare published the expected routes, redirects, headers, canonical URLs, and files. This page is for maintainers and coding agents changing production checks, browser coverage, release evidence, or rollback behavior.
+Hosted release verification compares Cloudflare Pages with the matching committed VyDex release archive. It runs after deployment because local builds cannot prove that Cloudflare published the expected routes, redirects, headers, canonical URLs, and files.
 
 ## Purpose And Ownership
 
@@ -30,7 +30,7 @@ It does not own:
 
 ## Expected State And Reports
 
-Every verification starts from the committed descriptor and manifest. The verifier regenerates the production release, Dataset, and Schema with `https://vydex.pages.dev` as the canonical origin, then compares that expected state with HTTP responses from the requested host.
+Active verification starts from the committed descriptor and manifest. Archived verification selects the descriptor, manifest, immutable-route contract, and source provenance by hosted Release ID. Both compare the expected state with HTTP responses from the requested host.
 
 Each JSON report records:
 
@@ -62,7 +62,7 @@ The same verifier can target the canonical origin or a deployment-specific produ
 
 The protected rehearsal first verifies the intended current deployment. It then searches successful production deployments for an earlier record whose deployment-specific URL exposes the same release identity and artifact bytes. Preview, skipped, failed, wrong-project, and malformed records cannot qualify.
 
-When only one qualifying production deployment exists, the workflow uploads the same validated `dist/` artifact again. This creates a second Cloudflare production deployment ID without changing the VyDex Release ID, manifest, Dataset, or inventory bytes. The original deployment becomes the earlier rollback target and the byte-identical deployment becomes the intended current target.
+The rehearsal first prefers a successful deployment exposing the immediate previous archived release. When none exists, it retains the same-release fallback and may upload the same validated `dist/` artifact again. Cloudflare deployment IDs and GitHub workflow commits remain operational identities rather than replacements for VyDex Release ID or `source_commit`.
 
 Before production changes, the workflow preserves both deployment IDs and the expected checksums. It rolls production back to the earlier deployment, waits until Cloudflare reports that ID as canonical, and runs complete hosted verification. An unconditional restoration step then selects the intended newer deployment, waits for it to become canonical, and repeats the complete verification.
 

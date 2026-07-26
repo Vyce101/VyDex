@@ -1,9 +1,11 @@
 ---
-label: Stage 1 Release Gate
+label: Stage 1 Release Gate (Legacy)
 order: 1400
 ---
 
 # Stage 1 Release Gate
+
+> This page records the original bootstrap design. Bootstrap is retired and the initial identity is archived. Use [Repeatable Release Publication](repeatable-release-publication.md) for current commands and lifecycle rules.
 
 The Stage 1 release gate turns one validated VyDex release into verified static output. It is the only workflow allowed to create the initial production descriptor, and it promotes output only after the website, Schema, export, redirects, browser checks, and manifest agree. This page is for maintainers and coding agents changing release orchestration, generated output, validation, or persistence behavior.
 

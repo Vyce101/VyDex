@@ -2,7 +2,7 @@
 label: How To Redeploy A Complete Stage 1 Release
 ---
 
-# How To Redeploy A Complete Stage 1 Release
+# How To Redeploy A Complete VyDex Release
 
 Use this guide to restore a known-good VyDex production deployment after an unsuccessful release or failed automatic restoration. You need maintainer access to the Cloudflare Pages project `vydex` and the matching repository release state.
 
@@ -13,7 +13,7 @@ This is an emergency recovery task. To test rollback and restoration under norma
 - Stop other production deployments and rollback attempts.
 - Find the exact intended Cloudflare deployment ID in the failed GitHub Actions run or its `vydex-rollback-evidence-*` artifact.
 - Confirm that the target is a successful **Production** deployment for the Pages project `vydex`. Never select a preview deployment.
-- Match the deployment's commit to `generated/release-data/release.json` and `generated/release-data/release-manifest.json` in GitHub.
+- Identify the VyDex Release ID served by the deployment and select its matching descriptor and manifest under `generated/release-data/releases/{release-id}/`. The deployment commit is separate operational provenance.
 - Confirm the expected VyDex Release ID, canonical origin, Entry count, immutable Dataset path, routes, redirects, and file inventory before changing production.
 - In a clean checkout of the matching commit, run `npm ci` and install the pinned Chromium runtime with `npm run test:browser:install` before using the hosted verifier.
 
@@ -44,7 +44,7 @@ If the failed workflow printed a manual recovery command, you may use that comma
    npm run verify:hosted-stage-1
    ```
 
-The command also requires the Cloudflare Pages environment values described in `.env.example`. It may run the complete HTTP, Playwright, and Axe suite up to three times with 30-second waits while Pages edges converge. Success still requires one complete pass against the real production origin; the command does not combine partial results across attempts.
+The command also requires the Cloudflare Pages environment values described in `.env.example`. Active release verification may run the complete HTTP, Playwright, and Axe suite up to three times while Pages edges converge. Archived recovery verification uses that release's immutable manifest and route contract.
 
 ## If Something Goes Wrong
 

@@ -60,12 +60,12 @@ Temporary Pages hostnames must remain non-indexable. Hosted qualification checks
 ## Production Flow
 
 1. A pull request or push starts the validation job. Production deployment is considered only for `main`; Cloudflare's automatic production-branch deployment remains disabled.
-2. GitHub Actions checks out the commit, installs the immutable dependency tree and pinned Chromium runtime, then runs `npm run release:stage-1:ci`.
-3. Strict release mode requires the committed descriptor and manifest, verifies their shared identity and origin, and regenerates the release without creating a UUID or timestamp.
+2. GitHub Actions fetches complete Git history, installs the immutable dependency tree and pinned Chromium runtime, then runs `npm run release:ci`.
+3. Strict release mode requires the descriptor, manifest, history, and archives; verifies source ancestry, identity, origin, and retained immutable routes; and regenerates the release without creating a UUID or timestamp.
 4. Type checking, Vitest, release validation, static generation, Playwright journeys, and Axe checks must all pass.
 5. The workflow uploads the complete validated `dist/` directory as an artifact retained for 30 days. The artifact supports operations; it is not canonical state.
 6. The production job downloads that exact artifact, validates the four deployment environment values, and checks every file against the committed manifest.
-7. Before upload, the job records the current canonical production deployment and checks whether it is a complete matching hosted release that can serve as a fallback.
+7. Before upload, the job identifies the Release ID on canonical production and verifies active, immediate-predecessor, or explicitly approved recovery state against its matching archive before accepting it as a fallback.
 8. Wrangler deploys the verified directory to the Pages project `vydex` with the `main` branch and Git commit hash attached.
 9. The Cloudflare API adapter waits for a distinct successful production deployment with that commit hash to become `canonical_deployment`.
 10. [Hosted Release Verification](hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior. If Pages edges have not converged after the canonical deployment changes, the orchestrator waits 30 seconds and retries the complete suite, up to three attempts.

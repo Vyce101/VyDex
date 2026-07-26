@@ -36,12 +36,12 @@ Do not cancel the job after production mutation begins unless emergency recovery
 1. Confirm that the **Roll back and restore production** job succeeded.
 2. Download the `vydex-rollback-evidence-<run-id>-<attempt>` artifact from the workflow run.
 3. Open `runtime/hosted-verification/rollback-rehearsal-evidence.json` and confirm that `earlier_deployment_id` and `intended_deployment_id` are different.
-4. Confirm that the Release ID, manifest SHA-256, Dataset SHA-256, and artifact-inventory SHA-256 remain unchanged across the rollback and restoration reports.
+4. Confirm the earlier and intended VyDex Release IDs, source commits, manifest hashes, Dataset hashes, and inventory hashes match their archived state. They may differ across a cross-release rehearsal.
 5. Confirm that the rollback report passed against `https://vydex.pages.dev` while the earlier deployment was canonical.
 6. Confirm that the restoration report passed and the intended deployment ID became canonical again.
 7. Open [https://vydex.pages.dev](https://vydex.pages.dev) and confirm that its Release ID matches the intended Stage 1 descriptor.
 
-The rehearsal is complete only when rollback verification, restoration, and final hosted verification all pass. Two deployment IDs do not represent two VyDex releases when both expose the same persisted Release ID and byte-identical artifact.
+The rehearsal is complete only when rollback verification, restoration, and final hosted verification all pass. It prefers the immediate previous archived release and falls back to two deployment IDs exposing one byte-identical VyDex release when no usable previous-release deployment exists.
 
 ## If Something Goes Wrong
 

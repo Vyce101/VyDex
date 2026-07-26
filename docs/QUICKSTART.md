@@ -67,7 +67,7 @@ npm run test:browser
 
 The browser command uses the reserved `https://vydex.example` test origin, writes disposable output to ignored `dist/`, serves it through the pinned Wrangler Pages development server, and runs the Playwright and Axe checks.
 
-## Reproduce The Stage 1 Release
+## Reproduce The Active Release
 
 The authoritative release origin is `https://vydex.pages.dev`. Set it before running production validation.
 
@@ -75,14 +75,14 @@ PowerShell:
 
 ```powershell
 $env:PUBLIC_SITE_ORIGIN = "https://vydex.pages.dev"
-npm run release:stage-1:ci
+npm run release:ci
 ```
 
 macOS or Linux:
 
 ```bash
 export PUBLIC_SITE_ORIGIN="https://vydex.pages.dev"
-npm run release:stage-1:ci
+npm run release:ci
 ```
 
 The strict command requires both committed files:
@@ -90,13 +90,25 @@ The strict command requires both committed files:
 ```text
 generated/release-data/release.json
 generated/release-data/release-manifest.json
+generated/release-data/release-history.json
+generated/release-data/releases/{release-id}/
 ```
 
 It checks that the descriptor, manifest, and configured origin agree; runs type checking and the complete Vitest suite; builds into isolated runtime storage; verifies every static surface; and runs Playwright and Axe against the staged output. It then compares the regenerated manifest and complete file inventory with the committed release state. A mismatch returns a non-zero result instead of creating a new release identity.
 
 On success, the terminal prints the release ID, generation timestamp, immutable export filename, manifest path, and `dist/` location. You can also read the release ID from `generated/release-data/release.json` and the export filename from `generated/release-data/release-manifest.json`.
 
-`npm run release:stage-1` is the one-time bootstrap-capable command. The initial Stage 1 identity has already been created, so CI and clean-runner reproduction must use `npm run release:stage-1:ci`. Do not delete or edit the committed descriptor or manifest to start another release.
+`npm run release:stage-1:ci` remains a compatibility alias. It does not bootstrap or rotate identity.
+
+## Create The Next Release
+
+First commit the accepted canonical records, Topic Trails, Methodology records, and authoritative Entry publication snapshots. From that clean, non-detached branch run:
+
+```powershell
+npm run release:next -- --confirm CREATE_NEXT_RELEASE
+```
+
+The command captures the clean `HEAD` as `source_commit`, verifies the active release, creates and verifies one successor, retains historical immutable Dataset routes, and leaves generated release state for review and a separate commit. It does not deploy, commit, tag, or push.
 
 A failed release leaves the previous successful `dist/` and manifest unchanged. Private diagnostics appear in the terminal and rotating ignored files under `user/logs/`; complete test output remains under ignored `runtime/` storage.
 

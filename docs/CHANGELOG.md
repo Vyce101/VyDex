@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added a repeatable release process that preserves every published Dataset, rebuilds committed releases exactly, creates new releases safely, and verifies deployment rollback against the matching archive.
 - Published the complete Stage 1 seed ledger to Cloudflare Pages and passed initial hosted verification, rollback verification, restoration, and final production verification.
 - Added automatic verification of each hosted Cloudflare Pages production deployment and a protected rollback rehearsal that verifies rollback, restores the intended deployment, and retains recovery evidence.
 - Added Git-integrated Cloudflare Pages previews and a gated GitHub Actions production deployment that publishes only the complete validated `dist/` artifact.
