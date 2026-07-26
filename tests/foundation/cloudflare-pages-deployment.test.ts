@@ -69,6 +69,8 @@ describe("Cloudflare Pages deployment contract", () => {
     }
     expect(workflow).toContain("needs: validate");
     expect(workflow).toContain("npm run release:ci");
+    expect(workflow).toContain("npm run release:check");
+    expect(workflow.indexOf("npm run release:check")).toBeLessThan(workflow.indexOf("npm run release:ci"));
     expect(workflow).toContain("fetch-depth: 0");
     expect(workflow).toContain("actions/upload-artifact@v7");
     expect(workflow).toContain("actions/download-artifact@v7");

@@ -6,9 +6,11 @@ import { describe, expect, test } from "vitest";
 const ROOT = resolve(import.meta.dirname, "../..");
 
 describe("release publication foundation", () => {
-  test("provides strict reproduction, explicit successor creation, and the compatibility alias", async () => {
+  test("provides strict reproduction, byte-aware synchronization, and the compatibility alias", async () => {
     const packageJson = JSON.parse(await readFile(resolve(ROOT, "package.json"), "utf8")) as { scripts: Record<string, string> };
     expect(packageJson.scripts["release:ci"]).toContain("scripts/release/release-ci.ts");
+    expect(packageJson.scripts["release:check"]).toContain("scripts/release/check-release-selection.ts");
+    expect(packageJson.scripts["release:sync"]).toContain("scripts/release/sync-release-selection.ts");
     expect(packageJson.scripts["release:next"]).toContain("scripts/release/next-release.ts");
     expect(packageJson.scripts["release:stage-1:ci"]).toBe("npm run release:ci");
     expect(packageJson.scripts["release:stage-1"]).toBe("npm run release:ci");
