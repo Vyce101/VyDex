@@ -2,7 +2,7 @@
 import { z } from "zod";
 import type { CloudflarePagesDeploymentEnvironment } from "../cloudflare-pages-environment";
 
-const deploymentStageSchema = z.strictObject({
+const deploymentStageSchema = z.object({
   status: z.enum(["success", "idle", "active", "failure", "canceled"]),
 });
 
