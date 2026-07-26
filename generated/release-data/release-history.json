@@ -1,0 +1,14 @@
+{
+  "history_version": "1.0.0",
+  "releases": [
+    {
+      "release_id": "019f9b40-a3a8-75ad-b2b2-05a7100bcc34",
+      "generated_at": "2026-07-25T21:48:52.520Z",
+      "source_commit": "655b7c8bf4a8b5cbb88bbc9427735084c5f19973",
+      "descriptor_path": "generated/release-data/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/release.json",
+      "manifest_path": "generated/release-data/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/release-manifest.json",
+      "dataset_public_path": "/datasets/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/vydex-latest-entry-versions-v1-0-0-2026-07-25.json",
+      "previous_release_id": null
+    }
+  ]
+}
