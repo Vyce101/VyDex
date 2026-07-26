@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Selected successor release `019fa07e-b516-774e-b1c4-75d38ecb36d5` so the production artifact includes sitemap discovery while retaining both earlier releases and their immutable Datasets.
 - Required CI to prove that current committed source reproduces the selected public artifact before installing browser tooling or uploading deployment output.
 - Selected a successor release to publish the Search Console verification metadata while retaining the initial release and its immutable Dataset in the public release history.
 - Required production and preview builds to use the validated `PUBLIC_SITE_ORIGIN`, with strict descriptor, manifest, origin, and byte-identical inventory checks in CI.
