@@ -52,6 +52,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed public Entry pages so each page publishes its approved self-referencing canonical URL.
 - Fixed Stage 1 release subprocesses on Windows by invoking npm's JavaScript CLI through the active Node.js runtime.
 - Fixed the Homepage heading hierarchy by making Latest Update an H2 parent for Entry Preview headings.
 - Fixed the Frontier Delta directional connector and aligned public Entry sections to one full-width maintained-record layout across supported viewports.
