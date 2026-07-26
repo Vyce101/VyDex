@@ -42,7 +42,7 @@ It does not own:
 4. Public HTML pages render their main content through `FoundationLayout.astro`, which supplies document metadata, the skip link, Header, single Main region, and Footer.
 5. `npm run build:test` type-checks the project, runs Vitest, generates deterministic static output with fixed non-production release metadata, and verifies the final sitemap files against that output. Ordinary Playwright validation uses this explicit test mode.
 6. `npm run build` performs the same checks and sitemap verification but loads the persisted production descriptor and requires a valid production origin.
-7. `npm run release:ci` reproduces committed descriptor, manifest, history, and archive state without creating identity. `npm run release:next -- --confirm CREATE_NEXT_RELEASE` is the only successor-creation command. Both build into isolated staging and neither deploys.
+7. `npm run release:check` compares current committed public output with active release state without creating identity. `npm run release:sync -- --confirm CREATE_NEXT_RELEASE` creates a successor only when that comparison detects changed public output. `npm run release:ci` reproduces committed state, while direct `release:next` remains available for intentional successor creation. These commands build into isolated staging and none deploys.
 8. `npm run build:pages-preview` produces production-shaped Git preview output and adds validated redirects. It uses the production origin for canonical URLs rather than the temporary preview hostname.
 9. `npm run test:browser` rebuilds in test mode, writes the validated test-release redirects into disposable `dist/`, serves the output through a local Wrangler Pages server, and runs the Playwright and Axe checks. The public command supplies the reserved `https://vydex.example` origin so the Dataset Schema receives its absolute canonical `$id`.
 10. Hosted verification supplies `VYDEX_BROWSER_BASE_URL` and uses `playwright.hosted.config.ts`. That mode starts no local server and does not proxy production canonical URLs to local output.
@@ -102,6 +102,7 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - A successful release-gate promotion updates local `dist/` and the internal manifest, but it does not update the hosted site.
 - A Git-integrated Pages preview uses production release data and canonical origin even though Cloudflare assigns it a temporary preview URL. It must not be confused with the diagnostic private-preview model.
 - A deployment job must consume the artifact created by its validation job. Rebuilding in the deployment job would weaken the verified-output boundary.
+- A code, metadata, content, dependency, or build change may alter public bytes while the active descriptor still points to an earlier source commit. Byte-based release selection validation must fail before upload and direct maintainers to create the required committed successor state.
 - A hosted browser run must not start Wrangler or proxy canonical URLs to local output; either behavior would test a local surface instead of production.
 - The Export JSON page and dated endpoint must fail together when application export preparation returns diagnostics; neither route renders a placeholder or independently repairs metadata.
 - Changelog content is generated from `release.changelog_events`; the browser does not load, sort, group, or filter material events.
@@ -144,7 +145,7 @@ Frontier Atlas owns presentation tokens, typography roles, shared components, an
 - `src/adapters/dataset-artifact-writer/` — Injected immutable dataset filesystem emission.
 - `src/adapters/application-export/` — Dataset preparation, determinism checks, and Export Page presentation model.
 - `src/release/stage-one-release/` — Atomic Stage 1 orchestration, staged verification, manifests, redirects, and promotion.
-- `scripts/release/` — Thin release command entry point and process exit handling.
+- `scripts/release/` — Thin release inspection, synchronization, reproduction, successor-creation, and process-exit entry points.
 - `scripts/deployment/` — Pages preview preparation, production sitemap verification, and production artifact preflight.
 - `.github/workflows/validate-application.yml` — Strict release validation, artifact transfer, and gated Pages publication.
 - `wrangler.jsonc` — Static Pages output configuration without Worker or Function bindings.

@@ -5,7 +5,7 @@ order: 1400
 
 # Repeatable Release Publication
 
-VyDex separates rebuilding a committed release from creating its successor. Both workflows are static, repository-controlled, and all-or-nothing. Neither workflow deploys, commits, tags, or pushes.
+VyDex separates detecting release-selection drift, rebuilding a committed release, and creating its successor. These workflows are static, repository-controlled, and all-or-nothing. None deploys, commits, tags, or pushes.
 
 ## Durable State
 
@@ -20,6 +20,20 @@ Run `npm run release:ci`. The compatibility command `npm run release:stage-1:ci`
 Reproduction loads all committed state, validates every archive and source commit, reconstructs the active release from its recorded source, runs static, browser, and Axe verification, compares the complete manifest and inventory, and replaces only ignored `dist/`. It never calls the clock or UUID generator.
 
 CI fetches full Git history because every `source_commit` must exist and be an ancestor of the commit being reproduced.
+
+## Detect And Synchronize Release Selection
+
+Run `npm run release:check` from a clean branch to compare current committed source with the active public artifact. The command rebuilds current `HEAD` using the active descriptor, retained immutable history, and approved production origin, while skipping duplicate quality and browser passes. It compares the complete candidate manifest and file inventory with active committed state, then removes its ignored staging output. A different Git commit is acceptable when its public bytes and manifest contract remain identical.
+
+When public output changed, run:
+
+```powershell
+npm run release:sync -- --confirm CREATE_NEXT_RELEASE
+```
+
+Synchronization performs the same read-only comparison first. It returns without creating identity when selection remains current. When selection is stale, the exact confirmation delegates to the existing next-release workflow, which reproduces the active release, creates and fully verifies one successor, retains immutable history, and leaves generated state for review and a separate commit.
+
+The validation workflow runs `release:check` before release reproduction and artifact upload. CI never invokes `release:sync`, generates a release ID, writes release state, or commits on behalf of a maintainer. This prevents a new deployment contract from being applied to an older selected artifact while keeping release identity repository-controlled.
 
 ## Create The Next Release
 
@@ -56,6 +70,8 @@ The later repository commit `e774b55f3a164411b6b0c0e32c99713966c64de3` belongs i
 
 `release:next` holds an exclusive runtime lock and rechecks branch, `HEAD`, clean status, inputs, and active-state bytes before promotion. Promotion journals and backs up the prior descriptor, manifest, history, and `dist/`. A failed selection restores previous state and leaves no authoritative partial release.
 
+`release:check` fails before deployment when current public bytes differ from active state and reports the changed artifact paths plus the exact synchronization command. A dirty working tree fails before comparison so uncommitted changes can never become release provenance. `release:sync` retains the same explicit confirmation, CI prohibition, locking, verification, and rollback behavior as direct successor creation.
+
 After a failed deployment, repository state may be newer than production. The workflow identifies the hosted Release ID, verifies it against its matching archive, deploys committed active `dist/`, and restores the verified earlier Cloudflare deployment if verification fails. Cloudflare history is operational support, not the permanent release archive.
 
 ## Invariants
@@ -65,6 +81,7 @@ After a failed deployment, repository state may be newer than production. The wo
 - Current pages and latest-entry data use accepted records and authoritative snapshots only.
 - Manifests and history remain internal; no public archive browser or API exists.
 - Local construction, Git commit, CI reproduction, deployment, and hosted verification are separate boundaries.
+- CI detects stale release selection but never creates authoritative release state.
 
 ## Related Pages
 

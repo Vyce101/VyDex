@@ -61,16 +61,18 @@ Temporary Pages hostnames must remain non-indexable. Hosted qualification checks
 ## Production Flow
 
 1. A pull request or push starts the validation job. Production deployment is considered only for `main`; Cloudflare's automatic production-branch deployment remains disabled.
-2. GitHub Actions fetches complete Git history, installs the immutable dependency tree and pinned Chromium runtime, then runs `npm run release:ci`.
-3. Strict release mode requires the descriptor, manifest, history, and archives; verifies source ancestry, identity, origin, and retained immutable routes; and regenerates the release without creating a UUID or timestamp.
-4. Type checking, Vitest, release validation, static generation, Playwright journeys, and Axe checks must all pass.
-5. The workflow uploads the complete validated `dist/` directory as an artifact retained for 30 days. The artifact supports operations; it is not canonical state.
-6. The production job downloads that exact artifact, validates the four deployment environment values, checks every file against the committed manifest, and reruns production sitemap verification before upload.
-7. Before upload, the job identifies the Release ID on canonical production and verifies active, immediate-predecessor, or explicitly approved recovery state against its matching archive before accepting it as a fallback.
-8. Wrangler deploys the verified directory to the Pages project `vydex` with the `main` branch and Git commit hash attached.
-9. The Cloudflare API adapter waits for a distinct successful production deployment with that commit hash to become `canonical_deployment`.
-10. [Hosted Release Verification](hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior. If Pages edges have not converged after the canonical deployment changes, the orchestrator waits 30 seconds and retries the complete suite, up to three attempts.
-11. GitHub Actions retains the hosted report, complete browser output, failure screenshots or traces, and rotating logs even when verification fails.
+2. GitHub Actions fetches complete Git history and installs the immutable dependency tree.
+3. `npm run release:check` rebuilds current committed source with the active descriptor and blocks stale release selection before browser installation or artifact construction. Its failure identifies changed artifact paths and directs maintainers to the explicit local synchronization command.
+4. The workflow installs the pinned Chromium runtime, then runs `npm run release:ci`.
+5. Strict release mode requires the descriptor, manifest, history, and archives; verifies source ancestry, identity, origin, and retained immutable routes; and regenerates the release without creating a UUID or timestamp.
+6. Type checking, Vitest, release validation, static generation, Playwright journeys, and Axe checks must all pass.
+7. The workflow uploads the complete validated `dist/` directory as an artifact retained for 30 days. The artifact supports operations; it is not canonical state.
+8. The production job downloads that exact artifact, validates the four deployment environment values, checks every file against the committed manifest, and reruns production sitemap verification before upload.
+9. Before upload, the job identifies the Release ID on canonical production and verifies active, immediate-predecessor, or explicitly approved recovery state against its matching archive before accepting it as a fallback.
+10. Wrangler deploys the verified directory to the Pages project `vydex` with the `main` branch and Git commit hash attached.
+11. The Cloudflare API adapter waits for a distinct successful production deployment with that commit hash to become `canonical_deployment`.
+12. [Hosted Release Verification](hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior. If Pages edges have not converged after the canonical deployment changes, the orchestrator waits 30 seconds and retries the complete suite, up to three attempts.
+13. GitHub Actions retains the hosted report, complete browser output, failure screenshots or traces, and rotating logs even when verification fails.
 
 The deployment job uses the non-cancelling `vydex-cloudflare-pages-production` concurrency group. It does not combine output from different commits or rebuild after artifact validation.
 
@@ -111,6 +113,7 @@ Cloudflare history is not the evidence archive. History retention and hosted dep
 - If the descriptor and manifest identify different releases, the release gate and deployment preflight both block publication.
 - If `PUBLIC_SITE_ORIGIN` differs from the manifest origin, Pages preview preparation, CI reproduction, or deployment fails rather than rewriting canonical URLs.
 - If an artifact differs from the manifest inventory, the deployment job rejects it even when the earlier validation job succeeded.
+- If current source changes public bytes without selecting a successor release, validation fails before artifact upload instead of applying current deployment checks to an older artifact.
 - A Cloudflare rollback changes hosting state but not repository state. The next successful `main` deployment can make the committed release current again.
 - Two successful production deployments can have different Cloudflare IDs while exposing the same VyDex Release ID, manifest, Dataset, and complete artifact bytes.
 - A deployment-specific URL can qualify a production record before rollback, but it remains non-canonical and must not be indexable.

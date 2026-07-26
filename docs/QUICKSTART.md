@@ -67,6 +67,24 @@ npm run test:browser
 
 The browser command uses the reserved `https://vydex.example` test origin, writes disposable output to ignored `dist/`, serves it through the pinned Wrangler Pages development server, and runs the Playwright and Axe checks.
 
+## Keep The Active Release In Sync
+
+After committing application, content, metadata, dependency, or build changes, check whether current `HEAD` still produces the active release's exact public artifact:
+
+```powershell
+npm run release:check
+```
+
+The read-only check requires a clean branch. It builds current source with the active descriptor in ignored runtime storage and compares the complete result with the committed manifest. Test-only and documentation-only commits pass when public bytes are unchanged.
+
+When public bytes changed, synchronize release selection with one command:
+
+```powershell
+npm run release:sync -- --confirm CREATE_NEXT_RELEASE
+```
+
+The sync command repeats the byte comparison. It exits without creating identity when the active artifact is already current; otherwise it runs the verified successor-release workflow and leaves descriptor, manifest, history, archive, and `dist/` changes for review. It never commits, pushes, or deploys. CI runs the read-only check before release reproduction and blocks stale selection with the same remediation command.
+
 ## Reproduce The Active Release
 
 The authoritative release origin is `https://vydex.pages.dev`. Set it before running production validation.
@@ -101,6 +119,8 @@ On success, the terminal prints the release ID, generation timestamp, immutable 
 `npm run release:stage-1:ci` remains a compatibility alias. It does not bootstrap or rotate identity.
 
 ## Create The Next Release
+
+For normal committed changes, prefer `release:sync` so unchanged public output does not create unnecessary release identity. Use the direct next-release command when a successor is intentionally required regardless of the preliminary comparison.
 
 First commit the accepted canonical records, Topic Trails, Methodology records, and authoritative Entry publication snapshots. From that clean, non-detached branch run:
 

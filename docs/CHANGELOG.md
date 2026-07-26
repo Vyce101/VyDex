@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added byte-based release selection checks and one-command synchronization so public output changes create a reviewed successor before deployment instead of failing during Pages preflight.
 - Added production sitemap generation for every public HTML page, `robots.txt` discovery, deployment-artifact validation, and hosted HTTP checks for both sitemap files.
 - Added Google Search Console ownership verification metadata to the shared static page layout with browser coverage that prevents missing or duplicate verification elements.
 - Added a repeatable release process that preserves every published Dataset, rebuilds committed releases exactly, creates new releases safely, and verifies deployment rollback against the matching archive.
@@ -38,6 +39,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Required CI to prove that current committed source reproduces the selected public artifact before installing browser tooling or uploading deployment output.
 - Selected a successor release to publish the Search Console verification metadata while retaining the initial release and its immutable Dataset in the public release history.
 - Required production and preview builds to use the validated `PUBLIC_SITE_ORIGIN`, with strict descriptor, manifest, origin, and byte-identical inventory checks in CI.
 - Routed production publication through the Cloudflare Pages project `vydex` while keeping canonical records, snapshots, and release metadata authoritative in the repository.
