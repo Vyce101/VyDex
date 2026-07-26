@@ -28,6 +28,8 @@ jobs:
 
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up exact Node.js
         uses: actions/setup-node@v6
@@ -43,7 +45,7 @@ jobs:
         run: npx --no-install playwright install --with-deps chromium
 
       - name: Reproduce and verify committed release
-        run: npm run release:stage-1:ci
+        run: npm run release:ci
 
       - name: Upload validated rehearsal artifact
         uses: actions/upload-artifact@v7
@@ -74,6 +76,8 @@ jobs:
     steps:
       - name: Check out validated repository state
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up exact Node.js
         uses: actions/setup-node@v6

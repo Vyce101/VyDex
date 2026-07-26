@@ -3,6 +3,11 @@ name: Validate and deploy application
 
 on:
   workflow_dispatch:
+    inputs:
+      recognized_hosted_release_id:
+        description: Optional archived Release ID explicitly recognized after recovery
+        required: false
+        type: string
   pull_request:
   push:
     branches:
@@ -13,7 +18,7 @@ permissions:
 
 jobs:
   validate:
-    name: Validate complete Stage 1 release
+    name: Validate complete active release
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -22,6 +27,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up exact Node.js
         uses: actions/setup-node@v6
@@ -37,13 +44,13 @@ jobs:
         run: npx --no-install playwright install --with-deps chromium
 
       - name: Type-check, test, validate, build, and verify release
-        run: npm run release:stage-1:ci
+        run: npm run release:ci
 
       - name: Upload complete validated static release
         if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v7
         with:
-          name: vydex-stage-1-${{ github.sha }}
+          name: vydex-release-${{ github.sha }}
           path: dist/
           if-no-files-found: error
           retention-days: 30
@@ -65,10 +72,13 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
       PUBLIC_SITE_ORIGIN: ${{ vars.PUBLIC_SITE_ORIGIN }}
+      VYDEX_RECOGNIZED_HOSTED_RELEASE_ID: ${{ inputs.recognized_hosted_release_id }}
 
     steps:
       - name: Check out validated repository state
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up exact Node.js
         uses: actions/setup-node@v6
@@ -86,7 +96,7 @@ jobs:
       - name: Download validated static release
         uses: actions/download-artifact@v7
         with:
-          name: vydex-stage-1-${{ github.sha }}
+          name: vydex-release-${{ github.sha }}
           path: dist
 
       - name: Verify deployment environment and artifact inventory
