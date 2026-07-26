@@ -109,6 +109,7 @@ export async function buildVerifiedReleaseOutput(input: {
   exclude_retained_release_id?: string;
   logger: ReleaseLogger;
   run_quality_checks?: boolean;
+  run_browser_checks?: boolean;
   run_command?: RunReleaseBuildCommand;
 }): Promise<{
   staging_root: string;
@@ -175,15 +176,17 @@ export async function buildVerifiedReleaseOutput(input: {
   if (verification.diagnostics.length > 0) {
     throw new Error(`Static release verification failed: ${verification.diagnostics.map(({ code }) => code).join(", ")}.`);
   }
-  await input.logger.info("Running Playwright journeys and Axe checks against the exact candidate output.");
-  await requireSuccessfulCommand({
-    command: "browser",
-    repository_root: input.repository_root,
-    output_root: outputRoot,
-    environment: qualityEnvironment,
-    run_command: runCommand,
-    output_file: resolve(runtimeRoot, "browser-test-output.txt"),
-  });
+  if (input.run_browser_checks !== false) {
+    await input.logger.info("Running Playwright journeys and Axe checks against the exact candidate output.");
+    await requireSuccessfulCommand({
+      command: "browser",
+      repository_root: input.repository_root,
+      output_root: outputRoot,
+      environment: qualityEnvironment,
+      run_command: runCommand,
+      output_file: resolve(runtimeRoot, "browser-test-output.txt"),
+    });
+  }
   const currentRoutes = expectedStageOneGeneratedRoutes(prepared.release);
   const manifest = await buildReleaseManifest({
     output_root: outputRoot,
