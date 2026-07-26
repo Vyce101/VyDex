@@ -25,7 +25,7 @@ describe("CI browser workflow", () => {
     expect(packageJson.scripts?.["test:browser:run"]).toBe(
       "tsx scripts/test/prepare-browser-output.ts && playwright test",
     );
-    expect(workflow).toContain("run: npm run release:stage-1:ci");
+    expect(workflow).toContain("run: npm run release:ci");
     expect(workflow).not.toContain("run: npx playwright test");
     expect(releaseGate).toContain("scripts/test/run-stage-one-browser-checks.ts");
   });

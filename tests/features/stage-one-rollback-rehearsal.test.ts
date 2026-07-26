@@ -24,14 +24,19 @@ function deployment(id: string, createdOn: string): CloudflarePagesDeployment {
   };
 }
 
-function report(deploymentId: string, success = true): HostedVerificationReport {
+function report(
+  deploymentId: string,
+  success = true,
+  releaseId = "01900000-0000-7000-8000-000000000006",
+): HostedVerificationReport {
   return {
-    report_version: "1.0.0",
+    report_version: "2.0.0",
     phase: "test",
     request_origin: "https://vydex.pages.dev",
     canonical_origin: "https://vydex.pages.dev",
     deployment_id: deploymentId,
-    release_id: "01900000-0000-7000-8000-000000000006",
+    release_id: releaseId,
+    source_commit: "a".repeat(40),
     manifest_sha256: "a".repeat(64),
     dataset_sha256: "b".repeat(64),
     artifact_inventory_sha256: "c".repeat(64),
@@ -76,6 +81,7 @@ function input(overrides: Partial<Parameters<typeof runStageOneRollbackRehearsal
     confirmation: PRODUCTION_ROLLBACK_CONFIRMATION,
     branch: "main",
     commit_sha: "commit",
+    intended_release_id: "01900000-0000-7000-8000-000000000006",
     public_origin: "https://vydex.pages.dev",
     api: pagesApi,
     logger: logger(),
@@ -113,11 +119,27 @@ describe("Stage 1 production rollback rehearsal", () => {
     expect(result.evidence).toMatchObject({
       earlier_deployment_id: "earlier",
       intended_deployment_id: "intended",
-      release_id: "01900000-0000-7000-8000-000000000006",
+      earlier_release_id: "01900000-0000-7000-8000-000000000006",
+      intended_release_id: "01900000-0000-7000-8000-000000000006",
     });
     expect(values.api.rollbackProductionTo).toHaveBeenNthCalledWith(1, "earlier");
     expect(values.api.rollbackProductionTo).toHaveBeenNthCalledWith(2, "intended");
     expect(values.preserve_evidence).toHaveBeenCalledOnce();
+  });
+
+  test("prefers and records an earlier deployment exposing another archived release", async () => {
+    const previousReleaseId = "01900000-0000-7000-8000-000000000005";
+    const values = input({
+      verify: vi.fn(async ({ deployment: value }) => report(
+        value.id,
+        true,
+        value.id === "earlier" ? previousReleaseId : "01900000-0000-7000-8000-000000000006",
+      )),
+    });
+    const result = await runStageOneRollbackRehearsal(values);
+    expect(result.evidence.earlier_release_id).toBe(previousReleaseId);
+    expect(result.evidence.intended_release_id).toBe("01900000-0000-7000-8000-000000000006");
+    expect(result.evidence.earlier_deployment_id).toBe("earlier");
   });
 
   test("creates a second byte-identical deployment when only one qualifying deployment exists", async () => {

@@ -9,12 +9,13 @@ type RunVerification = NonNullable<PropagationInput["run_verification"]>;
 
 function report(success: boolean, failedCheck = "hosted file entry.html"): HostedVerificationReport {
   return {
-    report_version: "1.0.0",
+    report_version: "2.0.0",
     phase: "post-deployment-production",
     request_origin: "https://vydex.pages.dev",
     canonical_origin: "https://vydex.pages.dev",
     deployment_id: "deployment",
     release_id: "01900000-0000-7000-8000-000000000001",
+    source_commit: "a".repeat(40),
     manifest_sha256: "a".repeat(64),
     dataset_sha256: "b".repeat(64),
     artifact_inventory_sha256: "c".repeat(64),

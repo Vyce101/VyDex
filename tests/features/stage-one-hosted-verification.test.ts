@@ -8,9 +8,9 @@ import {
   type ReleaseModel,
 } from "../../src/domain";
 import {
-  serializeStageOneReleaseManifest,
-  type StageOneReleaseManifest,
-} from "../../src/release/stage-one-release";
+  serializeReleaseManifest,
+  type ReleaseManifest,
+} from "../../src/release/release-publication";
 import { verifyHostedStageOneRelease } from "../../src/release/stage-one-hosted-verification";
 import {
   createLoadedCanonicalRecords,
@@ -117,21 +117,26 @@ function createHostedFixture(): HostedFixture {
     { path: "_headers", bytes: 1, sha256: sha256("x") },
     { path: "_redirects", bytes: 1, sha256: sha256("x") },
   ].sort((left, right) => left.path.localeCompare(right.path));
-  const manifest: StageOneReleaseManifest = {
-    manifest_version: "1.0.0",
+  const manifest: ReleaseManifest = {
+    manifest_version: "2.0.0",
     release_id: release.release_metadata.release_id,
     generated_at: release.release_metadata.generated_at,
+    source_commit: "a".repeat(40),
+    previous_release_id: null,
+    retained_release_ids: [],
     site_origin: ORIGIN,
     entry_count: release.current_entries.length,
     topic_trail_count: release.topic_trails.length,
     methodology_versions: ["1.0.0"],
     generated_routes: generatedRoutes,
+    current_release_routes: generatedRoutes,
+    retained_immutable_routes: [],
     export_filename: prepared.data.presentation.download_filename,
     json_schema_url: `${ORIGIN}${prepared.data.artifact.schema_public_path}`,
     redirects,
     files,
   };
-  const manifestRaw = serializeStageOneReleaseManifest(manifest);
+  const manifestRaw = serializeReleaseManifest(manifest);
   return {
     responses,
     input: {

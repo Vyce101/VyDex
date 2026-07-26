@@ -55,7 +55,8 @@ describe("Cloudflare Pages deployment contract", () => {
       expect(workflow).toContain(name);
     }
     expect(workflow).toContain("needs: validate");
-    expect(workflow).toContain("npm run release:stage-1:ci");
+    expect(workflow).toContain("npm run release:ci");
+    expect(workflow).toContain("fetch-depth: 0");
     expect(workflow).toContain("actions/upload-artifact@v7");
     expect(workflow).toContain("actions/download-artifact@v7");
     expect(workflow).toContain("npm run verify:pages-deployment");
@@ -65,7 +66,7 @@ describe("Cloudflare Pages deployment contract", () => {
     expect(workflow).not.toContain("https://vydex.example");
 
     const deployJob = workflow.slice(workflow.indexOf("  deploy:"));
-    expect(deployJob).not.toMatch(/npm run (?:build|release:stage-1:ci)/);
+    expect(deployJob).not.toMatch(/npm run (?:build|release:ci)/);
   });
 
   test("keeps rollback rehearsal manual, protected, confirmed, and mutually exclusive", () => {
