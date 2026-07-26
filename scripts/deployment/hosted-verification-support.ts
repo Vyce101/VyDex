@@ -285,6 +285,7 @@ export async function runCompleteHostedVerification(
           ...environment,
           PUBLIC_SITE_ORIGIN: input.canonical_origin,
           VYDEX_BROWSER_BASE_URL: input.request_origin,
+          VYDEX_HOSTED_VERIFICATION_PHASE: input.phase,
         },
       });
       await writeFile(browserOutputFilename, browserResult.output, "utf8");
