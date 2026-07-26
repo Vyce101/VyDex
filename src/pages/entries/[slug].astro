@@ -30,6 +30,6 @@ interface Props {
 const { entry } = Astro.props;
 ---
 
-<FoundationLayout title={`${entry.entry.title} — VyDex`}>
+<FoundationLayout title={`${entry.entry.title} — VyDex`} canonicalUrl={entry.canonical_url}>
   <EntryPage entry={entry} />
 </FoundationLayout>
