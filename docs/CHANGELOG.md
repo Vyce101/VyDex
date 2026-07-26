@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added production sitemap generation for every public HTML page, `robots.txt` discovery, deployment-artifact validation, and hosted HTTP checks for both sitemap files.
+- Added Google Search Console ownership verification metadata to the shared static page layout with browser coverage that prevents missing or duplicate verification elements.
 - Added a repeatable release process that preserves every published Dataset, rebuilds committed releases exactly, creates new releases safely, and verifies deployment rollback against the matching archive.
 - Published the complete Stage 1 seed ledger to Cloudflare Pages and passed initial hosted verification, rollback verification, restoration, and final production verification.
 - Added automatic verification of each hosted Cloudflare Pages production deployment and a protected rollback rehearsal that verifies rollback, restores the intended deployment, and retains recovery evidence.
@@ -36,6 +38,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Selected a successor release to publish the Search Console verification metadata while retaining the initial release and its immutable Dataset in the public release history.
 - Required production and preview builds to use the validated `PUBLIC_SITE_ORIGIN`, with strict descriptor, manifest, origin, and byte-identical inventory checks in CI.
 - Routed production publication through the Cloudflare Pages project `vydex` while keeping canonical records, snapshots, and release metadata authoritative in the repository.
 - Expanded the atomic Stage 1 release gate to run the complete Playwright suite against the exact staged Cloudflare Pages output before manifest creation or promotion, with complete ignored browser output and rollback-safe failure handling.

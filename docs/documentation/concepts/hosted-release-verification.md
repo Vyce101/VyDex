@@ -14,7 +14,7 @@ The system decides whether one hosted deployment exposes the complete release re
 It owns:
 
 - Loading the persisted release descriptor, manifest, deterministic Dataset, and Schema as the expected state.
-- Checking hosted routes, redirects, response headers, canonical metadata, HTML content, relationships, and public file hashes.
+- Checking hosted routes, sitemap availability, redirects, response headers, canonical metadata, HTML content, relationships, and public file hashes.
 - Running the shared Playwright and Axe journeys against an explicit hosted origin without starting a local server.
 - Producing a structured, non-secret report for each verification phase.
 - Qualifying earlier production deployments before they may be used in the rollback rehearsal.
@@ -47,16 +47,18 @@ Reports, Playwright output, screenshots, traces, and release logs remain operati
 
 1. The verifier loads and validates the committed release descriptor and manifest.
 2. It reconstructs the production release, Dataset, and Schema without creating new identity or changing committed state.
-3. It requests every manifest route, Entry route, Topic Trail route, Methodology route, About, Changelog, Export, Schema, and immutable Dataset route.
+3. It requests every manifest route, Entry route, Topic Trail route, Methodology route, About, Changelog, Export, Schema, immutable Dataset route, `sitemap-index.xml`, and `sitemap-0.xml`.
 4. It checks permanent Entry aliases, the stable Dataset redirect, and a deliberately unknown route with redirects disabled.
 5. It parses delivered HTML to verify canonical URLs, core Homepage and Entry content, absent preview diagnostics, and absent Stage 2 routes or controls.
 6. It compares hosted Dataset and Schema bytes with the deterministic local artifacts and validates their media types, cache policies, release metadata, counts, and relationships.
-7. It retrieves each public manifest file and compares its bytes with the committed inventory. Cloudflare consumes `_headers` and `_redirects`, so those two files are checked through response behavior instead of direct retrieval.
+7. It requires both sitemap URLs to return HTTP `200`, then retrieves each public manifest file and compares its bytes with the committed inventory. Cloudflare consumes `_headers` and `_redirects`, so those two files are checked through response behavior instead of direct retrieval.
 8. For a complete production check, it runs the shared desktop and mobile Playwright projects against the hosted origin, including Axe, keyboard, focus, overflow, downloads, and JavaScript-disabled journeys.
 9. After a deployment, rollback, or restoration changes the canonical deployment, the orchestrator may rerun the unchanged complete suite up to three times with a 30-second wait between attempts. This accounts for Pages edge propagation without accepting a partial result.
 10. It writes the latest phase report and returns failure when no complete attempt passes.
 
 The same verifier can target the canonical origin or a deployment-specific production URL. Canonical tags must still point to `https://vydex.pages.dev`; a non-canonical deployment URL must also carry `X-Robots-Tag: noindex`.
+
+Verification phases retain their own release expectations. A pre-deployment check of an earlier active or archived production release proves that release's committed contract; it does not require candidate-only metadata that first appears in the successor artifact.
 
 ## Rollback Rehearsal Integration
 
@@ -90,6 +92,7 @@ The verifier records failed checks but does not mutate hosted state. Only the de
 - Redirect destinations and statuses are exact. Entry aliases require `301`; the stable Dataset pointer requires its existing `302`.
 - A JSON body with the wrong media type, cache policy, or bytes fails even when it parses successfully.
 - A page with correct visible content fails when its canonical URL uses another origin or its core Entry content depends on JavaScript.
+- A sitemap route fails when it returns a branded or generic `404`; both the index and child must return HTTP `200` before a hosted release can pass.
 - Candidate verification errors do not make an unverified deployment eligible; the rehearsal continues searching or creates a byte-identical deployment.
 - A byte-identical redeployment that fails or cannot be verified triggers an attempt to restore and verify the original deployment before the rehearsal stops.
 - Browser startup errors become failed report checks and preserve their complete output for diagnosis.
@@ -107,6 +110,7 @@ The verifier records failed checks but does not mutate hosted state. Only the de
 ## Invariants
 
 - The approved canonical origin is `https://vydex.pages.dev`; Workers and `workers.dev` origins are invalid.
+- Both production sitemap URLs return HTTP `200` and remain covered by the manifest-backed hosted file checks.
 - Hosted verification never creates or rotates release identity.
 - Every qualifying rollback target is a successful Cloudflare Pages production deployment.
 - Preview deployments are never current, intended, fallback, or rollback targets.
@@ -132,6 +136,7 @@ The verifier records failed checks but does not mutate hosted state. Only the de
 Check:
 
 - Whether every new public route or artifact is represented in the manifest and hosted checks.
+- Whether both sitemap URLs still require HTTP `200` rather than accepting an error page with branded content.
 - Whether redirects are requested without automatic following and retain their exact status and destination.
 - Whether production and deployment-specific requests keep the canonical origin and indexing rules separate.
 - Whether browser checks still run without a local server or canonical-origin proxy in hosted mode.

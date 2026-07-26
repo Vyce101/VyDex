@@ -13,6 +13,7 @@ The shell prevents pages from rebuilding shared navigation or changing the docum
 
 - The skip link, Header, Main, and Footer order rendered by `FoundationLayout.astro`.
 - Optional canonical-link output supplied by individual routes.
+- The single Google Search Console ownership-verification element shared by static page heads.
 - The Header and Footer link labels and their required order.
 - Route-to-active-navigation mapping for Methodology, About, Changelog, and Export JSON.
 - The desktop Header and native mobile navigation disclosure.
@@ -31,7 +32,7 @@ It does not own:
 
 ## Normal Flow
 
-1. A page renders through `FoundationLayout.astro` and supplies its title, main content, and an optional canonical URL.
+1. A page renders through `FoundationLayout.astro` and supplies its title, main content, and an optional canonical URL. The layout adds the shared Search Console ownership-verification metadata.
 2. The layout reads `Astro.url.pathname` and asks the site-shell navigation module for the active navigation key.
 3. The layout renders the skip link, shared Header, one focusable Main region, and shared Footer in that order.
 4. At 768px and wider, the Header shows the wordmark and desktop navigation. Narrower viewports show the wordmark and a closed native `details` disclosure labelled `Menu`.
@@ -42,7 +43,7 @@ It does not own:
 
 The shell receives the current pathname from Astro, page content through the layout slot, and an optional route-owned canonical URL. The active-state helper returns `methodology`, `about`, `changelog`, `export`, or no active key.
 
-The output is static semantic HTML with one Header, one Main region, and one Footer. When a route supplies a canonical URL, the layout emits one canonical link in the document head. The only client script enhances Escape-key behavior; it does not reveal links, create navigation, or control page visibility.
+The output is static semantic HTML with one Header, one Main region, and one Footer. Every page head contains exactly one Google Search Console ownership-verification element. When a route supplies a canonical URL, the layout emits one canonical link in the document head. The only client script enhances Escape-key behavior; it does not reveal links, create navigation, or control page visibility.
 
 ## User-Facing Behavior
 
@@ -67,6 +68,7 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 - [Release Construction](release-construction.md) and route generation own canonical paths. The shell imports the fixed Stage 1 path map instead of maintaining a second set of destination strings.
 - [Frontier Atlas](frontier-atlas-design-system.md) owns the colors, type roles, focus outline, page margins, and 768px breakpoint. The shell composes those primitives but does not replace them.
 - [Static Application Foundation](static-application-foundation.md) owns the Astro document boundary and build process. The shell is rendered through that boundary and remains static-first.
+- Search Console verification metadata is a public ownership proof emitted in static HTML, not a secret, analytics signal, telemetry hook, or runtime request. Changing its approved value requires matching browser-contract coverage and a successor release before production can serve the new bytes.
 - The [Stage 1 Methodology Page](stage-1-methodology-page.md) supplies different self-canonical URLs for its current and immutable routes while reusing the same shell and active navigation state.
 - The [Stage 1 About Page](stage-1-about-page.md) supplies its self-canonical URL and uses the route-derived active About state on `/about/`.
 - The [Stage 1 Changelog Page](stage-1-changelog-page.md) supplies its self-canonical URL and uses the route-derived active Changelog state on `/changelog/`.
@@ -78,13 +80,14 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 
 A failed enhancement script leaves the disclosure closed but usable through native HTML. It must not hide main content, disable desktop navigation, or remove any destination.
 
-Source and browser tests fail when link order or destinations drift, active-state mapping changes, focus cannot reach or leave the disclosure, Escape does not return focus, the no-JavaScript path breaks, or the shell causes horizontal overflow. Destination availability is a release concern rather than a client-side shell recovery path.
+Source and browser tests fail when link order or destinations drift, active-state mapping changes, Search Console verification metadata is absent or duplicated, focus cannot reach or leave the disclosure, Escape does not return focus, the no-JavaScript path breaks, or the shell causes horizontal overflow. Destination availability is a release concern rather than a client-side shell recovery path.
 
 ## Invariants
 
 - `FoundationLayout.astro` owns the skip link, Header, Main, and Footer order.
 - Pages provide main content and do not compose their own Stage 1 shell.
 - Routes that require canonical metadata supply it through the layout rather than writing a second document head.
+- The shared layout emits exactly one approved Search Console verification element and does not use it for analytics or telemetry.
 - Navigation destinations come from the canonical fixed route map.
 - Latest remains a Homepage anchor and never becomes an active page link.
 - Mobile navigation remains reachable without JavaScript.
@@ -101,6 +104,7 @@ Source and browser tests fail when link order or destinations drift, active-stat
 - `src/domain/route-generation/` — Canonical fixed Stage 1 path ownership.
 - `tests/foundation/site-shell-navigation.test.ts` — Destination, order, and active-route contracts.
 - `tests/browser/site-shell.spec.ts` — Responsive, keyboard, no-JavaScript, focus, and accessibility behavior.
+- `tests/browser/homepage.spec.ts` — Static Search Console ownership-metadata coverage.
 
 ## Before Changing the Site Shell
 
@@ -117,6 +121,7 @@ Check:
 - Whether both responsive variants retain the approved dimensions, focus treatment, and page-grid alignment.
 - Whether repeated visible links retain contextual accessible names.
 - Whether routes with canonical requirements still supply one correct absolute URL to the layout.
+- Whether the Search Console verification element remains present exactly once without introducing analytics, telemetry, or a runtime dependency.
 - Whether source, route-matrix, browser, Axe, and horizontal-overflow tests cover the change.
 
 Read [Frontier Atlas](frontier-atlas-design-system.md) before changing shell presentation and [Static Application Foundation](static-application-foundation.md) before changing the layout or client-script boundary.

@@ -40,7 +40,7 @@ Important frontier claims are often scattered across announcements, papers, arti
 
 **Produces deterministic data releases.** Each dataset release has a fixed release identity, an immutable Schema and export path, and a complete file manifest. A stable convenience URL can point to the latest immutable artifact without replacing it.
 
-**Checks the release before and after publication.** Type checking, unit tests, release validation, static generation, Playwright journeys, and Axe checks must pass before deployment. The production workflow then checks the actual Pages routes, redirects, headers, canonical URLs, Dataset, Schema, accessibility behavior, and no-JavaScript journeys.
+**Checks the release before and after publication.** Type checking, unit tests, release validation, static generation, sitemap completeness, Playwright journeys, and Axe checks must pass before deployment. The production workflow then checks the actual Pages routes, redirects, headers, canonical URLs, sitemap responses, Dataset, Schema, accessibility behavior, and no-JavaScript journeys.
 
 Search, filtering, public Entry revision browsing, and exact historical citation remain planned capabilities rather than current Stage 1 behavior.
 
@@ -56,13 +56,13 @@ VyDex is not a daily newsletter, prediction market, leaderboard, or general tech
 
 ## Current Status
 
-Stage 1 contains the Homepage, three public Entry pages, three Topic Trail pages, the material Changelog, Methodology `1.0.0`, the About and Scope Limits page, the Export JSON page, and a static not-found page. These surfaces share the Frontier Atlas design system and remain readable without browser JavaScript.
+Stage 1 contains the Homepage, three public Entry pages, three Topic Trail pages, the material Changelog, Methodology `1.0.0`, the About and Scope Limits page, the Export JSON page, and a static not-found page. These surfaces share the Frontier Atlas design system and remain readable without browser JavaScript. Production builds also generate a complete sitemap index and child sitemap, and `robots.txt` advertises the production sitemap index.
 
-The initial Stage 1 release is represented by the committed descriptor, manifest, history, and immutable archive under `generated/release-data/`. Its release ID is `019f9b40-a3a8-75ad-b2b2-05a7100bcc34`, its canonical origin is `https://vydex.pages.dev`, and its immutable export filename is `vydex-latest-entry-versions-v1-0-0-2026-07-25.json`.
+The active committed release is successor `019fa023-d4fa-775e-af1f-25aa42de7cf9`, with canonical origin `https://vydex.pages.dev` and immutable export filename `vydex-latest-entry-versions-v1-0-0-2026-07-26.json`. The initial release `019f9b40-a3a8-75ad-b2b2-05a7100bcc34` and its July 25 Dataset remain retained in the committed history and immutable archive under `generated/release-data/`.
 
 The release gate validates canonical records and snapshots, constructs one release model, builds into isolated runtime storage, verifies the Schema, export, routes, redirects, links, counts, and navigation, then runs the complete Playwright and Axe matrix against that exact staged output. Promotion replaces local `dist/` and the manifest only after every check succeeds.
 
-Git-integrated Cloudflare Pages previews are enabled for repository changes. Production-branch automatic deployment is disabled in Cloudflare; the gated GitHub Actions workflow instead regenerates the committed release byte-for-byte, uploads the complete `dist/` artifact, waits for the matching Cloudflare production deployment to become canonical, and verifies `https://vydex.pages.dev`. If that hosted check fails and the previous deployment was verified as a matching known-good release, the workflow restores and verifies it.
+Git-integrated Cloudflare Pages previews are enabled for repository changes. Production-branch automatic deployment is disabled in Cloudflare; the gated GitHub Actions workflow instead regenerates the committed release byte-for-byte, validates the sitemap files inside the complete `dist/` artifact before upload, waits for the matching Cloudflare production deployment to become canonical, and verifies `https://vydex.pages.dev`. If that hosted check fails and the previous deployment was verified as a matching known-good release, the workflow restores and verifies it.
 
 A separate manually dispatched workflow rehearses production rollback under the protected GitHub `production` environment. It records two successful production deployment IDs for the same persisted release, verifies the earlier deployment after rollback, restores the intended deployment in unconditional cleanup, and verifies production again. It does not create another VyDex release identity.
 

@@ -56,7 +56,7 @@ Run the non-production validation build:
 npm run build:test
 ```
 
-This command runs type checking and unit tests, then generates deterministic test output. It does not create or modify the production release descriptor or manifest.
+This command runs type checking and unit tests, generates deterministic test output, and verifies that `dist/sitemap-index.xml`, `dist/sitemap-0.xml`, and `dist/robots.txt` describe exactly the generated public HTML pages at the production origin. It does not create or modify the production release descriptor or manifest.
 
 Install Chromium once, then run the responsive browser and accessibility suite:
 
@@ -94,7 +94,7 @@ generated/release-data/release-history.json
 generated/release-data/releases/{release-id}/
 ```
 
-It checks that the descriptor, manifest, and configured origin agree; runs type checking and the complete Vitest suite; builds into isolated runtime storage; verifies every static surface; and runs Playwright and Axe against the staged output. It then compares the regenerated manifest and complete file inventory with the committed release state. A mismatch returns a non-zero result instead of creating a new release identity.
+It checks that the descriptor, manifest, and configured origin agree; runs type checking and the complete Vitest suite; builds into isolated runtime storage; verifies every static surface; and runs Playwright and Axe against the staged output. The complete file inventory, including sitemap files and `robots.txt` for sitemap-enabled releases, is compared with committed release state. A mismatch returns a non-zero result instead of creating a new release identity.
 
 On success, the terminal prints the release ID, generation timestamp, immutable export filename, manifest path, and `dist/` location. You can also read the release ID from `generated/release-data/release.json` and the export filename from `generated/release-data/release-manifest.json`.
 

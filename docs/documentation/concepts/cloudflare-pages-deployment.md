@@ -28,7 +28,7 @@ The [Stage 1 Release Gate](stage-1-release-gate.md) owns release construction an
 
 ## Inputs And Outputs
 
-Preview builds use the committed repository state, the pinned Node.js and npm toolchain, `npm run build:pages-preview`, and the exact production `PUBLIC_SITE_ORIGIN`. The build produces static HTML, CSS, JavaScript, JSON, `_headers`, and generated `_redirects` under `dist/`.
+Preview builds use the committed repository state, the pinned Node.js and npm toolchain, `npm run build:pages-preview`, and the exact production `PUBLIC_SITE_ORIGIN`. The build produces static HTML, CSS, JavaScript, JSON, `robots.txt`, `sitemap-index.xml`, `sitemap-0.xml`, `_headers`, and generated `_redirects` under `dist/`.
 
 Production deployment requires:
 
@@ -50,8 +50,9 @@ The production workflow also reads the commit SHA and GitHub run identifiers sup
 2. The Pages build runs `npm run build:pages-preview` and writes output to `dist/`.
 3. The production release descriptor remains read-only; preview builds cannot create a release identity.
 4. Canonical URLs and the Dataset Schema `$id` use `https://vydex.pages.dev`, not the temporary preview hostname.
-5. The preview preparation step derives `_redirects` from the validated release and writes them beside the static output.
-6. A blocking production-data, origin, build, or redirect error fails the preview build instead of publishing incomplete authoritative-looking output.
+5. The build verifies that the sitemap index points to the production child sitemap and that the child contains exactly the generated public HTML pages at `https://vydex.pages.dev`.
+6. The preview preparation step derives `_redirects` from the validated release and writes them beside the static output.
+7. A blocking production-data, origin, sitemap, build, or redirect error fails the preview build instead of publishing incomplete authoritative-looking output.
 
 A Cloudflare preview URL is a review surface, never a canonical public origin. The diagnostic `PreviewReleaseModel` described in [Release Construction](release-construction.md) is an application validation model; the current Git-integrated Pages preview path builds production-shaped static content and does not publish that diagnostic model.
 
@@ -64,7 +65,7 @@ Temporary Pages hostnames must remain non-indexable. Hosted qualification checks
 3. Strict release mode requires the descriptor, manifest, history, and archives; verifies source ancestry, identity, origin, and retained immutable routes; and regenerates the release without creating a UUID or timestamp.
 4. Type checking, Vitest, release validation, static generation, Playwright journeys, and Axe checks must all pass.
 5. The workflow uploads the complete validated `dist/` directory as an artifact retained for 30 days. The artifact supports operations; it is not canonical state.
-6. The production job downloads that exact artifact, validates the four deployment environment values, and checks every file against the committed manifest.
+6. The production job downloads that exact artifact, validates the four deployment environment values, checks every file against the committed manifest, and reruns production sitemap verification before upload.
 7. Before upload, the job identifies the Release ID on canonical production and verifies active, immediate-predecessor, or explicitly approved recovery state against its matching archive before accepting it as a fallback.
 8. Wrangler deploys the verified directory to the Pages project `vydex` with the `main` branch and Git commit hash attached.
 9. The Cloudflare API adapter waits for a distinct successful production deployment with that commit hash to become `canonical_deployment`.
@@ -85,7 +86,7 @@ Cloudflare deployment IDs identify hosting records. They do not replace or rotat
 
 ## Failure And Recovery Behavior
 
-A validation failure prevents artifact publication and skips production deployment. A missing secret, wrong project name, missing descriptor or manifest, origin mismatch, added file, missing file, or changed byte fails deployment preflight before Wrangler uploads anything.
+A validation failure prevents artifact publication and skips production deployment. A missing secret, wrong project name, missing descriptor or manifest, origin mismatch, added file, missing file, changed byte, missing sitemap, incomplete sitemap URL set, or incorrect `robots.txt` directive fails deployment preflight before Wrangler uploads anything.
 
 An upload may become canonical before hosted verification finishes, and individual Pages edges may briefly serve different artifact versions after that API change. The job requires one complete hosted pass and retries the whole suite within a fixed propagation window. When all attempts fail and the previous deployment was established as known-good, the routine job restores the previous deployment and verifies the restored production site. On the first launch, or whenever no matching fallback was verified, the job fails critically with recovery information instead of assuming that an older deployment is safe.
 
@@ -103,6 +104,7 @@ Cloudflare history is not the evidence archive. History retention and hosted dep
 - A successful API rollback response is not proof that the target is live; the adapter polls `canonical_deployment.id` after rollback and restoration.
 - A matching `canonical_deployment.id` is not proof that all Pages edges serve one artifact yet; post-switch verification retries the complete suite instead of accepting mixed results.
 - `dist/` may exist locally after a failed or test build; its presence alone does not make it deployable.
+- Sitemap XML is deployable only when both files are present, the index references the production child URL, every child URL uses the production origin and resolves to generated public HTML, error and artifact routes are absent, and `robots.txt` advertises the production index.
 
 ## Cross-System Edge Cases
 
@@ -118,6 +120,7 @@ Cloudflare history is not the evidence archive. History retention and hosted dep
 ## Invariants
 
 - Production publication consumes one complete artifact that passed every required check.
+- The uploaded artifact includes `sitemap-index.xml`, `sitemap-0.xml`, and `robots.txt` in the same manifest-backed `dist/` inventory as the public pages.
 - Preview hostnames never become canonical origins.
 - CI and deployment never create or rotate release identity.
 - Routine deployments run complete hosted verification after the intended deployment becomes canonical.
@@ -140,6 +143,7 @@ Cloudflare history is not the evidence archive. History retention and hosted dep
 - `scripts/deployment/` — Preview preparation, artifact preflight, hosted verification, production deployment, and rehearsal entry points.
 - `src/adapters/cloudflare-pages-environment/` — Required deployment environment validation.
 - `src/adapters/public-site-origin/` — Required production-origin validation.
+- `src/adapters/production-sitemap-artifact/` — Deployment-shaped sitemap completeness and crawler-discovery verification.
 - `src/release/stage-one-release/` — Committed release-state and byte-inventory verification.
 - `tests/foundation/cloudflare-pages-deployment.test.ts` — Pages configuration and workflow boundary coverage.
 
@@ -150,6 +154,7 @@ Check:
 - Whether previews still use the production origin for every canonical URL.
 - Whether production still consumes the artifact created by the successful validation job.
 - Whether descriptor, manifest, origin, and file inventory mismatches fail closed.
+- Whether sitemap files and `robots.txt` are verified inside the exact downloaded artifact before upload.
 - Whether logs omit tokens, account identifiers, and other secrets.
 - Whether every post-upload failure restores the verified previous deployment when one exists.
 - Whether every rehearsal failure after mutation begins still attempts restoration.
