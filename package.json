@@ -19,6 +19,8 @@
     "preview": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "preview:browser": "wrangler pages dev dist --ip 127.0.0.1 --port 4322 --persist-to runtime/wrangler-state --log-level error --show-interactive-dev-session=false",
     "release:ci": "cross-env ASTRO_TELEMETRY_DISABLED=1 PUBLIC_SITE_ORIGIN=https://vydex.pages.dev tsx scripts/release/release-ci.ts",
+    "release:check": "cross-env ASTRO_TELEMETRY_DISABLED=1 PUBLIC_SITE_ORIGIN=https://vydex.pages.dev tsx scripts/release/check-release-selection.ts",
+    "release:sync": "cross-env ASTRO_TELEMETRY_DISABLED=1 PUBLIC_SITE_ORIGIN=https://vydex.pages.dev tsx scripts/release/sync-release-selection.ts",
     "release:next": "cross-env ASTRO_TELEMETRY_DISABLED=1 PUBLIC_SITE_ORIGIN=https://vydex.pages.dev tsx scripts/release/next-release.ts",
     "release:stage-1": "npm run release:ci",
     "release:stage-1:ci": "npm run release:ci",
