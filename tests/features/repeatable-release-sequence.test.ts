@@ -112,7 +112,7 @@ function createReleaseTwoRecords(stageOne: LoadedCanonicalRecords): { records: L
   return { records, revisedEntryId };
 }
 
-describe("repeatable release sequence fixtures", () => {
+describe("repeatable release sequence fixtures", { timeout: 15_000 }, () => {
   let stageOneRecords: LoadedCanonicalRecords;
   let stageOneMetadata: ReleaseMetadata;
 

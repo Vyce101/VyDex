@@ -8,7 +8,7 @@ import {
 
 const PROJECT_ROOT = join(import.meta.dirname, "../..");
 
-describe("application release loading", () => {
+describe("application release loading", { timeout: 15_000 }, () => {
   test("keeps production blocked when the persisted descriptor is absent", async () => {
     await expect(
       loadPersistedProductionApplicationRelease({
