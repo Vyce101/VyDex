@@ -9,6 +9,15 @@
       "manifest_path": "generated/release-data/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/release-manifest.json",
       "dataset_public_path": "/datasets/releases/019f9b40-a3a8-75ad-b2b2-05a7100bcc34/vydex-latest-entry-versions-v1-0-0-2026-07-25.json",
       "previous_release_id": null
+    },
+    {
+      "release_id": "019fa023-d4fa-775e-af1f-25aa42de7cf9",
+      "generated_at": "2026-07-26T20:35:30.684Z",
+      "source_commit": "280d9d7b786ff8c48c518bee23f0a9be1ba16947",
+      "descriptor_path": "generated/release-data/releases/019fa023-d4fa-775e-af1f-25aa42de7cf9/release.json",
+      "manifest_path": "generated/release-data/releases/019fa023-d4fa-775e-af1f-25aa42de7cf9/release-manifest.json",
+      "dataset_public_path": "/datasets/releases/019fa023-d4fa-775e-af1f-25aa42de7cf9/vydex-latest-entry-versions-v1-0-0-2026-07-26.json",
+      "previous_release_id": "019f9b40-a3a8-75ad-b2b2-05a7100bcc34"
     }
   ]
 }
