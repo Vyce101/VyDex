@@ -5,13 +5,13 @@
 </p>
 
 <p align="center">
-  <a href="#current-status"><img alt="Current status: Stage 1 release prepared" src="https://img.shields.io/badge/status-Stage%201%20release%20prepared-0892D0" /></a>
+  <a href="#current-status"><img alt="Current status: Stage 1 live" src="https://img.shields.io/badge/status-Stage%201%20live-0892D0" /></a>
   <a href="#what-it-does"><img alt="Build: static Astro site" src="https://img.shields.io/badge/build-static%20Astro-1B2430" /></a>
   <a href="#current-status"><img alt="Tests: Vitest, Playwright, and Axe" src="https://img.shields.io/badge/tests-Vitest%20%2B%20Playwright%20%2B%20Axe-22C55E" /></a>
   <a href="#license-and-notices"><img alt="License: MIT and CC BY 4.0" src="https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY%204.0-4A5568" /></a>
   <a href="https://vydex.pages.dev"><img alt="Website: vydex.pages.dev" src="https://img.shields.io/badge/site-vydex.pages.dev-0892D0" /></a>
   <a href="https://vyce101.github.io/VyDex/"><img alt="Documentation: Retype" src="https://img.shields.io/badge/docs-Retype-0892D0" /></a>
-  <a href="docs/CHANGELOG.md"><img alt="Release status: unreleased" src="https://img.shields.io/badge/release-unreleased-7A90A4" /></a>
+  <a href="docs/CHANGELOG.md"><img alt="Release status: no tagged release" src="https://img.shields.io/badge/release-no%20tagged%20release-7A90A4" /></a>
 </p>
 
 <p align="center">
@@ -66,11 +66,11 @@ Git-integrated Cloudflare Pages previews are enabled for repository changes. Pro
 
 A separate manually dispatched workflow rehearses production rollback under the protected GitHub `production` environment. It records two successful production deployment IDs for the same persisted release, verifies the earlier deployment after rollback, restores the intended deployment in unconditional cleanup, and verifies production again. It does not create another VyDex release identity.
 
-The first production publication is confirmed only after the main-branch hosted verification and the protected rollback-and-restoration rehearsal both succeed. Public Entry revision browsing and search remain later work.
+Stage 1 is live at `https://vydex.pages.dev`. The initial production deployment passed the complete hosted verification suite, and the protected rollback rehearsal verified the earlier deployment, restored the intended deployment, and passed final verification. Public Entry revision browsing and search remain later work.
 
 ## Major Milestones Roadmap
 
-- **Stage 1 — Public Seed Ledger.** The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface, public pages, JSON export, release identity, gated Cloudflare Pages deployment, hosted verification, and protected rollback rehearsal are implemented. Live acceptance remains separate from local implementation.
+- **Stage 1 — Public Seed Ledger.** Complete and live. The initial evidence records, Topic Trails, Methodology, About content, immutable Entry histories, Frontier Atlas interface, public pages, JSON export, release identity, gated Cloudflare Pages deployment, hosted verification, and protected rollback rehearsal have passed live acceptance.
 - **Stage 2 — Searchable Evidence Database.** Users can search real Entries, filter by evidence fields, and understand why results are ordered as they are.
 - **Stage 3 — Versioned Ledger and Citation.** Users can inspect Entry history, open older versions, see what changed, and cite an exact version with its applicable Methodology.
 

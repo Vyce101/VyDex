@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Published the complete Stage 1 seed ledger to Cloudflare Pages and passed initial hosted verification, rollback verification, restoration, and final production verification.
 - Added automatic verification of each hosted Cloudflare Pages production deployment and a protected rollback rehearsal that verifies rollback, restores the intended deployment, and retains recovery evidence.
 - Added Git-integrated Cloudflare Pages previews and a gated GitHub Actions production deployment that publishes only the complete validated `dist/` artifact.
 - Added committed Stage 1 release identity and manifest state for reproducible clean-runner builds and operational rollback.
@@ -52,6 +53,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed Cloudflare production-deployment discovery to use a supported paginated request size during rollback rehearsal.
 - Fixed hosted verification so it retries the complete suite while Cloudflare Pages edges converge after production switches.
 - Fixed public Entry pages so each page publishes its approved self-referencing canonical URL.
 - Fixed Stage 1 release subprocesses on Windows by invoking npm's JavaScript CLI through the active Node.js runtime.
