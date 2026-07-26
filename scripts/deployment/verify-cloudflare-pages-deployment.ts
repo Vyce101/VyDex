@@ -1,6 +1,7 @@
 // Verifies deployment configuration and downloaded static output before Pages upload.
 import { resolve } from "node:path";
 import { loadCloudflarePagesDeploymentEnvironment } from "../../src/adapters/cloudflare-pages-environment";
+import { verifyProductionSitemapArtifact } from "../../src/adapters/production-sitemap-artifact";
 import { readGitHead, requireCommitAncestor } from "../../src/adapters/release-git";
 import {
   inventoryReleaseFiles,
@@ -23,6 +24,10 @@ async function main(): Promise<void> {
   if (state.manifest.site_origin !== environment.public_site_origin) throw new Error("The active manifest origin does not match the deployment origin.");
   const inventory = await inventoryReleaseFiles(outputRoot);
   if (JSON.stringify(inventory) !== JSON.stringify(state.manifest.files)) throw new Error("Downloaded static output differs from the active release inventory.");
+  await verifyProductionSitemapArtifact({
+    output_root: outputRoot,
+    site_origin: environment.public_site_origin,
+  });
 
   await logger.info(
     [
