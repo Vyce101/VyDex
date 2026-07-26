@@ -12,6 +12,7 @@ import type { HostedVerificationCheck, HostedVerificationInput } from "./types";
 
 const IMMUTABLE_CACHE_CONTROL = "public, max-age=31536000, immutable";
 const UNKNOWN_ROUTE = "/__vydex-hosted-verification-not-found__/";
+const SITEMAP_ROUTES = ["/sitemap-index.xml", "/sitemap-0.xml"] as const;
 const FORBIDDEN_PUBLIC_MARKERS = [
   "Missing Required Field",
   "data-private-preview=\"true\"",
@@ -121,6 +122,16 @@ export async function runHostedHttpChecks(input: HostedVerificationInput): Promi
 
   add("canonical production origin", input.canonical_origin === input.manifest.site_origin,
     `Expected manifest origin ${input.manifest.site_origin}, received ${input.canonical_origin}.`);
+
+  for (const route of SITEMAP_ROUTES) {
+    try {
+      const response = await get(route);
+      add(`sitemap HTTP 200 ${route}`, response.status === 200,
+        `Expected HTTP 200, received ${response.status}.`);
+    } catch (error) {
+      add(`sitemap HTTP 200 ${route}`, false, error instanceof Error ? error.message : String(error));
+    }
+  }
 
   for (const route of input.manifest.generated_routes) {
     try {
