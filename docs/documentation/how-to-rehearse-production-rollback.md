@@ -27,7 +27,7 @@ The rehearsal changes the live production deployment twice. Run it only for laun
 6. Wait for the `rehearse` job to request approval from the protected `production` environment.
 7. Before approving, confirm that the workflow run uses the intended `main` commit and that no other production operation is active.
 8. Complete the repository's required production-environment approval.
-9. Wait for the workflow to finish. After approval, deployment discovery, optional byte-identical redeployment, rollback, hosted verification, restoration, final verification, and evidence capture are automatic.
+9. Wait for the workflow to finish. After approval, deployment discovery, optional byte-identical redeployment, rollback, hosted verification, restoration, final verification, and evidence capture are automatic. A verification phase may run the complete suite more than once while Pages edges converge; do not cancel it during the bounded retry window.
 
 Do not cancel the job after production mutation begins unless emergency recovery requires it. The workflow's unconditional cleanup is responsible for restoring the intended deployment after an intermediate failure.
 

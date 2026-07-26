@@ -53,7 +53,8 @@ Reports, Playwright output, screenshots, traces, and release logs remain operati
 6. It compares hosted Dataset and Schema bytes with the deterministic local artifacts and validates their media types, cache policies, release metadata, counts, and relationships.
 7. It retrieves each public manifest file and compares its bytes with the committed inventory. Cloudflare consumes `_headers` and `_redirects`, so those two files are checked through response behavior instead of direct retrieval.
 8. For a complete production check, it runs the shared desktop and mobile Playwright projects against the hosted origin, including Axe, keyboard, focus, overflow, downloads, and JavaScript-disabled journeys.
-9. It writes the report and returns failure when any HTTP or browser check fails.
+9. After a deployment, rollback, or restoration changes the canonical deployment, the orchestrator may rerun the unchanged complete suite up to three times with a 30-second wait between attempts. This accounts for Pages edge propagation without accepting a partial result.
+10. It writes the latest phase report and returns failure when no complete attempt passes.
 
 The same verifier can target the canonical origin or a deployment-specific production URL. Canonical tags must still point to `https://vydex.pages.dev`; a non-canonical deployment URL must also carry `X-Robots-Tag: noindex`.
 
@@ -68,6 +69,8 @@ Before production changes, the workflow preserves both deployment IDs and the ex
 ## Failure Behavior
 
 A routine deployment is unsuccessful when its new canonical deployment fails any hosted check. If the previous deployment was verified as a complete matching release before upload, the workflow restores it and verifies the restored production site. If no such fallback exists, the workflow reports a critical failure with manual recovery context rather than claiming that production is safe.
+
+Canonical-deployment polling and hosted-surface convergence are separate checks. Cloudflare may identify the intended deployment as canonical while some edge requests still return earlier bytes. After a production switch, the orchestrator retries the entire HTTP, Playwright, and Axe suite within a fixed bound. A passing route from one attempt is never combined with a different attempt; one complete pass must succeed before the deployment qualifies.
 
 Once a rehearsal mutation begins, restoration is attempted even when rollback polling or verification fails. A rollback-phase failure remains the job's result after successful restoration. If restoration itself fails, the workflow logs the exact intended deployment ID and a manual recovery command that uses environment-variable placeholders instead of credentials.
 
@@ -94,6 +97,7 @@ The verifier records failed checks but does not mutate hosted state. Only the de
 ## Cross-System Edge Cases
 
 - Cloudflare may report a successful upload before the intended deployment becomes canonical. Polling must prove the live deployment ID and commit instead of relying on Wrangler's exit status.
+- Cloudflare may report the intended deployment as canonical before every edge route serves its bytes. Bounded complete-suite retries handle this propagation window; exhausted retries remain a verification failure.
 - Cloudflare deployment identity and VyDex release identity are separate. Two production deployment IDs may represent the same byte-identical Stage 1 release.
 - A deployment-specific production URL may be used to qualify a candidate, but it never replaces the approved canonical origin and must not be indexed.
 - The production concurrency group prevents deployment and rehearsal mutations from overlapping. Validation jobs may run concurrently because they do not change production.

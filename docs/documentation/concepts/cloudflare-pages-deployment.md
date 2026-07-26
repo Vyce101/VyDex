@@ -68,7 +68,7 @@ Temporary Pages hostnames must remain non-indexable. Hosted qualification checks
 7. Before upload, the job records the current canonical production deployment and checks whether it is a complete matching hosted release that can serve as a fallback.
 8. Wrangler deploys the verified directory to the Pages project `vydex` with the `main` branch and Git commit hash attached.
 9. The Cloudflare API adapter waits for a distinct successful production deployment with that commit hash to become `canonical_deployment`.
-10. [Hosted Release Verification](hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior.
+10. [Hosted Release Verification](hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior. If Pages edges have not converged after the canonical deployment changes, the orchestrator waits 30 seconds and retries the complete suite, up to three attempts.
 11. GitHub Actions retains the hosted report, complete browser output, failure screenshots or traces, and rotating logs even when verification fails.
 
 The deployment job uses the non-cancelling `vydex-cloudflare-pages-production` concurrency group. It does not combine output from different commits or rebuild after artifact validation.
@@ -87,7 +87,7 @@ Cloudflare deployment IDs identify hosting records. They do not replace or rotat
 
 A validation failure prevents artifact publication and skips production deployment. A missing secret, wrong project name, missing descriptor or manifest, origin mismatch, added file, missing file, or changed byte fails deployment preflight before Wrangler uploads anything.
 
-An upload may become canonical before hosted verification finishes. When the new deployment fails verification and the previous deployment was established as known-good, the routine job restores the previous deployment and verifies the restored production site. On the first launch, or whenever no matching fallback was verified, the job fails critically with recovery information instead of assuming that an older deployment is safe.
+An upload may become canonical before hosted verification finishes, and individual Pages edges may briefly serve different artifact versions after that API change. The job requires one complete hosted pass and retries the whole suite within a fixed propagation window. When all attempts fail and the previous deployment was established as known-good, the routine job restores the previous deployment and verifies the restored production site. On the first launch, or whenever no matching fallback was verified, the job fails critically with recovery information instead of assuming that an older deployment is safe.
 
 Once the rehearsal changes production, restoration is attempted even when rollback polling or verification fails. A restoration failure emits a critical message with the exact intended deployment ID and a safe manual procedure. Maintainers must then follow [How To Redeploy A Complete Stage 1 Release](../how-to-redeploy-stage-1-release.md) and must not start another rehearsal until the intended production deployment is restored.
 
@@ -101,6 +101,7 @@ Cloudflare history is not the evidence archive. History retention and hosted dep
 - A preview URL must not enter canonical tags, Schema identifiers, export URLs, or release metadata.
 - Preview, skipped, failed, wrong-project, and malformed deployment records are rejected before rollback.
 - A successful API rollback response is not proof that the target is live; the adapter polls `canonical_deployment.id` after rollback and restoration.
+- A matching `canonical_deployment.id` is not proof that all Pages edges serve one artifact yet; post-switch verification retries the complete suite instead of accepting mixed results.
 - `dist/` may exist locally after a failed or test build; its presence alone does not make it deployable.
 
 ## Cross-System Edge Cases

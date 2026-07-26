@@ -52,6 +52,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed hosted verification so it retries the complete suite while Cloudflare Pages edges converge after production switches.
 - Fixed public Entry pages so each page publishes its approved self-referencing canonical URL.
 - Fixed Stage 1 release subprocesses on Windows by invoking npm's JavaScript CLI through the active Node.js runtime.
 - Fixed the Homepage heading hierarchy by making Latest Update an H2 parent for Entry Preview headings.

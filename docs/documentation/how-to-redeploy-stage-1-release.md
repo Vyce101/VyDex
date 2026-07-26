@@ -44,7 +44,7 @@ If the failed workflow printed a manual recovery command, you may use that comma
    npm run verify:hosted-stage-1
    ```
 
-The command also requires the Cloudflare Pages environment values described in `.env.example`. Success means the HTTP checks and the hosted Playwright and Axe suite pass against the real production origin.
+The command also requires the Cloudflare Pages environment values described in `.env.example`. It may run the complete HTTP, Playwright, and Axe suite up to three times with 30-second waits while Pages edges converge. Success still requires one complete pass against the real production origin; the command does not combine partial results across attempts.
 
 ## If Something Goes Wrong
 
