@@ -38,6 +38,29 @@ function jsonResponse(value: unknown, status = 200): Response {
 }
 
 describe("Cloudflare Pages API adapter", () => {
+  test("accepts unconsumed deployment-stage metadata", async () => {
+    const currentDeployment = deployment("current");
+    const api = createCloudflarePagesApi({
+      environment: ENVIRONMENT,
+      fetch: async () => jsonResponse({
+        success: true,
+        errors: [],
+        result: {
+          name: "vydex",
+          production_branch: "main",
+          canonical_deployment: {
+            ...currentDeployment,
+            latest_stage: { status: "success", ended_on: "2026-07-26T00:01:00Z" },
+          },
+        },
+      }),
+    });
+
+    await expect(api.getProject()).resolves.toMatchObject({
+      canonical_deployment: { id: "current", latest_stage: { status: "success" } },
+    });
+  });
+
   test("paginates and returns only successful production deployments", async () => {
     const firstPage = Array.from({ length: 100 }, (_, index) =>
       deployment(`production-${index.toString().padStart(3, "0")}`));
