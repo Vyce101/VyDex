@@ -9,6 +9,15 @@ export const BROWSER_TEST_URL = `http://${BROWSER_TEST_HOST}:${BROWSER_TEST_PORT
 export const EXPECTED_SITE_ORIGIN = parseRequiredPublicSiteOrigin(process.env.PUBLIC_SITE_ORIGIN);
 export const BROWSER_BASE_URL = process.env.VYDEX_BROWSER_BASE_URL?.trim() || BROWSER_TEST_URL;
 export const IS_HOSTED_BROWSER_TEST = BROWSER_BASE_URL !== BROWSER_TEST_URL;
+const PREVIOUS_PRODUCTION_VERIFICATION_PHASES = new Set([
+  "pre-deployment-current-production",
+  "failed-deployment-restoration",
+]);
+export const IS_PREVIOUS_PRODUCTION_BROWSER_VERIFICATION =
+  IS_HOSTED_BROWSER_TEST &&
+  PREVIOUS_PRODUCTION_VERIFICATION_PHASES.has(
+    process.env.VYDEX_HOSTED_VERIFICATION_PHASE?.trim() ?? "",
+  );
 
 export function createStageOnePlaywrightConfig(
   webServer?: PlaywrightTestConfig["webServer"],

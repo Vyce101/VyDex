@@ -1,6 +1,7 @@
 // Verifies the Stage 1 Homepage content, ordering, responsive layout, and accessibility contract.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { IS_PREVIOUS_PRODUCTION_BROWSER_VERIFICATION } from "./playwright-config";
 
 const RECENT_ENTRY_TITLES = [
   "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data",
@@ -19,6 +20,10 @@ test.beforeEach(async ({ page }) => {
 test("includes exactly one Google Search Console verification element in the static head", async ({
   page,
 }) => {
+  test.skip(
+    IS_PREVIOUS_PRODUCTION_BROWSER_VERIFICATION,
+    "Candidate metadata is not expected while verifying the previous production deployment.",
+  );
   const verificationElement = page.locator('head meta[name="google-site-verification"]');
 
   await expect(verificationElement).toHaveCount(1);

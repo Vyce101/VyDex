@@ -14,6 +14,9 @@ describe("Cloudflare Pages deployment contract", () => {
   let productionDeploymentScript: string;
   let rehearsalScript: string;
   let hostedVerificationScript: string;
+  let hostedVerificationSupport: string;
+  let playwrightConfig: string;
+  let homepageSpec: string;
 
   beforeAll(async () => {
     [
@@ -25,6 +28,9 @@ describe("Cloudflare Pages deployment contract", () => {
       productionDeploymentScript,
       rehearsalScript,
       hostedVerificationScript,
+      hostedVerificationSupport,
+      playwrightConfig,
+      homepageSpec,
     ] = await Promise.all([
       readFile(resolve(PROJECT_ROOT, ".github/workflows/validate-application.yml"), "utf8"),
       readFile(resolve(PROJECT_ROOT, ".github/workflows/rehearse-production-rollback.yml"), "utf8"),
@@ -34,6 +40,9 @@ describe("Cloudflare Pages deployment contract", () => {
       readFile(resolve(PROJECT_ROOT, "scripts/deployment/deploy-and-verify-cloudflare-pages.ts"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "scripts/deployment/rehearse-cloudflare-pages-rollback.ts"), "utf8"),
       readFile(resolve(PROJECT_ROOT, "scripts/deployment/verify-hosted-stage-one.ts"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "scripts/deployment/hosted-verification-support.ts"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "tests/browser/playwright-config.ts"), "utf8"),
+      readFile(resolve(PROJECT_ROOT, "tests/browser/homepage.spec.ts"), "utf8"),
     ]);
   });
 
@@ -85,6 +94,15 @@ describe("Cloudflare Pages deployment contract", () => {
     expect(productionDeploymentScript).toContain("runCompleteHostedVerificationAfterPropagation");
     expect(rehearsalScript).toContain("runCompleteHostedVerificationAfterPropagation");
     expect(hostedVerificationScript).toContain("runCompleteHostedVerificationAfterPropagation");
+  });
+
+  test("separates previous-production checks from candidate metadata expectations", () => {
+    expect(hostedVerificationSupport).toContain(
+      "VYDEX_HOSTED_VERIFICATION_PHASE: input.phase",
+    );
+    expect(playwrightConfig).toContain('"pre-deployment-current-production"');
+    expect(playwrightConfig).toContain('"failed-deployment-restoration"');
+    expect(homepageSpec).toContain("IS_PREVIOUS_PRODUCTION_BROWSER_VERIFICATION");
   });
 
   test("keeps generated output disposable and release state authoritative", () => {
