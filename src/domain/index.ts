@@ -5,5 +5,6 @@ export * from "./json-export-generation";
 export * from "./material-activity";
 export * from "./publication-revisions";
 export * from "./release-construction";
+export * from "./release-history";
 export * from "./route-generation";
 export * from "./source-ordering";
