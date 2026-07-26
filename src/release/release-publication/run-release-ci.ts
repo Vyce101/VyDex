@@ -17,8 +17,10 @@ export async function reproduceReleaseFromSource(input: {
   site_origin: SiteOrigin;
   logger: ReleaseLogger;
 }): Promise<string> {
+  const runtimeRoot = resolve(input.repository_root, "runtime");
+  await mkdir(runtimeRoot, { recursive: true });
   const state = await loadReleaseState(input.repository_root);
-  const worktreeRoot = await mkdtemp(resolve(input.repository_root, "runtime", "release-source-"));
+  const worktreeRoot = await mkdtemp(resolve(runtimeRoot, "release-source-"));
   await rm(worktreeRoot, { recursive: true, force: true });
   await addDetachedReleaseWorktree({ repository_root: input.repository_root, worktree_root: worktreeRoot, source_commit: state.manifest.source_commit });
   try {
@@ -29,8 +31,7 @@ export async function reproduceReleaseFromSource(input: {
     }
     await input.logger.info(`Installing the pinned dependency tree for release source ${state.manifest.source_commit}.`);
     const install = await runNpmCommand({ command_arguments: ["ci"], working_directory: worktreeRoot, environment: process.env });
-    await mkdir(resolve(input.repository_root, "runtime"), { recursive: true });
-    await import("node:fs/promises").then(({ writeFile }) => writeFile(resolve(input.repository_root, "runtime/source-install-output.txt"), install.output, "utf8"));
+    await import("node:fs/promises").then(({ writeFile }) => writeFile(resolve(runtimeRoot, "source-install-output.txt"), install.output, "utf8"));
     if (install.exit_code !== 0) throw new Error("Pinned source-commit dependency installation failed.");
     const command = state.manifest.source_commit === STAGE_ONE_SOURCE_COMMIT
       ? ["run", "release:stage-1:ci"]
@@ -40,9 +41,9 @@ export async function reproduceReleaseFromSource(input: {
       working_directory: worktreeRoot,
       environment: { ...process.env, PUBLIC_SITE_ORIGIN: input.site_origin },
     });
-    await import("node:fs/promises").then(({ writeFile }) => writeFile(resolve(input.repository_root, "runtime/source-reproduction-output.txt"), reproduction.output, "utf8"));
+    await import("node:fs/promises").then(({ writeFile }) => writeFile(resolve(runtimeRoot, "source-reproduction-output.txt"), reproduction.output, "utf8"));
     if (reproduction.exit_code !== 0) throw new Error("Source-commit release reproduction failed.");
-    const outputRoot = await mkdtemp(resolve(input.repository_root, "runtime", "reproduced-"));
+    const outputRoot = await mkdtemp(resolve(runtimeRoot, "reproduced-"));
     await rm(outputRoot, { recursive: true, force: true });
     await cp(resolve(worktreeRoot, "dist"), outputRoot, { recursive: true, errorOnExist: true, force: false });
     return outputRoot;
