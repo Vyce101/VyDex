@@ -88,7 +88,11 @@ export async function addDetachedReleaseWorktree(input: {
   worktree_root: string;
   source_commit: string;
 }): Promise<void> {
-  await git(input.repository_root, ["worktree", "add", "--detach", input.worktree_root, input.source_commit]);
+  await git(input.repository_root, [
+    "-c", "core.autocrlf=false",
+    "-c", "core.eol=lf",
+    "worktree", "add", "--detach", input.worktree_root, input.source_commit,
+  ]);
 }
 
 export async function removeDetachedReleaseWorktree(input: {
