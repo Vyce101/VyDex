@@ -106,6 +106,13 @@ function apiFailureMessage(operation: string, errors: readonly { code?: number; 
   return `Cloudflare Pages ${operation} failed${details ? `: ${details}` : "."}`;
 }
 
+function malformedResponseMessage(operation: string, error: z.ZodError): string {
+  const issues = error.issues
+    .map((issue) => `${issue.path.map(String).join(".") || "response"}:${issue.code}`)
+    .join(", ");
+  return `Cloudflare Pages ${operation} returned a malformed response (${issues}).`;
+}
+
 export function createCloudflarePagesApi(input: {
   environment: CloudflarePagesDeploymentEnvironment;
   fetch?: FetchImplementation;
@@ -134,7 +141,7 @@ export function createCloudflarePagesApi(input: {
 
   async function getProject(): Promise<CloudflarePagesProject> {
     const result = projectEnvelopeSchema.safeParse(await requestJson(projectPath));
-    if (!result.success) throw new Error("Cloudflare Pages project lookup returned a malformed response.");
+    if (!result.success) throw new Error(malformedResponseMessage("project lookup", result.error));
     const parsed = result.data;
     if (!parsed.success) throw new Error(apiFailureMessage("project lookup", parsed.errors));
     if (!parsed.result) throw new Error("Cloudflare Pages project lookup returned no project.");
@@ -156,7 +163,7 @@ export function createCloudflarePagesApi(input: {
     const result = deploymentEnvelopeSchema.safeParse(
       await requestJson(`${projectPath}/deployments/${encodeURIComponent(deploymentId)}`),
     );
-    if (!result.success) throw new Error("Cloudflare Pages deployment lookup returned a malformed response.");
+    if (!result.success) throw new Error(malformedResponseMessage("deployment lookup", result.error));
     const parsed = result.data;
     if (!parsed.success) throw new Error(apiFailureMessage("deployment lookup", parsed.errors));
     if (!parsed.result) throw new Error("Cloudflare Pages deployment lookup returned no deployment.");
@@ -170,7 +177,7 @@ export function createCloudflarePagesApi(input: {
       const result = deploymentListEnvelopeSchema.safeParse(
         await requestJson(`${projectPath}/deployments?env=production&page=${page}&per_page=${DEPLOYMENTS_PER_PAGE}`),
       );
-      if (!result.success) throw new Error("Cloudflare Pages deployment listing returned a malformed response.");
+      if (!result.success) throw new Error(malformedResponseMessage("deployment listing", result.error));
       const parsed = result.data;
       if (!parsed.success) throw new Error(apiFailureMessage("deployment listing", parsed.errors));
       if (!parsed.result) throw new Error("Cloudflare Pages deployment listing returned no deployments.");
@@ -189,7 +196,7 @@ export function createCloudflarePagesApi(input: {
     const result = deploymentEnvelopeSchema.safeParse(
       await requestJson(`${projectPath}/deployments/${encodeURIComponent(deploymentId)}/rollback`, { method: "POST" }),
     );
-    if (!result.success) throw new Error("Cloudflare Pages production rollback returned a malformed response.");
+    if (!result.success) throw new Error(malformedResponseMessage("production rollback", result.error));
     const parsed = result.data;
     if (!parsed.success) throw new Error(apiFailureMessage("production rollback", parsed.errors));
     if (!parsed.result) throw new Error("Cloudflare Pages production rollback returned no deployment.");
