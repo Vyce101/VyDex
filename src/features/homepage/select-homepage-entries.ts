@@ -36,7 +36,7 @@ export function selectHomepageEntries(
 
   return {
     latest_update: latestUpdate,
-    recent_entries: orderedEntries.slice(0, MAXIMUM_RECENT_HOMEPAGE_ENTRIES),
+    recent_entries: orderedEntries.slice(1, MAXIMUM_RECENT_HOMEPAGE_ENTRIES + 1),
   };
 }
 
