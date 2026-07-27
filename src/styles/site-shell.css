@@ -79,6 +79,8 @@
   font-family: var(--atlas-font-sans);
   font-size: var(--atlas-type-control-size);
   font-weight: 650;
+  gap: var(--atlas-space-8);
+  inline-size: fit-content;
   justify-content: center;
   line-height: var(--atlas-type-control-line);
   list-style: none;
@@ -89,6 +91,26 @@
   min-block-size: var(--site-header-menu-target);
   min-inline-size: var(--site-header-menu-target);
   padding-inline: var(--atlas-space-12);
+}
+
+.site-header__mobile-disclosure-state {
+  border-inline-start: 1px solid var(--atlas-color-rule-record);
+  color: var(--atlas-color-ink-secondary);
+  font-size: var(--atlas-type-metadata-size);
+  line-height: var(--atlas-type-metadata-line);
+  padding-inline-start: var(--atlas-space-8);
+}
+
+.site-header__mobile-disclosure-state-open {
+  display: none;
+}
+
+.site-header__mobile-disclosure[open] .site-header__mobile-disclosure-state-closed {
+  display: none;
+}
+
+.site-header__mobile-disclosure[open] .site-header__mobile-disclosure-state-open {
+  display: inline;
 }
 
 .site-header__mobile-disclosure > summary::-webkit-details-marker {

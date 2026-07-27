@@ -44,7 +44,13 @@ const { activeNavigationKey } = Astro.props;
         VyDex
       </a>
       <details class="site-header__mobile-disclosure" data-site-navigation-disclosure>
-        <summary>Menu</summary>
+        <summary>
+          <span>Menu</span>
+          <span class="site-header__mobile-disclosure-state" aria-hidden="true">
+            <span class="site-header__mobile-disclosure-state-closed">Closed</span>
+            <span class="site-header__mobile-disclosure-state-open">Open</span>
+          </span>
+        </summary>
         <nav class="site-header__mobile-navigation" aria-label="Mobile primary navigation">
           <ul>
             {
