@@ -57,7 +57,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
         </span>
         <span class="atlas-status-tab">Evidence: {model.evidence_strength_label}</span>
         <span class="atlas-status-tab">Review: {model.review_status_label}</span>
-        <span class="atlas-status-tab">State: Main Entry</span>
+        <span class="atlas-status-tab entry-status-summary__state">State: Main Entry</span>
       </div>
       <a class="entry-status-summary__methodology" href={model.methodology.url}>
         Methodology: v{model.methodology.version}
@@ -92,7 +92,23 @@ const model = createEntryPageViewModel(Astro.props.entry);
       )
     }
 
-    <section class="entry-section entry-frontier" data-entry-section="frontier-delta">
+    <nav class="entry-section-index" aria-label="Entry sections">
+      <span class="entry-section-index__label atlas-type-metadata">In this entry</span>
+      <ul>
+        <li><a href="#frontier-delta">Frontier Delta</a></li>
+        <li><a href="#details">Details</a></li>
+        <li><a href="#significance">Significance</a></li>
+        <li><a href="#caveats">Caveats</a></li>
+        <li><a href="#dates-and-metadata">Metadata</a></li>
+        <li><a href="#sources">Sources</a></li>
+      </ul>
+    </nav>
+
+    <section
+      id="frontier-delta"
+      class="entry-section entry-frontier"
+      data-entry-section="frontier-delta"
+    >
       <h2 class="atlas-type-major-heading">Frontier Delta</h2>
       <div class="entry-frontier__field">
         <div class="entry-frontier__state">
@@ -111,7 +127,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
       </div>
     </section>
 
-    <section class="entry-section entry-details" data-entry-section="details">
+    <section id="details" class="entry-section entry-details" data-entry-section="details">
       <h2 class="atlas-type-major-heading">Details</h2>
       <div class="entry-details__item">
         <h3 class="atlas-type-subsection-heading">What Happened?</h3>
@@ -131,7 +147,11 @@ const model = createEntryPageViewModel(Astro.props.entry);
       </div>
     </section>
 
-    <section class="entry-section entry-significance" data-entry-section="significance">
+    <section
+      id="significance"
+      class="entry-section entry-significance"
+      data-entry-section="significance"
+    >
       <h2 class="atlas-type-major-heading">Significance</h2>
       <div class="entry-significance__plate">
         <h3 class="atlas-type-subsection-heading">Confirmed Significance</h3>
@@ -149,7 +169,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
       }
     </section>
 
-    <section class="entry-section entry-caveats" data-entry-section="caveats">
+    <section id="caveats" class="entry-section entry-caveats" data-entry-section="caveats">
       <h2 class="atlas-type-major-heading">Caveats</h2>
       {
         model.caveats_html.length === 1 ? (
@@ -162,7 +182,11 @@ const model = createEntryPageViewModel(Astro.props.entry);
       }
     </section>
 
-    <section class="entry-section entry-metadata" data-entry-section="dates-and-metadata">
+    <section
+      id="dates-and-metadata"
+      class="entry-section entry-metadata"
+      data-entry-section="dates-and-metadata"
+    >
       <h2 class="atlas-type-major-heading">Dates and Metadata</h2>
       <dl class="entry-metadata__list">
         <div><dt>Date Happened</dt><dd>{model.metadata.date_happened ? <time datetime={model.metadata.date_happened.iso}>{model.metadata.date_happened.label}</time> : "Unknown"}</dd></div>
@@ -190,7 +214,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
       </dl>
     </section>
 
-    <section class="entry-section entry-sources" data-entry-section="sources">
+    <section id="sources" class="entry-section entry-sources" data-entry-section="sources">
       <h2 class="atlas-type-major-heading">Sources</h2>
       <div class="entry-sources__list">
         {
@@ -215,7 +239,7 @@ const model = createEntryPageViewModel(Astro.props.entry);
       </div>
     </section>
 
-    <section class="entry-methodology" data-entry-section="methodology-used">
+    <section id="methodology-used" class="entry-methodology" data-entry-section="methodology-used">
       <h2 class="atlas-type-major-heading">Methodology Used</h2>
       <p>This entry uses Methodology v{model.methodology.version}.</p>
       <a href={model.methodology.url}>View Methodology v{model.methodology.version} →</a>
