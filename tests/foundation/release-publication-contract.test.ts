@@ -21,6 +21,25 @@ describe("release publication foundation", () => {
     expect(source).not.toMatch(/\buuidV7\b|\brandomUUID\b|\bnew Date\b|Date\.now/);
   });
 
+  test("synchronizes release state only for trusted pull request branches", async () => {
+    const workflow = await readFile(resolve(ROOT, ".github/workflows/validate-application.yml"), "utf8");
+    expect(workflow).toContain("github.event.pull_request.head.repo.full_name == github.repository");
+    expect(workflow).toContain("contents: write");
+    expect(workflow).toContain("npm run release:sync -- --confirm CREATE_NEXT_RELEASE");
+    expect(workflow).toContain("grep -v '^generated/release-data/'");
+    expect(workflow).toContain("git add -- generated/release-data");
+    expect(workflow).toContain('git push origin "HEAD:${HEAD_REF}"');
+
+    const synchronizationIndex = workflow.indexOf("npm run release:sync");
+    const verificationIndex = workflow.indexOf("npm run release:check", synchronizationIndex);
+    const validationIndex = workflow.indexOf("npm run release:ci", verificationIndex);
+    const pushIndex = workflow.indexOf('git push origin "HEAD:${HEAD_REF}"');
+    expect(synchronizationIndex).toBeGreaterThan(-1);
+    expect(verificationIndex).toBeGreaterThan(synchronizationIndex);
+    expect(validationIndex).toBeGreaterThan(verificationIndex);
+    expect(pushIndex).toBeGreaterThan(validationIndex);
+  });
+
   test("does not add public manifest, history, diagnostics, or archive-index pages", async () => {
     const pages = (await readdir(resolve(ROOT, "src/pages"), { recursive: true }))
       .filter((entry): entry is string => typeof entry === "string")
