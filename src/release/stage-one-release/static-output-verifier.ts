@@ -4,10 +4,8 @@ import { relative, resolve, sep } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import type { PreparedApplicationExport } from "../../adapters/application-export";
-import {
-  compareResolvedPublicEntriesByLatestMaterialActivity,
-  type ReleaseModel,
-} from "../../domain";
+import type { ReleaseModel } from "../../domain";
+import { selectHomepageEntries } from "../../features/homepage";
 import { HEADER_NAVIGATION_ITEMS, FOOTER_NAVIGATION_ITEMS } from "../../components/site-shell/navigation";
 import { collectStageOneRedirects, type StageOneRedirect } from "./redirects";
 import type { StageOneReleaseDiagnostic } from "./diagnostics";
@@ -74,7 +72,7 @@ function compareExactValues(
 
 function verifyHomepage(document: HtmlNode, release: ReleaseModel): StageOneReleaseDiagnostic[] {
   const diagnostics: StageOneReleaseDiagnostic[] = [];
-  const ordered = [...release.current_entries].sort(compareResolvedPublicEntriesByLatestMaterialActivity);
+  const selection = selectHomepageEntries(release.current_entries);
   const latestContainer = findFirst(document, (node) => hasAttribute(node, "data-homepage-latest"));
   const recentContainer = findFirst(document, (node) => hasAttribute(node, "data-homepage-recent-list"));
   const latest = latestContainer ? titleLinksWithin(latestContainer) : [];
@@ -82,13 +80,13 @@ function verifyHomepage(document: HtmlNode, release: ReleaseModel): StageOneRele
   diagnostics.push(
     ...compareExactValues(
       latest.map(({ title }) => title),
-      [ordered[0]!.entry.title],
+      [selection.latest_update.entry.title],
       "homepage_latest_entry_mismatch",
       "Homepage Latest Entry",
     ),
     ...compareExactValues(
       recent.map(({ title }) => title),
-      ordered.slice(0, 5).map(({ entry }) => entry.title),
+      selection.recent_entries.map(({ entry }) => entry.title),
       "homepage_recent_order_mismatch",
       "Homepage recent ordering",
     ),
