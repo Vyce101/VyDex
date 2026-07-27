@@ -1,6 +1,7 @@
 ---
 label: Entry Preview
-order: 400
+order: 300
+permalink: /concepts/entry-preview/
 ---
 
 # Entry Preview
@@ -24,7 +25,7 @@ It does not own:
 - Canonical Entry schemas, validation, controlled values, or the authored order of Domains.
 - Snapshot selection, material activity, Topic Trail resolution, canonical URLs, or release promotion.
 - Host headings, page layout, Entry ordering, Homepage sections, or Topic Trail pages.
-- [Stage 1 Entry Page](stage-1-entry-page.md) or Dataset export presentation, both of which retain every attached Domain.
+- [Stage 1 Entry Page](./stage-1-entry-page.md) or Dataset export presentation, both of which retain every attached Domain.
 - Logging, telemetry, client-side state, or a runtime backend.
 
 ## Inputs and Outputs
@@ -35,13 +36,13 @@ The public `EntryPreview.astro` component accepts that source, calls `projectEnt
 
 ## Normal Flow
 
-1. A host obtains a validated resolved Entry through [Release Construction](release-construction.md) and the application release adapter.
-2. The host passes the required subset to `EntryPreview.astro`. Homepage hosts use the default treatment, while a [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) passes the quiet treatment and its current trail reference.
+1. A host obtains a validated resolved Entry through [Release Construction](../release-lifecycle/release-construction.md) and the application release adapter.
+2. The host passes the required subset to `EntryPreview.astro`. Homepage hosts use the default treatment, while a [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md) passes the quiet treatment and its current trail reference.
 3. `projectEntryPreview` validates every required display value, selects `domains[0]`, resolves either the Entry's primary trail or the host-supplied current trail, maps controlled values to public labels, and renders the claim through the shared renderer's approved inline-Markdown profile.
 4. The component renders the metadata band, editorial body, status row, and footer in a fixed order.
 5. Frontier Atlas tokens and primitives supply the sheet, rules, type roles, focus treatment, status colors, spacing, and responsive breakpoint. Feature-owned CSS arranges those primitives for this component.
 
-The [Stage 1 Homepage](stage-1-homepage.md) passes the release-selected Latest Update Entry and each Recent Entry through the same component with the default treatment. Latest and recent previews remain identical. Topic Trail pages use the quiet treatment without changing the record field sequence or interaction.
+The [Stage 1 Homepage](./stage-1-homepage.md) passes the release-selected Latest Update Entry and each Recent Entry through the same component with the default treatment. Latest and recent previews remain identical. Topic Trail pages use the quiet treatment without changing the record field sequence or interaction.
 
 ## User-Facing Behavior
 
@@ -78,13 +79,13 @@ The projection throws a normal build error when the source is missing, the Domai
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns the field schemas, inline-Markdown profile, controlled machine values, and exhaustive public-label maps. The preview consumes those contracts without widening them.
-- [Release Construction](release-construction.md) owns current snapshot selection, Date Updated, resolved Topic Trail data, and canonical URLs. The preview must not load or repair authoring records itself.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns the Atlas Sheet, Record Rules, typography roles, neutral and exceptional status treatments, focus behavior, spacing tokens, and 768px breakpoint. The preview owns only their feature-specific composition.
-- [Static Application Foundation](static-application-foundation.md) owns the Astro boundary, static build, and test harness. The preview adds no client script or runtime data dependency.
-- The [Stage 1 Entry Page](stage-1-entry-page.md) shares the Markdown renderer but owns its complete record projection, block profile, source presentation, and page hierarchy.
-- The [Stage 1 Homepage](stage-1-homepage.md) owns latest and recent selection, section headings, and page placement. It uses the same preview for both contexts and intentionally repeats the Latest Update Entry as the first recent Entry.
-- The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) owns trail membership, list placement, and its request for the quiet treatment and current-trail footer. This matters when an Entry belongs through a secondary Topic Trail relationship.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns the field schemas, inline-Markdown profile, controlled machine values, and exhaustive public-label maps. The preview consumes those contracts without widening them.
+- [Release Construction](../release-lifecycle/release-construction.md) owns current snapshot selection, Date Updated, resolved Topic Trail data, and canonical URLs. The preview must not load or repair authoring records itself.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns the Atlas Sheet, Record Rules, typography roles, neutral and exceptional status treatments, focus behavior, spacing tokens, and 768px breakpoint. The preview owns only their feature-specific composition.
+- [Static Application Foundation](../static-application-foundation.md) owns the Astro boundary, static build, and test harness. The preview adds no client script or runtime data dependency.
+- The [Stage 1 Entry Page](./stage-1-entry-page.md) shares the Markdown renderer but owns its complete record projection, block profile, source presentation, and page hierarchy.
+- The [Stage 1 Homepage](./stage-1-homepage.md) owns latest and recent selection, section headings, and page placement. It uses the same preview for both contexts and intentionally repeats the Latest Update Entry as the first recent Entry.
+- The [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md) owns trail membership, list placement, and its request for the quiet treatment and current-trail footer. This matters when an Entry belongs through a secondary Topic Trail relationship.
 - Hosts own their headings and record selection. The component exposes no featured, ranked, Latest-specific, or importance treatment.
 
 ## Invariants

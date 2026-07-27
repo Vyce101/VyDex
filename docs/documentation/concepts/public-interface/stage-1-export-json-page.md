@@ -1,6 +1,7 @@
 ---
 label: Stage 1 Export JSON Page
-order: 1100
+order: 1000
+permalink: /concepts/stage-1-export-json-page/
 ---
 
 # Stage 1 Export JSON Page
@@ -27,7 +28,7 @@ It does not own:
 - Historical Entry exports, CSV, custom filtering, a public API, login, payments, or commercial gating.
 - Runtime metadata loading, browser download management, telemetry, or persistent logging.
 
-[Dataset Generation](dataset-generation.md) owns the artifact contract and validated bytes. [Release Construction](release-construction.md) owns the complete release model and route registry. The [Stage 1 Release Gate](stage-1-release-gate.md) owns genuine descriptor creation, staged artifact writing, verification, manifest creation, and local promotion.
+[Dataset Generation](../release-lifecycle/dataset-generation.md) owns the artifact contract and validated bytes. [Release Construction](../release-lifecycle/release-construction.md) owns the complete release model and route registry. [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) owns selected descriptor handling, staged artifact writing, verification, manifest creation, and local promotion.
 
 ## Inputs and Outputs
 
@@ -98,13 +99,13 @@ The Astro routes convert those failed results into build errors containing diagn
 
 ## Cross-System Edge Cases
 
-- [Dataset Generation](dataset-generation.md) validates and serializes the public contract. Export preparation rejects disagreements; it does not repair or independently reimplement dataset rules.
-- [Release Construction](release-construction.md) supplies the route registry and complete current Entries. Preview or incomplete releases cannot enter export preparation.
-- [Static Application Foundation](static-application-foundation.md) owns mode selection, static route generation, hosting response metadata, and build failure propagation.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns Header, Footer, active navigation, canonical document structure, and focus foundations.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns the sheet, rule, button, table, typography, breakpoint, and accessibility primitives composed by the page.
+- [Dataset Generation](../release-lifecycle/dataset-generation.md) validates and serializes the public contract. Export preparation rejects disagreements; it does not repair or independently reimplement dataset rules.
+- [Release Construction](../release-lifecycle/release-construction.md) supplies the route registry and complete current Entries. Preview or incomplete releases cannot enter export preparation.
+- [Static Application Foundation](../static-application-foundation.md) owns mode selection, static route generation, hosting response metadata, and build failure propagation.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) owns Header, Footer, active navigation, canonical document structure, and focus foundations.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns the sheet, rule, button, table, typography, breakpoint, and accessibility primitives composed by the page.
 - [Repository Data Boundaries](https://github.com/Vyce101/VyDex/blob/main/docs/architecture/repository-boundaries.md) separates disposable test-build artifacts from durable genuine release state.
-- The [Stage 1 Release Gate](stage-1-release-gate.md) reuses preparation and the existing artifact writer, then verifies the page and artifact together before promotion. Deployment remains outside both systems.
+- [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) reuses preparation and the existing artifact writer, then verifies the page and artifact together before promotion. Deployment remains outside both systems.
 
 ## Invariants
 

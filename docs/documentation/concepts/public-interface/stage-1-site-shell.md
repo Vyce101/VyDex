@@ -1,11 +1,12 @@
 ---
 label: Stage 1 Site Shell
-order: 1500
+order: 200
+permalink: /concepts/stage-1-site-shell/
 ---
 
 # Stage 1 Site Shell
 
-The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It owns the navigation behavior shared by the implemented [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Export JSON Page](stage-1-export-json-page.md), [Stage 1 Methodology Page](stage-1-methodology-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page. This page is for maintainers and coding agents changing shared layout, navigation, document metadata, or page-level accessibility.
+The Stage 1 site shell gives every public page the same Header, Main, and Footer structure. It owns the navigation behavior shared by the implemented [Stage 1 Homepage](./stage-1-homepage.md), [Stage 1 About Page](./stage-1-about-page.md), [Stage 1 Changelog Page](./stage-1-changelog-page.md), [Stage 1 Entry Page](./stage-1-entry-page.md), [Stage 1 Export JSON Page](./stage-1-export-json-page.md), [Stage 1 Methodology Page](./stage-1-methodology-page.md), [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md), and generic not-found page. This page is for maintainers and coding agents changing shared layout, navigation, document metadata, or page-level accessibility.
 
 ## Purpose and Ownership
 
@@ -65,16 +66,16 @@ The skip link is the first keyboard stop and becomes visible when focused. Activ
 
 ## Cross-System Edge Cases
 
-- [Release Construction](release-construction.md) and route generation own canonical paths. The shell imports the fixed Stage 1 path map instead of maintaining a second set of destination strings.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns the colors, type roles, focus outline, page margins, and 768px breakpoint. The shell composes those primitives but does not replace them.
-- [Static Application Foundation](static-application-foundation.md) owns the Astro document boundary and build process. The shell is rendered through that boundary and remains static-first.
+- [Release Construction](../release-lifecycle/release-construction.md) and route generation own canonical paths. The shell imports the fixed Stage 1 path map instead of maintaining a second set of destination strings.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns the colors, type roles, focus outline, page margins, and 768px breakpoint. The shell composes those primitives but does not replace them.
+- [Static Application Foundation](../static-application-foundation.md) owns the Astro document boundary and build process. The shell is rendered through that boundary and remains static-first.
 - Search Console verification metadata is a public ownership proof emitted in static HTML, not a secret, analytics signal, telemetry hook, or runtime request. Changing its approved value requires matching browser-contract coverage and a successor release before production can serve the new bytes.
-- The [Stage 1 Methodology Page](stage-1-methodology-page.md) supplies different self-canonical URLs for its current and immutable routes while reusing the same shell and active navigation state.
-- The [Stage 1 About Page](stage-1-about-page.md) supplies its self-canonical URL and uses the route-derived active About state on `/about/`.
-- The [Stage 1 Changelog Page](stage-1-changelog-page.md) supplies its self-canonical URL and uses the route-derived active Changelog state on `/changelog/`.
-- The [Stage 1 Export JSON Page](stage-1-export-json-page.md) supplies its self-canonical URL and uses the route-derived active Export JSON state on `/export/`.
-- The [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 Entry Page](stage-1-entry-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and generic not-found page use no active navigation item.
-- The [Stage 1 Release Gate](stage-1-release-gate.md) checks the exact Header and Footer destinations on every generated HTML page and rejects unresolved links or fragments before promotion. The shell owns the markup; the gate owns output-wide verification.
+- The [Stage 1 Methodology Page](./stage-1-methodology-page.md) supplies different self-canonical URLs for its current and immutable routes while reusing the same shell and active navigation state.
+- The [Stage 1 About Page](./stage-1-about-page.md) supplies its self-canonical URL and uses the route-derived active About state on `/about/`.
+- The [Stage 1 Changelog Page](./stage-1-changelog-page.md) supplies its self-canonical URL and uses the route-derived active Changelog state on `/changelog/`.
+- The [Stage 1 Export JSON Page](./stage-1-export-json-page.md) supplies its self-canonical URL and uses the route-derived active Export JSON state on `/export/`.
+- The [Stage 1 Homepage](./stage-1-homepage.md), [Stage 1 Entry Page](./stage-1-entry-page.md), [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md), and generic not-found page use no active navigation item.
+- [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) checks the exact Header and Footer destinations on every generated HTML page and rejects unresolved links or fragments before promotion. The shell owns the markup; release publication owns output-wide verification.
 
 ## Failure Behavior
 
@@ -124,4 +125,4 @@ Check:
 - Whether the Search Console verification element remains present exactly once without introducing analytics, telemetry, or a runtime dependency.
 - Whether source, route-matrix, browser, Axe, and horizontal-overflow tests cover the change.
 
-Read [Frontier Atlas](frontier-atlas-design-system.md) before changing shell presentation and [Static Application Foundation](static-application-foundation.md) before changing the layout or client-script boundary.
+Read [Frontier Atlas](./frontier-atlas-design-system.md) before changing shell presentation and [Static Application Foundation](../static-application-foundation.md) before changing the layout or client-script boundary.

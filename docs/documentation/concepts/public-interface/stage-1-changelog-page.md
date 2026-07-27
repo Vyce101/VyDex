@@ -1,6 +1,7 @@
 ---
 label: Stage 1 Changelog Page
 order: 900
+permalink: /concepts/stage-1-changelog-page/
 ---
 
 # Stage 1 Changelog Page
@@ -19,8 +20,8 @@ The feature turns `release.changelog_events` into the public `/changelog/` page.
 
 It does not own:
 
-- Canonical Methodology publication-event or Entry snapshot schemas. [Canonical Records](canonical-records.md) owns those stored contracts.
-- Materiality classification, current Entry selection, event derivation, ordering, canonical affected URLs, or production release validity. [Release Construction](release-construction.md) supplies those values.
+- Canonical Methodology publication-event or Entry snapshot schemas. [Canonical Records](../evidence-ledger/canonical-records.md) owns those stored contracts.
+- Materiality classification, current Entry selection, event derivation, ordering, canonical affected URLs, or production release validity. [Release Construction](../release-lifecycle/release-construction.md) supplies those values.
 - Header, Footer, navigation, document structure, global tokens, or the route registry.
 - Search, filters, pagination, archives, a visual timeline, client-side event loading, analytics, telemetry, or logging.
 
@@ -38,7 +39,7 @@ The output model contains the approved legend copy and ordered date groups. It d
 2. Release construction validates canonical content and immutable histories, derives material events, attaches affected URLs when available, and sorts the complete event collection.
 3. The Changelog presentation model validates the resolved fields and derives each display date from `published_at`.
 4. Consecutive events with the same derived date enter one date group while retaining release order.
-5. The page renders through the [Stage 1 Site Shell](stage-1-site-shell.md) with a route-derived canonical URL and active Changelog navigation state.
+5. The page renders through the [Stage 1 Site Shell](./stage-1-site-shell.md) with a route-derived canonical URL and active Changelog navigation state.
 6. Astro writes the complete revision index to static HTML. The browser does not fetch, sort, filter, or paginate events.
 
 ## Material Events and Ordering
@@ -95,12 +96,12 @@ An event without a legitimate affected destination may omit its link. Removed re
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns required publication timestamps and strict source field validation.
-- [Publication Revisions](publication-revisions.md) owns Entry snapshot materiality and immutable revision history.
-- [Release Construction](release-construction.md) owns event derivation, uniform ordering, derived dates, affected URLs, and production diagnostics.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns Header, Main, Footer, skip navigation, canonical navigation, and the active Changelog state.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns colors, status tokens, typography, spacing, rules, focus, grid, and breakpoints.
-- [Static Application Foundation](static-application-foundation.md) owns Astro mode selection, application release loading, static route generation, and the test harness.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns required publication timestamps and strict source field validation.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) owns Entry snapshot materiality and immutable revision history.
+- [Release Construction](../release-lifecycle/release-construction.md) owns event derivation, uniform ordering, derived dates, affected URLs, and production diagnostics.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) owns Header, Main, Footer, skip navigation, canonical navigation, and the active Changelog state.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns colors, status tokens, typography, spacing, rules, focus, grid, and breakpoints.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro mode selection, application release loading, static route generation, and the test harness.
 
 ## Invariants
 

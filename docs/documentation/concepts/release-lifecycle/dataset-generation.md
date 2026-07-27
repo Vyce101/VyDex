@@ -1,6 +1,7 @@
 ---
 label: Dataset Generation
-order: 300
+order: 200
+permalink: /concepts/dataset-generation/
 ---
 
 # Dataset Generation
@@ -46,13 +47,13 @@ The generator returns:
 - The Dataset Schema public path.
 - A `302` stable-latest redirect descriptor targeting the immutable artifact.
 
-The application export boundary calls the generator with an already selected validated release. It checks that repeated generation produces the same path and bytes, validates the page-facing metadata against the generated dataset, and returns the artifact together with the [Export JSON Page](stage-1-export-json-page.md) presentation model. Dataset generation does not own that presentation model or page composition.
+The application export boundary calls the generator with an already selected validated release. It checks that repeated generation produces the same path and bytes, validates the page-facing metadata against the generated dataset, and returns the artifact together with the [Export JSON Page](../public-interface/stage-1-export-json-page.md) presentation model. Dataset generation does not own that presentation model or page composition.
 
 `generateVyDexDatasetSchemaV1` accepts a production site origin and returns the origin-specific Schema value and deterministic Schema bytes. The repository now contains the validated Stage 1 seed records and their initial snapshots, but it does not contain genuine persisted release metadata. Tests use fixed metadata to prove that the records can form a production release. That input is not persisted and does not represent a genuine release, so no dataset artifact is currently committed.
 
 ## Normal Flow
 
-1. [Release Construction](release-construction.md) validates repository records, selects each Entry's newest published snapshot, resolves relationships and routes, and returns one complete production release.
+1. [Release Construction](./release-construction.md) validates repository records, selects each Entry's newest published snapshot, resolves relationships and routes, and returns one complete production release.
 2. The dataset generator rechecks the release discriminator, persisted metadata, production origin, required dataset routes, public Entry state, unique Entry identities, Methodology version, and canonical relationship URLs.
 3. Each current public Entry is projected from its selected snapshot. Editable canonical differences and historical snapshots are not input collections and cannot become separate export records.
 4. The generator derives public values and applies the Dataset `1.0.0` ordering rules without mutating the release. Sources are reordered from a copy through the same helper used by release resolution.
@@ -102,7 +103,7 @@ The date comes from the first ten characters of the validated RFC 3339 UTC `rele
 
 The dataset artifact writer accepts an explicit output root, creates required parent directories, verifies that the resolved target remains inside that root, and creates the file exclusively. If the path already contains identical bytes, the writer returns an idempotent `unchanged` result. If the bytes differ, it returns `immutable_artifact_collision` and leaves the existing file untouched.
 
-The stable convenience path is `/datasets/vydex-latest-entry-versions-v1-0-0.json`. Generation returns a `302` descriptor that points to the current immutable path. The writer does not create a mutable copy or a deployment redirect file; the [Stage 1 Release Gate](stage-1-release-gate.md) writes and verifies that descriptor in the staged Cloudflare `_redirects` file.
+The stable convenience path is `/datasets/vydex-latest-entry-versions-v1-0-0.json`. Generation returns a `302` descriptor that points to the current immutable path. The writer does not create a mutable copy or a deployment redirect file; [Repeatable Release Publication](repeatable-release-publication.md) writes and verifies that descriptor in the staged Cloudflare `_redirects` file.
 
 ## Failure Behavior
 
@@ -124,13 +125,13 @@ Filesystem emission reports `unsafe_artifact_path`, `immutable_artifact_collisio
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns authored Entry and Source validation. Dataset generation narrows those records into a separate immutable public contract.
-- [Publication Revisions](publication-revisions.md) owns snapshot history and revision activity. Dataset generation receives only the current snapshot selected by release construction.
-- [Release Construction](release-construction.md) owns production validity, relationship resolution, canonical URLs, and route registration. Dataset generation rejects disagreements rather than rebuilding those decisions.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns authored Entry and Source validation. Dataset generation narrows those records into a separate immutable public contract.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) owns snapshot history and revision activity. Dataset generation receives only the current snapshot selected by release construction.
+- [Release Construction](./release-construction.md) owns production validity, relationship resolution, canonical URLs, and route registration. Dataset generation rejects disagreements rather than rebuilding those decisions.
 - The domain-owned source-ordering module is shared with release resolution. Dataset generation may defensively reorder copied input, but it must not introduce a second role cascade or mutate resolved sources.
-- [Static Application Foundation](static-application-foundation.md) owns Astro publication, configured environment access, Cloudflare response metadata, pinned dependencies, and CI execution.
-- The [Export JSON Page](stage-1-export-json-page.md) consumes the prepared artifact and presentation model. It never parses generated bytes, reconstructs release metadata, or links to the stable convenience path.
-- The [Stage 1 Release Gate](stage-1-release-gate.md) owns descriptor persistence, writer invocation, staged redirect emission, static verification, and local promotion. Hosted deployment and deployed-target verification remain outside both systems.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro publication, configured environment access, Cloudflare response metadata, pinned dependencies, and CI execution.
+- The [Export JSON Page](../public-interface/stage-1-export-json-page.md) consumes the prepared artifact and presentation model. It never parses generated bytes, reconstructs release metadata, or links to the stable convenience path.
+- [Repeatable Release Publication](repeatable-release-publication.md) owns descriptor persistence, writer invocation, staged redirect emission, static verification, and local promotion. Hosted deployment and deployed-target verification remain outside both systems.
 
 ## Invariants
 

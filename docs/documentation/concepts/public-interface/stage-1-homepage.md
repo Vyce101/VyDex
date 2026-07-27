@@ -1,6 +1,7 @@
 ---
 label: Stage 1 Homepage
-order: 1200
+order: 400
+permalink: /concepts/stage-1-homepage/
 ---
 
 # Stage 1 Homepage
@@ -77,12 +78,12 @@ The separate private-preview state may render only `No entries have been added y
 
 ## Cross-System Edge Cases
 
-- [Publication Revisions](publication-revisions.md) derives `latest_meaningful_activity`; the Homepage must not infer materiality from Date Updated or the current snapshot.
-- [Release Construction](release-construction.md) validates current public Entries, supplies persisted or fixed metadata through explicit adapters, and uses the same comparator before the Homepage receives data.
-- [Entry Preview](entry-preview.md) owns record projection and sheet markup. The Homepage owns only which records appear and the headings around them.
-- [Frontier Atlas](frontier-atlas-design-system.md) supplies the grid, sheet, button, typography, rule, focus, and responsive primitives. Homepage CSS composes those primitives without creating substitute tokens.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns the Header, Main, Footer, and navigation contract. The Homepage renders through that layout and does not set an active navigation item.
-- [Static Application Foundation](static-application-foundation.md) owns Astro mode selection and static-build commands. Test-mode output proves the page without creating genuine release metadata.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) derives `latest_meaningful_activity`; the Homepage must not infer materiality from Date Updated or the current snapshot.
+- [Release Construction](../release-lifecycle/release-construction.md) validates current public Entries, supplies persisted or fixed metadata through explicit adapters, and uses the same comparator before the Homepage receives data.
+- [Entry Preview](./entry-preview.md) owns record projection and sheet markup. The Homepage owns only which records appear and the headings around them.
+- [Frontier Atlas](./frontier-atlas-design-system.md) supplies the grid, sheet, button, typography, rule, focus, and responsive primitives. Homepage CSS composes those primitives without creating substitute tokens.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) owns the Header, Main, Footer, and navigation contract. The Homepage renders through that layout and does not set an active navigation item.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro mode selection and static-build commands. Test-mode output proves the page without creating genuine release metadata.
 
 ## Invariants
 

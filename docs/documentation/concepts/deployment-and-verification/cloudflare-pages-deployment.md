@@ -1,6 +1,7 @@
 ---
 label: Cloudflare Pages Deployment
-order: 200
+order: 100
+permalink: /concepts/cloudflare-pages-deployment/
 ---
 
 # Cloudflare Pages Deployment
@@ -22,9 +23,9 @@ The deployment system owns:
 - Serialized production deployment, rollback, and restoration operations.
 - Operational deployment history, rollback access, and retained workflow evidence.
 
-It does not own canonical records, immutable publication snapshots, release identity, the release manifest, Dataset semantics, hosted HTTP assertions, or permanent evidence retention. [Hosted Release Verification](hosted-release-verification.md) owns the checks that decide whether a deployed release is complete. This system does not introduce Workers, Pages Functions, runtime databases, or paid service dependencies.
+It does not own canonical records, immutable publication snapshots, release identity, the release manifest, Dataset semantics, hosted HTTP assertions, or permanent evidence retention. [Hosted Release Verification](./hosted-release-verification.md) owns the checks that decide whether a deployed release is complete. This system does not introduce Workers, Pages Functions, runtime databases, or paid service dependencies.
 
-The [Stage 1 Release Gate](stage-1-release-gate.md) owns release construction and local verification. [Repository Data Boundaries](https://github.com/Vyce101/VyDex/blob/main/docs/architecture/repository-boundaries.md) defines which files remain authoritative.
+[Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) owns release selection and local verification. [Repository Data Boundaries](https://github.com/Vyce101/VyDex/blob/main/docs/architecture/repository-boundaries.md) defines which files remain authoritative.
 
 ## Inputs And Outputs
 
@@ -54,7 +55,7 @@ The production workflow also reads the commit SHA and GitHub run identifiers sup
 6. The preview preparation step derives `_redirects` from the validated release and writes them beside the static output.
 7. A blocking production-data, origin, sitemap, build, or redirect error fails the preview build instead of publishing incomplete authoritative-looking output.
 
-A Cloudflare preview URL is a review surface, never a canonical public origin. The diagnostic `PreviewReleaseModel` described in [Release Construction](release-construction.md) is an application validation model; the current Git-integrated Pages preview path builds production-shaped static content and does not publish that diagnostic model.
+A Cloudflare preview URL is a review surface, never a canonical public origin. The diagnostic `PreviewReleaseModel` described in [Release Construction](../release-lifecycle/release-construction.md) is an application validation model; the current Git-integrated Pages preview path builds production-shaped static content and does not publish that diagnostic model.
 
 Temporary Pages hostnames must remain non-indexable. Hosted qualification checks require `X-Robots-Tag: noindex` when a production deployment is requested through its deployment-specific URL.
 
@@ -71,7 +72,7 @@ Temporary Pages hostnames must remain non-indexable. Hosted qualification checks
 9. Before upload, the job identifies the Release ID on canonical production and verifies active, immediate-predecessor, or explicitly approved recovery state against its matching archive before accepting it as a fallback.
 10. Wrangler deploys the verified directory to the Pages project `vydex` with the `main` branch and Git commit hash attached.
 11. The Cloudflare API adapter waits for a distinct successful production deployment with that commit hash to become `canonical_deployment`.
-12. [Hosted Release Verification](hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior. If Pages edges have not converged after the canonical deployment changes, the orchestrator waits 30 seconds and retries the complete suite, up to three attempts.
+12. [Hosted Release Verification](./hosted-release-verification.md) checks the complete production site at `https://vydex.pages.dev`, including browser and accessibility behavior. If Pages edges have not converged after the canonical deployment changes, the orchestrator waits 30 seconds and retries the complete suite, up to three attempts.
 13. GitHub Actions retains the hosted report, complete browser output, failure screenshots or traces, and rotating logs even when verification fails.
 
 The deployment job uses the non-cancelling `vydex-cloudflare-pages-production` concurrency group. It does not combine output from different commits or rebuild after artifact validation.
@@ -92,7 +93,7 @@ A validation failure prevents artifact publication and skips production deployme
 
 An upload may become canonical before hosted verification finishes, and individual Pages edges may briefly serve different artifact versions after that API change. The job requires one complete hosted pass and retries the whole suite within a fixed propagation window. When all attempts fail and the previous deployment was established as known-good, the routine job restores the previous deployment and verifies the restored production site. On the first launch, or whenever no matching fallback was verified, the job fails critically with recovery information instead of assuming that an older deployment is safe.
 
-Once the rehearsal changes production, restoration is attempted even when rollback polling or verification fails. A restoration failure emits a critical message with the exact intended deployment ID and a safe manual procedure. Maintainers must then follow [How To Redeploy A Complete Stage 1 Release](../guides/how-to-redeploy-stage-1-release.md) and must not start another rehearsal until the intended production deployment is restored.
+Once the rehearsal changes production, restoration is attempted even when rollback polling or verification fails. A restoration failure emits a critical message with the exact intended deployment ID and a safe manual procedure. Maintainers must then follow [How To Restore A Production Deployment](../../guides/production-operations/how-to-restore-production-deployment.md) and must not start another rehearsal until the intended production deployment is restored.
 
 Cloudflare history is not the evidence archive. History retention and hosted deployment availability are operational concerns, while canonical records, immutable snapshots, the lockfile, pinned toolchain, descriptor, and manifest provide the durable inputs needed to reproduce a release.
 

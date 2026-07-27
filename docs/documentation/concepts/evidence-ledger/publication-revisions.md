@@ -1,6 +1,7 @@
 ---
 label: Publication Revisions
-order: 600
+order: 200
+permalink: /concepts/publication-revisions/
 ---
 
 # Publication Revisions
@@ -67,13 +68,13 @@ A later `material_update` needs an automatically material difference or at least
 - Current revision ID, number, and update summary come from the newest revision.
 - Latest meaningful activity contains the newest material revision's ID, number, timestamp, category, update summary, and Entry title.
 
-A non-material revision becomes current but does not move Date Updated or replace latest meaningful activity. Its current title may differ from the title retained with latest meaningful activity; [Topic Trail pages](stage-1-topic-trail-page.md) use the retained material title for deterministic ordering. Dates never come from file modification time, Git history, build time, or local timezone conversion.
+A non-material revision becomes current but does not move Date Updated or replace latest meaningful activity. Its current title may differ from the title retained with latest meaningful activity; [Topic Trail pages](../public-interface/stage-1-topic-trail-page.md) use the retained material title for deterministic ordering. Dates never come from file modification time, Git history, build time, or local timezone conversion.
 
 ## Failure Behavior
 
 Publication stops before snapshot construction when any input or history rule fails. Blocking conditions include invalid canonical state, empty summaries, duplicate or discontinuous revisions, contradictory chronology, missing historical slug aliases, unresolved Methodologies, duplicate Methodology IDs, category/materiality conflicts, unchanged material declarations, and disabled Stage 1 removal.
 
-The domain returns `ValidationDiagnostic` values. The [Stage 1 Release Gate](stage-1-release-gate.md) can enrich and format those diagnostics for private terminal output, but formatting and process exit behavior do not belong in this system.
+The domain returns `ValidationDiagnostic` values. [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) can enrich and format those diagnostics for private terminal output, but formatting and process exit behavior do not belong in this system.
 
 ## Internal Edge Cases
 
@@ -87,12 +88,12 @@ The domain returns `ValidationDiagnostic` values. The [Stage 1 Release Gate](sta
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns the Entry, Methodology, timestamp, UUIDv7, controlled-value, and snapshot schemas. Publication revisions consume those contracts without expanding the stored snapshot.
+- [Canonical Records](./canonical-records.md) owns the Entry, Methodology, timestamp, UUIDv7, controlled-value, and snapshot schemas. Publication revisions consume those contracts without expanding the stored snapshot.
 - Every historical snapshot must resolve to the exact supplied Methodology ID and public version that it records. Older revisions may reference older Methodology records.
 - Aggregate canonical validation can validate repository-wide identities and relationships. The publication operation validates only the complete referenced Methodology set supplied for one Entry history.
 - Repository persistence remains separate. A successful return does not mean a snapshot file exists or that a release includes it.
-- [Release Construction](release-construction.md) validates complete stored histories, selects the newest snapshot, and derives public routes and Changelog events. [Dataset Generation](dataset-generation.md) projects the selected current snapshots into the public export contract.
-- [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) depends on the retained material title so current display wording and ordering history cannot drift together after a non-material correction.
+- [Release Construction](../release-lifecycle/release-construction.md) validates complete stored histories, selects the newest snapshot, and derives public routes and Changelog events. [Dataset Generation](../release-lifecycle/dataset-generation.md) projects the selected current snapshots into the public export contract.
+- [Stage 1 Topic Trail Page](../public-interface/stage-1-topic-trail-page.md) depends on the retained material title so current display wording and ordering history cannot drift together after a non-material correction.
 - Historical public browsing remains future Stage 3 work; retained snapshots have no public revision route yet.
 
 ## Invariants

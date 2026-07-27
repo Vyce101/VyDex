@@ -1,6 +1,7 @@
 ---
 label: Canonical Records
 order: 100
+permalink: /concepts/canonical-records/
 ---
 
 # Canonical Records
@@ -36,11 +37,11 @@ A `TopicTrail` provides a durable identity, public name, description, current sl
 
 A `Methodology` stores a public version and complete public content in named sections. Its structure owns lists, examples, definitions, and hierarchy, while each Markdown leaf supplies prose only.
 
-An `AboutRecord` stores the complete structured Stage 1 About content. It is a singleton without its own UUID because other records do not reference or version it. Its related-link fields contain titles and descriptions; [Release Construction](release-construction.md) supplies their canonical destinations.
+An `AboutRecord` stores the complete structured Stage 1 About content. It is a singleton without its own UUID because other records do not reference or version it. Its related-link fields contain titles and descriptions; [Release Construction](../release-lifecycle/release-construction.md) supplies their canonical destinations.
 
 A `MethodologyPublicationEvent` records the one separately authored Stage 1 Methodology Changelog event. It references Methodology `1.0.0` by UUID and requires a genuine RFC 3339 UTC `published_at` timestamp. Its public calendar date is derived later from that timestamp. Methodology `effective_date` remains a separate value describing when the rules apply.
 
-An `EntryPublicationSnapshot` stores revision metadata with a complete validated Entry payload. The schema defines the durable shape; the separate [Publication Revisions](publication-revisions.md) system validates history, constructs snapshots, and derives activity without changing the canonical contract.
+An `EntryPublicationSnapshot` stores revision metadata with a complete validated Entry payload. The schema defines the durable shape; the separate [Publication Revisions](./publication-revisions.md) system validates history, constructs snapshots, and derives activity without changing the canonical contract.
 
 `ReleaseMetadata` contains a durable release ID and generation timestamp. The release constructor validates these explicit caller-supplied values and uses them unchanged; descriptor creation and persistence remain outside the canonical-record system.
 
@@ -97,9 +98,9 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - A snapshot’s outer Entry and Methodology IDs must match its embedded Entry, and its stored Methodology public version must match the referenced Methodology record.
 - The schema recognizes `removed` for durable compatibility. Stage 1 production validation rejects it only for current public Entries, not for historical snapshot payloads.
 - The canonical loader retains filenames and raw invalid JSON for preview diagnostics, but filesystem access stays in the adapter boundary.
-- Release construction may combine valid canonical records into resolved public data, but it must not repair or widen the stored contracts. [Dataset Generation](dataset-generation.md) narrows that resolved state into the separate public Dataset `1.0.0` contract.
-- The [Entry Preview](entry-preview.md) consumes validated current Entry fields and the exhaustive public-label maps. It displays only the first authored Domain as preview priority without changing the ordered array or the full Entry and Dataset representations.
-- The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes resolved Trail Names, descriptions, slugs, and Entry relationships. It does not load canonical records directly or derive membership from filenames.
+- Release construction may combine valid canonical records into resolved public data, but it must not repair or widen the stored contracts. [Dataset Generation](../release-lifecycle/dataset-generation.md) narrows that resolved state into the separate public Dataset `1.0.0` contract.
+- The [Entry Preview](../public-interface/entry-preview.md) consumes validated current Entry fields and the exhaustive public-label maps. It displays only the first authored Domain as preview priority without changing the ordered array or the full Entry and Dataset representations.
+- The [Stage 1 Topic Trail Page](../public-interface/stage-1-topic-trail-page.md) consumes resolved Trail Names, descriptions, slugs, and Entry relationships. It does not load canonical records directly or derive membership from filenames.
 
 ## Invariants
 
@@ -120,7 +121,7 @@ Every rule implemented today emits a blocking `error`. The diagnostic type reser
 - `src/domain/index.ts` — Public framework-independent domain entry point.
 - `tests/domain/` — Valid fixtures, schema checks, Markdown safety, singleton content, and aggregate validation tests.
 
-Publication behavior belongs to `src/domain/publication-revisions/` and `src/domain/material-activity/`. Resolved public data belongs to `src/domain/release-construction/`. See [Publication Revisions](publication-revisions.md) before changing snapshot history and [Release Construction](release-construction.md) before changing derived release values.
+Publication behavior belongs to `src/domain/publication-revisions/` and `src/domain/material-activity/`. Resolved public data belongs to `src/domain/release-construction/`. See [Publication Revisions](./publication-revisions.md) before changing snapshot history and [Release Construction](../release-lifecycle/release-construction.md) before changing derived release values.
 
 ## Before Changing Canonical Records
 
@@ -136,4 +137,4 @@ Check:
 - Whether a Methodology publication event keeps `published_at` separate from the referenced Methodology's `effective_date` and avoids inferring future timestamps from UUIDs or repository metadata.
 - Whether compatibility behavior for aliases, snapshots, or removed Entries would be broken.
 
-Read [Static Application Foundation](static-application-foundation.md) before changing dependency direction, root tooling, or the Astro/domain boundary.
+Read [Static Application Foundation](../static-application-foundation.md) before changing dependency direction, root tooling, or the Astro/domain boundary.

@@ -1,6 +1,7 @@
 ---
 label: Stage 1 About Page
 order: 800
+permalink: /concepts/stage-1-about-page/
 ---
 
 # Stage 1 About Page
@@ -19,8 +20,8 @@ The feature turns one validated canonical About record into the complete public 
 
 It does not own:
 
-- Project identity copy, maintainer details, Scope Limit explanations, Coverage Baseline prose, or Related Link descriptions. [Canonical Records](canonical-records.md) owns those values.
-- Production completeness or release promotion. [Release Construction](release-construction.md) validates the About record and blocks incomplete releases.
+- Project identity copy, maintainer details, Scope Limit explanations, Coverage Baseline prose, or Related Link descriptions. [Canonical Records](../evidence-ledger/canonical-records.md) owns those values.
+- Production completeness or release promotion. [Release Construction](../release-lifecycle/release-construction.md) validates the About record and blocks incomplete releases.
 - Shared Header, Footer, navigation, route paths, canonical origins, typography, colors, focus treatment, or page width.
 - Methodology definitions, Changelog items, export behavior, or the content behind Related Links.
 - Runtime fetching, loading states, client recovery, logging, telemetry, or analytics.
@@ -86,12 +87,12 @@ Normal validation, build, and test failures are the observability boundary. The 
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns the singleton About shape and safe prose profiles. The page must not parse the authoring JSON or weaken its schemas.
-- [Release Construction](release-construction.md) owns production completeness, preview promotability, the site origin, route registry, and absolute Related Link URLs. The page must not repair invalid content or reconstruct those Related Link destinations.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns Header, Main, Footer, active navigation, skip navigation, and document metadata output. The feature provides only main content and its route-owned canonical URL.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns the reading measure, spacing, colors, typography, buttons, rules, focus treatment, and responsive breakpoint. About CSS composes those primitives without adding local substitute tokens.
-- [Static Application Foundation](static-application-foundation.md) owns Astro mode selection, application release loading, static generation, and the test harness.
-- Methodology, Changelog, and the [Export JSON Page](stage-1-export-json-page.md) remain separate destination features. The About page describes and links to them without taking ownership of their content or behavior.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns the singleton About shape and safe prose profiles. The page must not parse the authoring JSON or weaken its schemas.
+- [Release Construction](../release-lifecycle/release-construction.md) owns production completeness, preview promotability, the site origin, route registry, and absolute Related Link URLs. The page must not repair invalid content or reconstruct those Related Link destinations.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) owns Header, Main, Footer, active navigation, skip navigation, and document metadata output. The feature provides only main content and its route-owned canonical URL.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns the reading measure, spacing, colors, typography, buttons, rules, focus treatment, and responsive breakpoint. About CSS composes those primitives without adding local substitute tokens.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro mode selection, application release loading, static generation, and the test harness.
+- Methodology, Changelog, and the [Export JSON Page](./stage-1-export-json-page.md) remain separate destination features. The About page describes and links to them without taking ownership of their content or behavior.
 
 ## Invariants
 
@@ -127,4 +128,4 @@ Check:
 - Whether heading hierarchy, semantic lists, keyboard focus, responsive dividers, reading measure, and overflow behavior remain accessible.
 - Whether the page remains static and free of runtime loading, recovery, logging, telemetry, and analytics.
 
-Read [Canonical Records](canonical-records.md) before changing About content or validation, and [Release Construction](release-construction.md) before changing resolved links or release failure behavior.
+Read [Canonical Records](../evidence-ledger/canonical-records.md) before changing About content or validation, and [Release Construction](../release-lifecycle/release-construction.md) before changing resolved links or release failure behavior.

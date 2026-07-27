@@ -1,11 +1,12 @@
 ---
 label: Hosted Release Verification
-order: 550
+order: 200
+permalink: /concepts/hosted-release-verification/
 ---
 
 # Hosted Release Verification
 
-Hosted release verification compares Cloudflare Pages with the matching committed VyDex release archive. It runs after deployment because local builds cannot prove that Cloudflare published the expected routes, redirects, headers, canonical URLs, and files.
+Hosted release verification compares Cloudflare Pages with the matching committed VyDex release archive. It runs after deployment because local builds cannot prove that Cloudflare published the expected routes, redirects, headers, canonical URLs, and files. This page is for maintainers and coding agents changing hosted checks, deployment evidence, rollback qualification, or restoration verification.
 
 ## Purpose And Ownership
 
@@ -22,8 +23,8 @@ It owns:
 
 It does not own:
 
-- Constructing or rotating the VyDex Release ID. [Release Construction](release-construction.md) and the [Stage 1 Release Gate](stage-1-release-gate.md) own release data and local promotion.
-- Uploading files, authenticating to Cloudflare, discovering deployments, or calling the rollback endpoint. [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) owns those hosting operations.
+- Constructing or rotating the VyDex Release ID. [Release Construction](../release-lifecycle/release-construction.md) and [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) own release data and local promotion.
+- Uploading files, authenticating to Cloudflare, discovering deployments, or calling the rollback endpoint. [Cloudflare Pages Deployment](./cloudflare-pages-deployment.md) owns those hosting operations.
 - Defining page content, Dataset fields, Schema rules, or public route generation.
 - Treating Cloudflare deployment history as canonical evidence or permanent release storage.
 - Repairing a failed hosted release in place.
@@ -80,10 +81,10 @@ The verifier records failed checks but does not mutate hosted state. Only the de
 
 ## Interactions With Other VyDex Systems
 
-- [Stage 1 Release Gate](stage-1-release-gate.md) creates the exact `dist/` and manifest that define expected release bytes. Hosted verification never weakens or replaces that local gate.
-- [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) supplies production deployment records, performs uploads and rollbacks, and polls `canonical_deployment` after each mutation.
-- [Dataset Generation](dataset-generation.md) supplies the deterministic Dataset and immutable Schema contracts used in byte and relationship checks.
-- [Static Application Foundation](static-application-foundation.md) supplies the shared Playwright projects and no-JavaScript, accessibility, keyboard, and responsive journeys.
+- [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md) creates the exact `dist/` and manifest that define expected release bytes. Hosted verification never weakens or replaces that local publication boundary.
+- [Cloudflare Pages Deployment](./cloudflare-pages-deployment.md) supplies production deployment records, performs uploads and rollbacks, and polls `canonical_deployment` after each mutation.
+- [Dataset Generation](../release-lifecycle/dataset-generation.md) supplies the deterministic Dataset and immutable Schema contracts used in byte and relationship checks.
+- [Static Application Foundation](../static-application-foundation.md) supplies the shared Playwright projects and no-JavaScript, accessibility, keyboard, and responsive journeys.
 - GitHub Actions supplies commit and run identifiers, protected-environment approval, exclusive production-operation concurrency, and retained evidence artifacts.
 
 ## Internal Edge Cases
@@ -148,7 +149,7 @@ Check:
 
 ## Related Pages
 
-- [Cloudflare Pages Deployment](cloudflare-pages-deployment.md)
-- [Stage 1 Release Gate](stage-1-release-gate.md)
-- [How To Rehearse The Production Rollback](../guides/how-to-rehearse-production-rollback.md)
-- [How To Redeploy A Complete Stage 1 Release](../guides/how-to-redeploy-stage-1-release.md)
+- [Cloudflare Pages Deployment](./cloudflare-pages-deployment.md)
+- [Repeatable Release Publication](../release-lifecycle/repeatable-release-publication.md)
+- [How To Rehearse The Production Rollback](../../guides/production-operations/how-to-rehearse-production-rollback.md)
+- [How To Restore A Production Deployment](../../guides/production-operations/how-to-restore-production-deployment.md)

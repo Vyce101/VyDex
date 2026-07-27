@@ -1,6 +1,7 @@
 ---
 label: Release Construction
-order: 700
+order: 100
+permalink: /concepts/release-construction/
 ---
 
 # Release Construction
@@ -32,7 +33,7 @@ It does not own:
 - Rendering the Stage 1 pages or a private preview interface.
 - Terminal logging, persistent logs, process exit behavior, or the current clock.
 
-The [Stage 1 Release Gate](stage-1-release-gate.md) owns those production orchestration responsibilities. It supplies explicit metadata to this system and consumes either one complete release or its blocking diagnostics.
+[Repeatable Release Publication](repeatable-release-publication.md) owns those production orchestration responsibilities. It supplies explicit metadata to this system and consumes either one complete release or its blocking diagnostics.
 
 ## Inputs and Outputs
 
@@ -45,7 +46,7 @@ The canonical loader receives an injectable repository root and reads the approv
 - An explicit public site origin.
 - Either `production` or `preview` mode.
 
-A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), [Stage 1 Export JSON Page](stage-1-export-json-page.md), [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](stage-1-methodology-page.md), and is the input to [Dataset Generation](dataset-generation.md). A failed production call returns diagnostics and no release.
+A successful production call returns one immutable `ReleaseModel`. It contains current public Entries, Methodology, Topic Trails, About content, material Changelog events, and route and permanent-alias redirect descriptors. That validated model feeds public pages, including the [Stage 1 About Page](../public-interface/stage-1-about-page.md), [Stage 1 Changelog Page](../public-interface/stage-1-changelog-page.md), [Stage 1 Export JSON Page](../public-interface/stage-1-export-json-page.md), [Stage 1 Topic Trail Page](../public-interface/stage-1-topic-trail-page.md), and [Stage 1 Methodology Page](../public-interface/stage-1-methodology-page.md), and is the input to [Dataset Generation](./dataset-generation.md). A failed production call returns diagnostics and no release.
 
 Preview always returns a `PreviewReleaseModel`. Valid sections remain available when they can be resolved without relying on invalid input; invalid records remain separate from authoritative values.
 
@@ -70,7 +71,7 @@ The operation is deterministic. Identical records, snapshots, release metadata, 
 
 Production loading fails closed when the descriptor is missing, unreadable, malformed, or schema-invalid. It never falls back to the fixed development/test metadata. Ordinary builds, development starts, page renders, and tests do not create a UUID, read the clock, or write the descriptor.
 
-The fixed adapter is explicitly non-production. Its constants make local and automated output reproducible, but they are not genuine release state and must not be written into canonical records or persisted as a production descriptor. The [Stage 1 Release Gate](stage-1-release-gate.md) is the sole creator of the initial genuine descriptor. It validates a candidate release before exclusive creation, preserves the winning descriptor during a creation race, and never rewrites an existing descriptor.
+The fixed adapter is explicitly non-production. Its constants make local and automated output reproducible, but they are not genuine release state and must not be written into canonical records or persisted as a production descriptor. The [Stage 1 Release Gate (Historical)](stage-1-release-gate.md) was the sole creator of the initial genuine descriptor. It validated a candidate release before exclusive creation, preserved the winning descriptor during a creation race, and never rewrote an existing descriptor.
 
 ## Production and Private Preview
 
@@ -78,7 +79,7 @@ Production requires a root-only HTTPS origin, valid release metadata, one comple
 
 Preview may use an explicitly supplied HTTPS origin or HTTP localhost. The application adapter defaults an omitted preview origin to `http://localhost:4321`, even when a production origin exists in the environment. Missing release metadata keeps release-independent information available, but the preview is non-promotable and cannot expose a release-specific dataset artifact path or enter dataset generation.
 
-This diagnostic preview mode is separate from a Cloudflare Pages preview deployment. Git-integrated Pages previews run a production-shaped static build with the committed descriptor and `PUBLIC_SITE_ORIGIN=https://vydex.pages.dev`, so their temporary preview hostnames never become canonical URLs. [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) owns that hosting behavior.
+This diagnostic preview mode is separate from a Cloudflare Pages preview deployment. Git-integrated Pages previews run a production-shaped static build with the committed descriptor and `PUBLIC_SITE_ORIGIN=https://vydex.pages.dev`, so their temporary preview hostnames never become canonical URLs. [Cloudflare Pages Deployment](../deployment-and-verification/cloudflare-pages-deployment.md) owns that hosting behavior.
 
 Invalid preview records are not repaired. The preview keeps their record type, recoverable ID, filename, raw or partial value, field diagnostics, and unresolved relationship diagnostics. The Topic Trail page may present `Missing Required Field` and `Last Activity: Unknown`, but the constructor never inserts those fallbacks into records, resolved release values, routes, Changelog events, or exports.
 
@@ -90,7 +91,7 @@ Every canonical Entry must have a valid snapshot history, and every history must
 
 Date Added comes from the first publication timestamp. Date Updated and latest meaningful activity come from the newest material revision. Latest meaningful activity also retains the Entry title from that material snapshot.
 
-Resolved public Entries sort by latest meaningful activity timestamp descending, Date Added descending, then immutable Entry ID ascending. The shared pure comparator is also used by the [Stage 1 Homepage](stage-1-homepage.md), so a non-material correction or title-only change cannot move an Entry in either list.
+Resolved public Entries sort by latest meaningful activity timestamp descending, Date Added descending, then immutable Entry ID ascending. The shared pure comparator is also used by the [Stage 1 Homepage](../public-interface/stage-1-homepage.md), so a non-material correction or title-only change cannot move an Entry in either list.
 
 Each resolved Topic Trail has a separate latest-update comparator. It uses latest meaningful activity timestamp descending, Date Added descending, the retained material title alphabetically in English, then immutable Entry ID ascending. This extra title key applies only inside Topic Trail lists. A later non-material title correction may change the displayed current title but cannot change trail order or Last Activity.
 
@@ -102,7 +103,7 @@ Route collision checks operate on normalized root-relative pathnames before the 
 
 The resolved Methodology pairs the validated canonical record with separate current and immutable absolute URLs. The Methodology Page consumes those URLs directly for route-specific canonical metadata; Entry records continue to carry the immutable version URL assigned by their published snapshot.
 
-Entry and Topic Trail aliases produce permanent `301` redirects. The stable-latest dataset path is not an alias and does not use that contract; [Dataset Generation](dataset-generation.md) returns a separate `302` descriptor whose destination changes with each release.
+Entry and Topic Trail aliases produce permanent `301` redirects. The stable-latest dataset path is not an alias and does not use that contract; [Dataset Generation](./dataset-generation.md) returns a separate `302` descriptor whose destination changes with each release.
 
 Current slugs create canonical routes. Historical aliases create `301` redirect descriptors that point directly to the current route. Redirect sources must be unique, cannot collide with current routes, and cannot form loops or chains. This system returns descriptors only; the release gate translates them into the staged Cloudflare `_redirects` file and verifies the emitted rules.
 
@@ -122,7 +123,7 @@ The separately authored Methodology publication event becomes `methodology_chang
 
 Methodology `effective_date` is not an event-ordering field. The canonical `1.0.0` event uses the one-time migrated timestamp `2026-07-24T19:21:21.438Z`; future Methodology publication events must author their genuine timestamp at publication rather than infer it from a UUID, Git history, or the effective date.
 
-Release construction retains the selected snapshot, derived revision activity, canonical URL, resolved Topic Trail and Methodology references, and publicly ordered copied sources for every current Entry. It does not create public export records. The [Stage 1 Entry Page](stage-1-entry-page.md) renders that resolved order directly, while the separate dataset generator uses the same resolved state so pages and exports cannot disagree about which revision or relationship is current.
+Release construction retains the selected snapshot, derived revision activity, canonical URL, resolved Topic Trail and Methodology references, and publicly ordered copied sources for every current Entry. It does not create public export records. The [Stage 1 Entry Page](../public-interface/stage-1-entry-page.md) renders that resolved order directly, while the separate dataset generator uses the same resolved state so pages and exports cannot disagree about which revision or relationship is current.
 
 The source-ordering module owns one pure comparator: Source Role follows the approved evidence-role cascade, and an English alphabetical title comparison breaks ties. Its ordering helper sorts a copied array. Dataset generation defensively reapplies that same helper to copied input, derives labels and Evidence Types, validates the serialized result against its Schema, and returns immutable artifact metadata. Domains retain their validated order. The filesystem writer remains a separate adapter.
 
@@ -147,18 +148,18 @@ The loader and constructor return diagnostics without writing to standard output
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns stored shapes and record-local rules. Release construction consumes those schemas rather than widening or repairing them.
-- [Publication Revisions](publication-revisions.md) owns snapshot creation, history semantics, and material activity. Release construction validates complete stored histories and selects their current state.
-- [Dataset Generation](dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
-- The [Entry Preview](entry-preview.md) consumes a typed subset of `ResolvedPublicEntry`. It must use resolved dates, Topic Trail data, and canonical URLs rather than load, infer, or repair authoring records.
-- The [Stage 1 Entry Page](stage-1-entry-page.md) consumes the complete `ResolvedPublicEntry`, including its publicly ordered sources. It must not introduce a page-local comparator.
-- The [Stage 1 Methodology Page](stage-1-methodology-page.md) consumes `ResolvedMethodology`, including its current and version-specific canonical URLs. It must not reconstruct those URLs from the request pathname.
-- The [Stage 1 About Page](stage-1-about-page.md) consumes `ResolvedAboutRecord`. It must not load authoring JSON, repair missing content, or reconstruct Related Link destinations.
-- The [Stage 1 Changelog Page](stage-1-changelog-page.md) consumes the ordered material-event collection, validates its display projection, and groups derived dates without adding a second comparator or exposing exact times.
-- The [Stage 1 Export JSON Page](stage-1-export-json-page.md) prepares Dataset `1.0.0` and its page model from this same release. It must not load a second descriptor or reconstruct the artifact route.
-- The [Stage 1 Homepage](stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
-- The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
-- [Static Application Foundation](static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns stored shapes and record-local rules. Release construction consumes those schemas rather than widening or repairing them.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) owns snapshot creation, history semantics, and material activity. Release construction validates complete stored histories and selects their current state.
+- [Dataset Generation](./dataset-generation.md) owns public export projection, Schema validation, deterministic serialization, immutable artifact descriptors, and the dataset filesystem writer boundary.
+- The [Entry Preview](../public-interface/entry-preview.md) consumes a typed subset of `ResolvedPublicEntry`. It must use resolved dates, Topic Trail data, and canonical URLs rather than load, infer, or repair authoring records.
+- The [Stage 1 Entry Page](../public-interface/stage-1-entry-page.md) consumes the complete `ResolvedPublicEntry`, including its publicly ordered sources. It must not introduce a page-local comparator.
+- The [Stage 1 Methodology Page](../public-interface/stage-1-methodology-page.md) consumes `ResolvedMethodology`, including its current and version-specific canonical URLs. It must not reconstruct those URLs from the request pathname.
+- The [Stage 1 About Page](../public-interface/stage-1-about-page.md) consumes `ResolvedAboutRecord`. It must not load authoring JSON, repair missing content, or reconstruct Related Link destinations.
+- The [Stage 1 Changelog Page](../public-interface/stage-1-changelog-page.md) consumes the ordered material-event collection, validates its display projection, and groups derived dates without adding a second comparator or exposing exact times.
+- The [Stage 1 Export JSON Page](../public-interface/stage-1-export-json-page.md) prepares Dataset `1.0.0` and its page model from this same release. It must not load a second descriptor or reconstruct the artifact route.
+- The [Stage 1 Homepage](../public-interface/stage-1-homepage.md) consumes `current_entries` and reuses the release comparator. It does not add filtering, title ordering, or a second material-activity field.
+- The [Stage 1 Topic Trail Page](../public-interface/stage-1-topic-trail-page.md) consumes one resolved non-empty trail with its ordered Entries, count, Last Activity, and canonical URL. It verifies consistency but does not rebuild membership or ordering.
+- [Static Application Foundation](../static-application-foundation.md) owns the Astro build and dependency direction. Astro pages must consume the shared application release adapter instead of parsing authoring files.
 - Release metadata persistence remains outside the canonical loader and domain constructor. Rebuilding the same release with the same persisted descriptor preserves its ID, generation timestamp, and deterministic output.
 - Cloudflare preview URLs are hosting addresses, not release-construction inputs. Pages preview builds must pass the production origin into the strict application adapter.
 - The repository contains the complete Stage 1 seed record set and initial production descriptor. Tests and development page builds inject fixed metadata through the named non-production adapter without creating or persisting genuine release state. Ordinary production builds require the persisted descriptor and never generate a replacement.
@@ -211,6 +212,6 @@ Check:
 - Whether the release UUIDv7 still participates in the global durable-ID collision check.
 - Whether route and alias checks run before absolute URL generation.
 - Whether every page-facing value still comes from the shared release model.
-- Whether dataset behavior belongs in [Dataset Generation](dataset-generation.md) rather than the release constructor.
+- Whether dataset behavior belongs in [Dataset Generation](./dataset-generation.md) rather than the release constructor.
 - Whether a proposed filesystem, environment, clock, logging, or output side effect belongs in an adapter or the release gate instead of the domain constructor.
 - Whether tests cover both strict production rejection and diagnostic preview behavior.

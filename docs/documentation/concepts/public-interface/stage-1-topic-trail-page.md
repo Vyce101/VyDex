@@ -1,6 +1,7 @@
 ---
 label: Stage 1 Topic Trail Page
-order: 1600
+order: 600
+permalink: /concepts/stage-1-topic-trail-page/
 ---
 
 # Stage 1 Topic Trail Page
@@ -15,12 +16,12 @@ The feature turns one `ResolvedTopicTrail` into a lightweight reading surface. I
 - The Trail Header, Metadata Strip, Topic Trail note, and Entry list inside the shared site shell.
 - Production projection checks for the Trail Name, description, Entry count, Last Activity, and canonical route.
 - Presentation-only private-preview fallbacks for missing required text and unavailable Last Activity.
-- Topic Trail-specific composition of [Entry Preview](entry-preview.md) and Frontier Atlas primitives.
+- Topic Trail-specific composition of [Entry Preview](./entry-preview.md) and Frontier Atlas primitives.
 
 It does not own:
 
-- [Canonical Records](canonical-records.md) owns Topic Trail schemas, stable IDs, slugs, aliases, and Entry relationship validation.
-- Selection of current public Entry snapshots, material-activity derivation, membership, counts, ordering, or Last Activity. [Release Construction](release-construction.md) supplies those values.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns Topic Trail schemas, stable IDs, slugs, aliases, and Entry relationship validation.
+- Selection of current public Entry snapshots, material-activity derivation, membership, counts, ordering, or Last Activity. [Release Construction](../release-lifecycle/release-construction.md) supplies those values.
 - Entry Preview field content, status labels, claim rendering, or Entry links.
 - Header, Footer, navigation, document structure, or global design tokens.
 - Client-side Entry loading, search, filters, sort controls, analytics, or logging.
@@ -34,11 +35,11 @@ The private-preview presentation input may contain partial Trail Name, descripti
 ## Normal Flow
 
 1. The thin dynamic route selects the approved application release source for the current Astro mode.
-2. [Release Construction](release-construction.md) validates records and histories, selects current public Entries, resolves Topic Trail relationships and routes, and rejects empty trails.
+2. [Release Construction](../release-lifecycle/release-construction.md) validates records and histories, selects current public Entries, resolves Topic Trail relationships and routes, and rejects empty trails.
 3. Release resolution copies each trail's members and sorts them with the Topic Trail latest-update comparator.
 4. Astro maps every resolved trail slug to one static route and passes the complete trail to the feature boundary.
 5. The presentation model checks that required fields, count, canonical route, and Last Activity agree with the ordered Entry list.
-6. The page renders through the [Stage 1 Site Shell](stage-1-site-shell.md), using the reusable Entry Preview for each Entry.
+6. The page renders through the [Stage 1 Site Shell](./stage-1-site-shell.md), using the reusable Entry Preview for each Entry.
 7. Astro writes the complete page to HTML. The browser does not fetch or reorder Entry data.
 
 ## Entry Ordering and Activity
@@ -89,12 +90,12 @@ Unknown Topic Trail slugs are absent from `getStaticPaths()` and use the project
 
 ## Cross-System Edge Cases
 
-- [Publication Revisions](publication-revisions.md) derives latest meaningful activity and retains the title from its material snapshot. Topic Trail pages must not infer materiality from the current Entry title or Date Updated alone.
-- [Release Construction](release-construction.md) owns membership, ordering, counts, Last Activity, canonical URLs, production failure, and preview promotability. The page verifies resolved consistency but does not rebuild those decisions from authoring files.
-- [Entry Preview](entry-preview.md) owns the record field sequence and validation. The Topic Trail host supplies only the quiet treatment and current-trail footer reference.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns Header, Main, Footer, skip navigation, document metadata, and inactive Topic Trail navigation state.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns color, typography, spacing, focus, rule, radius, and responsive primitives. Topic Trail CSS only composes those project-owned values.
-- [Static Application Foundation](static-application-foundation.md) owns Astro mode selection, application release loading, generated route behavior, the generic 404 boundary, and the browser-test harness.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) derives latest meaningful activity and retains the title from its material snapshot. Topic Trail pages must not infer materiality from the current Entry title or Date Updated alone.
+- [Release Construction](../release-lifecycle/release-construction.md) owns membership, ordering, counts, Last Activity, canonical URLs, production failure, and preview promotability. The page verifies resolved consistency but does not rebuild those decisions from authoring files.
+- [Entry Preview](./entry-preview.md) owns the record field sequence and validation. The Topic Trail host supplies only the quiet treatment and current-trail footer reference.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) owns Header, Main, Footer, skip navigation, document metadata, and inactive Topic Trail navigation state.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns color, typography, spacing, focus, rule, radius, and responsive primitives. Topic Trail CSS only composes those project-owned values.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro mode selection, application release loading, generated route behavior, the generic 404 boundary, and the browser-test harness.
 
 ## Invariants
 

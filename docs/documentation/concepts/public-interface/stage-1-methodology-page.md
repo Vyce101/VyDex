@@ -1,6 +1,7 @@
 ---
 label: Stage 1 Methodology Page
-order: 1300
+order: 700
+permalink: /concepts/stage-1-methodology-page/
 ---
 
 # Stage 1 Methodology Page
@@ -20,8 +21,8 @@ The feature turns one validated canonical Methodology record into a complete pub
 
 It does not own:
 
-- Methodology content, definitions, version identity, or effective date. [Canonical Records](canonical-records.md) owns those values.
-- Canonical route paths and absolute URLs. Route generation and [Release Construction](release-construction.md) own them.
+- Methodology content, definitions, version identity, or effective date. [Canonical Records](../evidence-ledger/canonical-records.md) owns those values.
+- Canonical route paths and absolute URLs. Route generation and [Release Construction](../release-lifecycle/release-construction.md) own them.
 - Entry assessment data or the Methodology version assigned to an Entry.
 - Shared Header, Footer, focus tokens, typography, colors, or generic table behavior.
 - Runtime fetching, client recovery, analytics, or logging.
@@ -79,7 +80,7 @@ The Entry Page links these explanatory labels:
 - `Potential Significance If Confirmed` to `#significance`.
 - `Review Reason` to `#review-status`.
 
-Only the label becomes Methodology help. Domain values remain text, and Topic Trail names retain their links to the generated [Stage 1 Topic Trail pages](stage-1-topic-trail-page.md). This keeps explanatory navigation separate from record relationships.
+Only the label becomes Methodology help. Domain values remain text, and Topic Trail names retain their links to the generated [Stage 1 Topic Trail pages](./stage-1-topic-trail-page.md). This keeps explanatory navigation separate from record relationships.
 
 ## User-Facing Behavior
 
@@ -108,11 +109,11 @@ The page projection also rejects duplicate section IDs or a Jump To destination 
 
 ## Cross-System Edge Cases
 
-- [Release Construction](release-construction.md) supplies one validated Methodology and both canonical URLs. The page must not parse authoring files or construct route URLs itself.
-- [Stage 1 Entry Page](stage-1-entry-page.md) uses the shared anchor contract and its resolved immutable Methodology URL. It must not hardcode `1.0.0` into help links.
-- [Stage 1 Site Shell](stage-1-site-shell.md) derives the active Methodology state from the pathname and owns document order.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns responsive table behavior, typography, colors, focus, and page measurements. The Methodology feature owns only their rulebook composition.
-- [Static Application Foundation](static-application-foundation.md) owns the build mode, application release boundary, canonical-link layout interface, and browser-test harness.
+- [Release Construction](../release-lifecycle/release-construction.md) supplies one validated Methodology and both canonical URLs. The page must not parse authoring files or construct route URLs itself.
+- [Stage 1 Entry Page](./stage-1-entry-page.md) uses the shared anchor contract and its resolved immutable Methodology URL. It must not hardcode `1.0.0` into help links.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) derives the active Methodology state from the pathname and owns document order.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns responsive table behavior, typography, colors, focus, and page measurements. The Methodology feature owns only their rulebook composition.
+- [Static Application Foundation](../static-application-foundation.md) owns the build mode, application release boundary, canonical-link layout interface, and browser-test harness.
 - The current route may change in a later Methodology release, but an immutable version route must continue to render the content and canonical URL for that exact version.
 
 ## Invariants
@@ -151,4 +152,4 @@ Check:
 - Whether headings, focus, scroll spacing, no-JavaScript reading, and Browser Find behavior remain accessible.
 - Whether tests cover missing content, missing targets, route identity, and the absence of fake versions or runtime fetching.
 
-Read [Canonical Records](canonical-records.md) before changing Methodology content or validation, and [Release Construction](release-construction.md) before changing resolved URLs or release selection.
+Read [Canonical Records](../evidence-ledger/canonical-records.md) before changing Methodology content or validation, and [Release Construction](../release-lifecycle/release-construction.md) before changing resolved URLs or release selection.

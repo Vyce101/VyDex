@@ -12,7 +12,8 @@ These docs cover the public VyDex pages, the evidence and release systems behind
 
 ## Choose a Path
 
+- [I want to read the public VyDex ledger](https://vydex.pages.dev)
 - [I want to run VyDex](https://github.com/Vyce101/VyDex/blob/main/docs/QUICKSTART.md)
 - [I want to understand VyDex](concepts/)
-- [I want to use VyDex](guides/)
+- [I want to operate VyDex production](guides/production-operations/)
 - [I want to contribute to the codebase](https://github.com/Vyce101/VyDex)

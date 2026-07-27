@@ -1,10 +1,12 @@
 ---
 label: How To Rehearse The Production Rollback
+order: 100
+permalink: /guides/how-to-rehearse-production-rollback/
 ---
 
 # How To Rehearse The Production Rollback
 
-Use this guide when the deployment or rollback mechanism changes or another production rehearsal is explicitly required. The protected workflow temporarily switches the live Pages deployment, verifies it, restores the intended deployment, and verifies production again.
+This guide is for VyDex maintainers authorized to approve the protected `production` environment. Use it when the deployment or rollback mechanism changes or another production rehearsal is explicitly required. The protected workflow temporarily switches the live Pages deployment, verifies it, restores the intended deployment, and verifies production again.
 
 ## Before You Start
 
@@ -13,7 +15,7 @@ Use this guide when the deployment or rollback mechanism changes or another prod
 - Confirm that `https://vydex.pages.dev` currently serves the intended Release ID.
 - Confirm that the GitHub `production` environment has required reviewers and that an authorized reviewer is available.
 - Confirm that no deployment, rollback, restoration, or production incident is in progress.
-- Be ready to use [How To Redeploy A Complete Stage 1 Release](how-to-redeploy-stage-1-release.md) if automatic restoration fails.
+- Be ready to use [How To Restore A Production Deployment](how-to-restore-production-deployment.md) if automatic restoration fails.
 
 The initial Stage 1 launch rehearsal has passed. A new rehearsal still changes the live production deployment twice, so run it only when an explicit later check is needed; it is not part of every routine content deployment.
 
@@ -47,7 +49,7 @@ The rehearsal is complete only when rollback verification, restoration, and fina
 
 The workflow still attempts restoration when rollback polling or verification fails. Preserve the failed run and its uploaded reports, browser output, screenshots, traces, and logs.
 
-If the logs contain `CRITICAL: restore production to deployment`, do not start another rehearsal. Copy the intended deployment ID, follow the emitted manual recovery procedure, and use [How To Redeploy A Complete Stage 1 Release](how-to-redeploy-stage-1-release.md). Never substitute a preview deployment.
+If the logs contain `CRITICAL: restore production to deployment`, do not start another rehearsal. Copy the intended deployment ID, follow the emitted manual recovery procedure, and use [How To Restore A Production Deployment](how-to-restore-production-deployment.md). Never substitute a preview deployment.
 
 If restoration succeeds but the rollback phase failed, the workflow remains failed by design. Review the failed phase report before deciding whether the mechanism is ready for another explicitly approved rehearsal.
 
@@ -57,7 +59,7 @@ Retain the successful workflow artifact with the deployment evidence. Routine pr
 
 ## Related Pages
 
-- [How To Redeploy A Complete Stage 1 Release](how-to-redeploy-stage-1-release.md)
-- [Hosted Release Verification](../concepts/hosted-release-verification.md)
-- [Cloudflare Pages Deployment](../concepts/cloudflare-pages-deployment.md)
-- [Stage 1 Release Gate](../concepts/stage-1-release-gate.md)
+- [How To Restore A Production Deployment](how-to-restore-production-deployment.md)
+- [Hosted Release Verification](../../concepts/deployment-and-verification/hosted-release-verification.md)
+- [Cloudflare Pages Deployment](../../concepts/deployment-and-verification/cloudflare-pages-deployment.md)
+- [Repeatable Release Publication](../../concepts/release-lifecycle/repeatable-release-publication.md)

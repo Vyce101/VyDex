@@ -1,6 +1,7 @@
 ---
 label: Stage 1 Entry Page
-order: 1000
+order: 500
+permalink: /concepts/stage-1-entry-page/
 ---
 
 # Stage 1 Entry Page
@@ -24,8 +25,8 @@ It does not own:
 
 - Canonical Entry validation, Source Role definitions, or public label maps.
 - Snapshot publication, materiality, Date Added, Date Updated, or current-revision selection.
-- Public source ordering. [Release Construction](release-construction.md) supplies an already ordered copied Entry.
-- Topic Trail destination-page membership, ordering, and presentation. The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) owns that feature.
+- Public source ordering. [Release Construction](../release-lifecycle/release-construction.md) supplies an already ordered copied Entry.
+- Topic Trail destination-page membership, ordering, and presentation. The [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md) owns that feature.
 - The shared Header, Footer, document structure, or Frontier Atlas tokens.
 - Client-side fetching, loading states, browser recovery, telemetry, or logging.
 
@@ -96,7 +97,7 @@ Release resolution clones the selected current Entry and orders its copied sourc
 
 Every source record keeps its citation ID, title, publisher or domain, public Source Role, Evidence Types, `used_for` text, and URL attached to the same source object. The page gives every repeated source link a contextual accessible name based on the source title.
 
-[Dataset Generation](dataset-generation.md) defensively uses the same ordering helper. This shared contract prevents the HTML record and public dataset from disagreeing about evidence-role order while leaving canonical records and immutable snapshots untouched.
+[Dataset Generation](../release-lifecycle/dataset-generation.md) defensively uses the same ordering helper. This shared contract prevents the HTML record and public dataset from disagreeing about evidence-role order while leaving canonical records and immutable snapshots untouched.
 
 ## Failure Behavior
 
@@ -123,15 +124,15 @@ Methodology links resolve to the implemented immutable version route, while Topi
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns valid Entry fields, Markdown profiles, controlled values, and label maps. The feature consumes those contracts without widening them.
-- [Publication Revisions](publication-revisions.md) owns immutable snapshots and material activity. The page cannot infer Date Updated from editable canonical data.
-- [Release Construction](release-construction.md) owns current snapshot selection, source ordering, relationships, routes, canonical URLs, and production validity.
-- [Entry Preview](entry-preview.md) uses the same inline Markdown renderer but intentionally shows a smaller field subset and only its display-priority Domain and primary Topic Trail.
-- [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) consumes the Entry's resolved primary and secondary relationships to build trail membership. The Entry Page only presents and links those relationships.
-- [Frontier Atlas](frontier-atlas-design-system.md) owns tokens, typography roles, focus treatment, status treatments, and responsive primitives. The Entry Page owns only their feature-specific composition.
-- The [Stage 1 Methodology Page](stage-1-methodology-page.md) owns the public definitions and anchor destinations. The Entry Page consumes the shared anchor contract without owning the rulebook.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns the shared document order and navigation. Entry routes have no active Header item.
-- [Static Application Foundation](static-application-foundation.md) owns Astro's static build, application-release adapter boundary, and browser-test environment.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns valid Entry fields, Markdown profiles, controlled values, and label maps. The feature consumes those contracts without widening them.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) owns immutable snapshots and material activity. The page cannot infer Date Updated from editable canonical data.
+- [Release Construction](../release-lifecycle/release-construction.md) owns current snapshot selection, source ordering, relationships, routes, canonical URLs, and production validity.
+- [Entry Preview](./entry-preview.md) uses the same inline Markdown renderer but intentionally shows a smaller field subset and only its display-priority Domain and primary Topic Trail.
+- [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md) consumes the Entry's resolved primary and secondary relationships to build trail membership. The Entry Page only presents and links those relationships.
+- [Frontier Atlas](./frontier-atlas-design-system.md) owns tokens, typography roles, focus treatment, status treatments, and responsive primitives. The Entry Page owns only their feature-specific composition.
+- The [Stage 1 Methodology Page](./stage-1-methodology-page.md) owns the public definitions and anchor destinations. The Entry Page consumes the shared anchor contract without owning the rulebook.
+- [Stage 1 Site Shell](./stage-1-site-shell.md) owns the shared document order and navigation. Entry routes have no active Header item.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro's static build, application-release adapter boundary, and browser-test environment.
 
 ## Invariants
 

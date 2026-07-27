@@ -1,6 +1,7 @@
 ---
 label: Frontier Atlas Design System
-order: 500
+order: 100
+permalink: /concepts/frontier-atlas-design-system/
 ---
 
 # Frontier Atlas Design System
@@ -32,10 +33,10 @@ It does not own:
 1. `FoundationLayout.astro` loads the project-owned Source Sans 3 and Source Serif 4 files, then imports `src/styles/global.css`.
 2. `global.css` imports the token, base, typography, layout, component, and site-shell stylesheets in a stable order.
 3. Mobile tokens apply by default. Media queries change the grid and approved type roles at 768px, 1024px, and 1312px; viewports below 400px use the smaller mobile page margin.
-4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](stage-1-site-shell.md) composes those primitives for shared navigation, the [Entry Preview](entry-preview.md) composes them for record summaries, the [Stage 1 About Page](stage-1-about-page.md) composes them for project identity and limitations, the [Stage 1 Changelog Page](stage-1-changelog-page.md) composes them for the ruled type key and revision index, the [Stage 1 Entry Page](stage-1-entry-page.md) composes them for complete maintained records, the [Stage 1 Export JSON Page](stage-1-export-json-page.md) composes them for the release sheet and responsive field index, the [Stage 1 Methodology Page](stage-1-methodology-page.md) composes them for the public rulebook, and the [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) composes them for trail metadata and Entry lists.
+4. Astro pages use the shared `atlas-*` classes and status data attributes instead of declaring local colors or substitute components. The [Stage 1 Site Shell](./stage-1-site-shell.md) composes those primitives for shared navigation, the [Entry Preview](./entry-preview.md) composes them for record summaries, the [Stage 1 About Page](./stage-1-about-page.md) composes them for project identity and limitations, the [Stage 1 Changelog Page](./stage-1-changelog-page.md) composes them for the ruled type key and revision index, the [Stage 1 Entry Page](./stage-1-entry-page.md) composes them for complete maintained records, the [Stage 1 Export JSON Page](./stage-1-export-json-page.md) composes them for the release sheet and responsive field index, the [Stage 1 Methodology Page](./stage-1-methodology-page.md) composes them for the public rulebook, and the [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md) composes them for trail metadata and Entry lists.
 5. Vitest checks the token and source contract. Playwright checks representative computed styles, responsive layouts, interaction states, reduced motion, grayscale-readable states, accessibility, and horizontal overflow.
 
-The current public interface includes the [Stage 1 Homepage](stage-1-homepage.md), [Stage 1 About Page](stage-1-about-page.md), [Stage 1 Changelog Page](stage-1-changelog-page.md), statically generated [Stage 1 Entry pages](stage-1-entry-page.md), the [Stage 1 Export JSON Page](stage-1-export-json-page.md), current and immutable [Stage 1 Methodology pages](stage-1-methodology-page.md), and generated [Stage 1 Topic Trail pages](stage-1-topic-trail-page.md). Each feature owns its composition while reusing the same type roles, rules, sheets, links, status treatments, spacing, and focus behavior.
+The current public interface includes the [Stage 1 Homepage](./stage-1-homepage.md), [Stage 1 About Page](./stage-1-about-page.md), [Stage 1 Changelog Page](./stage-1-changelog-page.md), statically generated [Stage 1 Entry pages](./stage-1-entry-page.md), the [Stage 1 Export JSON Page](./stage-1-export-json-page.md), current and immutable [Stage 1 Methodology pages](./stage-1-methodology-page.md), and generated [Stage 1 Topic Trail pages](./stage-1-topic-trail-page.md). Each feature owns its composition while reusing the same type roles, rules, sheets, links, status treatments, spacing, and focus behavior.
 
 ## Presentation Contracts
 
@@ -74,17 +75,17 @@ Under `prefers-reduced-motion: reduce`, non-essential transitions and disclosure
 
 ## Cross-System Edge Cases
 
-- [Canonical Records](canonical-records.md) owns claim-status machine values and public labels. Frontier Atlas only maps those machine values to presentation treatments.
-- The [Entry Preview](entry-preview.md) owns its field sequence, typed projection, and feature layout. Frontier Atlas supplies the sheet, rules, typography, status treatments, focus behavior, spacing, and responsive breakpoint used by that component.
-- The [Stage 1 Site Shell](stage-1-site-shell.md) owns shared navigation behavior and page structure. Frontier Atlas supplies its tokens, focus treatment, responsive breakpoint, and page alignment primitive.
-- The [Stage 1 Homepage](stage-1-homepage.md) owns its 1100px page composition, Hero annotation, action arrangement, and claim-reading band while reusing Frontier Atlas tokens and primitives.
-- The [Stage 1 About Page](stage-1-about-page.md) owns its open editorial composition, reading-width prose, responsive actions, ruled Scope Limit rows, carefulness band, and Related Links list while reusing Frontier Atlas tokens and primitives.
-- The [Stage 1 Changelog Page](stage-1-changelog-page.md) owns its continuous ruled Change Type Key, neutral material-event tabs, responsive date grouping, and wide date rail while reusing Frontier Atlas status, rule, type, grid, focus, and color contracts.
-- The [Stage 1 Entry Page](stage-1-entry-page.md) owns its continuous 1080px sheet, exact record hierarchy, full-width section composition, responsive Frontier Delta, and feature-specific source records while reusing Frontier Atlas tokens and primitives.
-- The [Stage 1 Export JSON Page](stage-1-export-json-page.md) owns its prominent release sheet, exact summary rows, ruled field index, Stage 1 limits, and direct download action while reusing Frontier Atlas sheet, table, button, focus, rule, and responsive contracts.
-- The [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md) owns its Trail Header, Metadata Strip, route cue, quiet note, and Entry list composition. Frontier Atlas supplies the approved compact type, Route Blue, rules, spacing, focus, and responsive primitives.
-- The [Stage 1 Methodology Page](stage-1-methodology-page.md) owns its open reading sections, ruled Jump To index, Methodology plates, and feature-specific table composition while reusing Frontier Atlas table, focus, typography, spacing, and color contracts.
-- [Static Application Foundation](static-application-foundation.md) owns the Astro shell, local font loading, static build, and validation commands. Frontier Atlas owns the presentation contract loaded by that shell.
+- [Canonical Records](../evidence-ledger/canonical-records.md) owns claim-status machine values and public labels. Frontier Atlas only maps those machine values to presentation treatments.
+- The [Entry Preview](./entry-preview.md) owns its field sequence, typed projection, and feature layout. Frontier Atlas supplies the sheet, rules, typography, status treatments, focus behavior, spacing, and responsive breakpoint used by that component.
+- The [Stage 1 Site Shell](./stage-1-site-shell.md) owns shared navigation behavior and page structure. Frontier Atlas supplies its tokens, focus treatment, responsive breakpoint, and page alignment primitive.
+- The [Stage 1 Homepage](./stage-1-homepage.md) owns its 1100px page composition, Hero annotation, action arrangement, and claim-reading band while reusing Frontier Atlas tokens and primitives.
+- The [Stage 1 About Page](./stage-1-about-page.md) owns its open editorial composition, reading-width prose, responsive actions, ruled Scope Limit rows, carefulness band, and Related Links list while reusing Frontier Atlas tokens and primitives.
+- The [Stage 1 Changelog Page](./stage-1-changelog-page.md) owns its continuous ruled Change Type Key, neutral material-event tabs, responsive date grouping, and wide date rail while reusing Frontier Atlas status, rule, type, grid, focus, and color contracts.
+- The [Stage 1 Entry Page](./stage-1-entry-page.md) owns its continuous 1080px sheet, exact record hierarchy, full-width section composition, responsive Frontier Delta, and feature-specific source records while reusing Frontier Atlas tokens and primitives.
+- The [Stage 1 Export JSON Page](./stage-1-export-json-page.md) owns its prominent release sheet, exact summary rows, ruled field index, Stage 1 limits, and direct download action while reusing Frontier Atlas sheet, table, button, focus, rule, and responsive contracts.
+- The [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md) owns its Trail Header, Metadata Strip, route cue, quiet note, and Entry list composition. Frontier Atlas supplies the approved compact type, Route Blue, rules, spacing, focus, and responsive primitives.
+- The [Stage 1 Methodology Page](./stage-1-methodology-page.md) owns its open reading sections, ruled Jump To index, Methodology plates, and feature-specific table composition while reusing Frontier Atlas table, focus, typography, spacing, and color contracts.
+- [Static Application Foundation](../static-application-foundation.md) owns the Astro shell, local font loading, static build, and validation commands. Frontier Atlas owns the presentation contract loaded by that shell.
 - Later page modules may choose which real record information to show, but annotations may only repeat or emphasize that information. A page cannot move an essential value exclusively into an annotation.
 - Page-specific CSS may arrange content within an approved primitive, but it must not introduce substitute colors, shadows, large radii, gradients, or a competing responsive scale.
 
@@ -137,6 +138,6 @@ Check:
 - Whether mobile tables retain visible definition labels and desktop table semantics.
 - Whether reduced-motion and dark operating-system preferences preserve the approved static states and light palette.
 - Whether a page ticket predates the compact-metadata accessibility adjustment. If it conflicts, preserve the Secondary Ink rule unless the project owner explicitly approves a tested accessible replacement.
-- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](stage-1-site-shell.md), the [Entry Preview](entry-preview.md), the [Stage 1 Homepage](stage-1-homepage.md), the [Stage 1 About Page](stage-1-about-page.md), the [Stage 1 Changelog Page](stage-1-changelog-page.md), the [Stage 1 Entry Page](stage-1-entry-page.md), the [Stage 1 Export JSON Page](stage-1-export-json-page.md), the [Stage 1 Methodology Page](stage-1-methodology-page.md), or the [Stage 1 Topic Trail Page](stage-1-topic-trail-page.md).
+- Whether the change belongs to Frontier Atlas, the [Stage 1 Site Shell](./stage-1-site-shell.md), the [Entry Preview](./entry-preview.md), the [Stage 1 Homepage](./stage-1-homepage.md), the [Stage 1 About Page](./stage-1-about-page.md), the [Stage 1 Changelog Page](./stage-1-changelog-page.md), the [Stage 1 Entry Page](./stage-1-entry-page.md), the [Stage 1 Export JSON Page](./stage-1-export-json-page.md), the [Stage 1 Methodology Page](./stage-1-methodology-page.md), or the [Stage 1 Topic Trail Page](./stage-1-topic-trail-page.md).
 
-Read [Stage 1 Site Shell](stage-1-site-shell.md) before changing shared navigation or page structure, and read [Static Application Foundation](static-application-foundation.md) before changing global imports, font loading, test commands, or the Astro presentation boundary.
+Read [Stage 1 Site Shell](./stage-1-site-shell.md) before changing shared navigation or page structure, and read [Static Application Foundation](../static-application-foundation.md) before changing global imports, font loading, test commands, or the Astro presentation boundary.

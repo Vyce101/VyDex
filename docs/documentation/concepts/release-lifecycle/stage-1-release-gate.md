@@ -1,19 +1,24 @@
 ---
-label: Stage 1 Release Gate (Legacy)
-order: 1400
+label: Stage 1 Release Gate (Historical)
+order: 400
+permalink: /concepts/stage-1-release-gate/
 ---
 
-# Stage 1 Release Gate
+# Stage 1 Release Gate (Historical)
 
-> This page records the original bootstrap design. Bootstrap is retired and the initial identity is archived. Use [Repeatable Release Publication](repeatable-release-publication.md) for current commands and lifecycle rules.
+> This page records the original bootstrap design. Bootstrap is retired and the initial identity is archived. Use [Repeatable Release Publication](./repeatable-release-publication.md) for current commands and lifecycle rules.
 
-The Stage 1 release gate turns one validated VyDex release into verified static output. It is the only workflow allowed to create the initial production descriptor, and it promotes output only after the website, Schema, export, redirects, browser checks, and manifest agree. This page is for maintainers and coding agents changing release orchestration, generated output, validation, or persistence behavior.
+The retired Stage 1 release gate turned one validated VyDex release into verified static output. It was the only workflow allowed to create the initial production descriptor, and it promoted output only after the website, Schema, export, redirects, browser checks, and manifest agreed. This page is retained for maintainers and coding agents that need the original bootstrap context while changing current release orchestration, generated output, validation, or persistence behavior.
+
+## Historical Scope
+
+The ownership and flow below describe the retired one-time bootstrap contract. Current release selection, reproduction, and successor construction belong to [Repeatable Release Publication](repeatable-release-publication.md). The historical gate must not be reactivated or treated as a current command path.
 
 ## Purpose and Ownership
 
-The gate prevents a partially valid or internally inconsistent build from replacing the previous promotable output.
+The gate prevented a partially valid or internally inconsistent build from replacing the previous promotable output.
 
-It owns:
+The historical gate owned:
 
 - The `npm run release:stage-1` production release command.
 - Validation of the required `PUBLIC_SITE_ORIGIN` before release construction.
@@ -27,14 +32,14 @@ It owns:
 - Rollback-aware promotion of the verified static output and manifest.
 - Human-readable terminal diagnostics, complete browser-test output, and private rotating release logs.
 
-It does not own:
+It did not own:
 
 - Authoring canonical records or publication snapshots.
-- Deciding whether a record or relationship is valid. [Release Construction](release-construction.md) owns those rules.
-- Defining the Dataset `1.0.0` contract or JSON Schema. [Dataset Generation](dataset-generation.md) owns those contracts.
+- Deciding whether a record or relationship is valid. [Release Construction](./release-construction.md) owns those rules.
+- Defining the Dataset `1.0.0` contract or JSON Schema. [Dataset Generation](./dataset-generation.md) owns those contracts.
 - Creating a later release descriptor or rotating the Stage 1 descriptor.
-- Deploying to Cloudflare Pages or changing the hosted production site. [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) owns publication.
-- Proving that Cloudflare serves the promoted routes, headers, redirects, bytes, accessibility behavior, or no-JavaScript journeys. [Hosted Release Verification](hosted-release-verification.md) owns that post-deployment contract.
+- Deploying to Cloudflare Pages or changing the hosted production site. [Cloudflare Pages Deployment](../deployment-and-verification/cloudflare-pages-deployment.md) owns publication.
+- Proving that Cloudflare serves the promoted routes, headers, redirects, bytes, accessibility behavior, or no-JavaScript journeys. [Hosted Release Verification](../deployment-and-verification/hosted-release-verification.md) owns that post-deployment contract.
 - Rendering a public preview, manifest route, diagnostics page, or client-side recovery state.
 
 ## Inputs and Outputs
@@ -106,15 +111,15 @@ The staging directory is removed after success or failure. Browser output, Wrang
 
 ## Interactions With Other VyDex Systems
 
-- [Canonical Records](canonical-records.md) defines stored record shapes and record-local validation. The gate does not widen or repair those values.
-- [Publication Revisions](publication-revisions.md) owns immutable Entry history and materiality. The gate consumes the resulting snapshots without creating revisions.
-- [Release Construction](release-construction.md) creates the single strict production release used by every verifier.
-- [Dataset Generation](dataset-generation.md) creates deterministic Schema and export contracts. The gate writes, verifies, inventories, and promotes their output.
-- [Static Application Foundation](static-application-foundation.md) owns Astro configuration, public rendering, and the ordinary development and build commands. The gate invokes that build through an isolated output boundary.
-- [Cloudflare Pages Deployment](cloudflare-pages-deployment.md) consumes only output that strict release mode reproduced and verified against committed release state.
-- [Hosted Release Verification](hosted-release-verification.md) reloads the same committed state after deployment and compares it with the live production surface. It does not change the gate's manifest or `dist/`.
-- [Stage 1 Site Shell](stage-1-site-shell.md) owns Header and Footer composition. The gate verifies its destinations on the generated HTML.
-- [Stage 1 Export JSON Page](stage-1-export-json-page.md) presents release-derived export metadata. The gate verifies that the page and downloadable bytes describe the same release.
+- [Canonical Records](../evidence-ledger/canonical-records.md) defines stored record shapes and record-local validation. The gate does not widen or repair those values.
+- [Publication Revisions](../evidence-ledger/publication-revisions.md) owns immutable Entry history and materiality. The gate consumes the resulting snapshots without creating revisions.
+- [Release Construction](./release-construction.md) creates the single strict production release used by every verifier.
+- [Dataset Generation](./dataset-generation.md) creates deterministic Schema and export contracts. The gate writes, verifies, inventories, and promotes their output.
+- [Static Application Foundation](../static-application-foundation.md) owns Astro configuration, public rendering, and the ordinary development and build commands. The gate invokes that build through an isolated output boundary.
+- [Cloudflare Pages Deployment](../deployment-and-verification/cloudflare-pages-deployment.md) consumes only output that strict release mode reproduced and verified against committed release state.
+- [Hosted Release Verification](../deployment-and-verification/hosted-release-verification.md) reloads the same committed state after deployment and compares it with the live production surface. It does not change the gate's manifest or `dist/`.
+- [Stage 1 Site Shell](../public-interface/stage-1-site-shell.md) owns Header and Footer composition. The gate verifies its destinations on the generated HTML.
+- [Stage 1 Export JSON Page](../public-interface/stage-1-export-json-page.md) presents release-derived export metadata. The gate verifies that the page and downloadable bytes describe the same release.
 
 ## Internal Edge Cases
 
