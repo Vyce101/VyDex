@@ -17,8 +17,91 @@ permissions:
   contents: read
 
 jobs:
+  synchronize_release:
+    name: Synchronize trusted PR release state
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: vydex-release-sync-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    env:
+      PUBLIC_SITE_ORIGIN: ${{ vars.PUBLIC_SITE_ORIGIN }}
+
+    steps:
+      - name: Check out trusted pull request branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up exact Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install immutable dependency tree
+        run: npm ci
+
+      - name: Install pinned Chromium runtime
+        run: npx --no-install playwright install --with-deps chromium
+
+      - name: Synchronize active release selection
+        run: npm run release:sync -- --confirm CREATE_NEXT_RELEASE
+
+      - name: Commit generated release state
+        id: release_state
+        shell: bash
+        run: |
+          changed_paths="$(
+            {
+              git diff --name-only
+              git ls-files --others --exclude-standard
+            } | sort -u
+          )"
+          if [[ -z "$changed_paths" ]]; then
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          unexpected_paths="$(printf '%s\n' "$changed_paths" | grep -v '^generated/release-data/' || true)"
+          if [[ -n "$unexpected_paths" ]]; then
+            printf 'Release synchronization changed unexpected paths:\n%s\n' "$unexpected_paths" >&2
+            exit 1
+          fi
+
+          git add -- generated/release-data
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit \
+            -m "Select synchronized Stage 1 release" \
+            -m "Generate the checksum-linked release state for the pull request's validated public output. Previous immutable releases remain retained."
+          echo "created=true" >> "$GITHUB_OUTPUT"
+
+      - name: Require synchronized release selection
+        run: npm run release:check
+
+      - name: Type-check, test, validate, build, and verify release
+        run: npm run release:ci
+
+      - name: Push validated release state
+        if: steps.release_state.outputs.created == 'true'
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: git push origin "HEAD:${HEAD_REF}"
+
   validate:
     name: Validate complete active release
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
