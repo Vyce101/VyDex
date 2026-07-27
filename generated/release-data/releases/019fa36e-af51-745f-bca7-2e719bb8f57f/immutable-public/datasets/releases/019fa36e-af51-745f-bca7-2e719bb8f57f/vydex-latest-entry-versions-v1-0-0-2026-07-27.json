@@ -1,0 +1,522 @@
+{
+  "$schema": "https://vydex.pages.dev/schemas/vydex-dataset/1.0.0.json",
+  "dataset_name": "VyDex",
+  "dataset_schema_version": "1.0.0",
+  "release_id": "019fa36e-af51-745f-bca7-2e719bb8f57f",
+  "generated_at": "2026-07-27T11:56:07.891Z",
+  "scope": "latest_entry_versions",
+  "entry_count": 3,
+  "methodology_versions": [
+    "1.0.0"
+  ],
+  "entries": [
+    {
+      "id": "019f95f1-29e5-7ea2-a96e-03b7e9d296cb",
+      "slug": "dreamer-4-offline-minecraft-diamonds",
+      "canonical_url": "https://vydex.pages.dev/entries/dreamer-4-offline-minecraft-diamonds/",
+      "revision_id": "019f995f-3e13-7666-94f1-4331d5503e5f",
+      "revision_number": 2,
+      "revision_published_at": "2026-07-25T13:03:03Z",
+      "latest_update_summary": "Completed the evidence review and marked the Entry stable.",
+      "title": "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data",
+      "claim": "Google DeepMind researchers report that Dreamer 4 obtained diamonds in 0.7% of 1,000 one-hour Minecraft evaluations after learning from a fixed 2,541-hour gameplay dataset and improving its policy through reinforcement learning entirely inside a learned world model, without online environment interaction during training.",
+      "claim_status": "supported",
+      "evidence_strength": "strong",
+      "evidence_strength_score": 3,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019f95f1-29e6-73e2-8d15-188f7e0593bf",
+        "name": "World models for agent training",
+        "slug": "world-models-for-agent-training",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/world-models-for-agent-training/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": null,
+        "date_disclosed": "2025-09-29",
+        "date_added": "2026-07-24",
+        "date_updated": "2026-07-25",
+        "date_last_checked": "2026-07-25",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Dreamer 3 had learned from online interaction to collect Minecraft diamonds from sparse rewards, reaching its first diamond after 30 million environment steps, while OpenAI’s VPT used large-scale video pretraining followed by online reinforcement learning to craft diamond tools. Dreamer 3 also received inventory information and abstract crafting actions rather than relying exclusively on the native visual interface.",
+        "new_claim_result": "Dreamer 4 obtained diamonds after training only on a fixed offline dataset, using raw pixel observations and low-level mouse and keyboard actions. Its policy was first initialized from the recorded dataset and then improved through reinforcement learning on trajectories generated inside its learned world model, without collecting additional experience from Minecraft during learning.",
+        "delta": "The reported frontier moved from Minecraft diamond acquisition requiring online trial and error to rare but measurable diamond acquisition after fully offline policy training, with learned imagined experience replacing environment interaction during reinforcement learning."
+      },
+      "details": {
+        "what_happened": "Dreamer 4 is a two-billion-parameter world-model agent developed by Google DeepMind researchers Danijar Hafner, Wilson Yan, and Timothy Lillicrap. Its training has three broad stages: world-model pretraining on recorded video and actions, task-conditioned policy and reward-model training from the dataset, and reinforcement learning on trajectories generated inside the frozen world model. The final policy is then evaluated in the actual Minecraft engine, but the evaluation environment does not supply new training experience.\n\nFor the Offline Diamond Challenge, the researchers used 2,541 hours of contractor gameplay containing 360p video, mouse and keyboard actions, and event annotations. Evaluations began in randomly generated worlds with empty inventories, lasted up to 60 minutes, and used raw pixels with the native low-level control interface. The paper estimates that an experienced human needs about 20 minutes, corresponding to approximately 24,000 mouse and keyboard actions, to obtain a diamond.",
+        "what_evidence_shows": "Dreamer 4 obtained diamonds in 0.7% of 1,000 evaluation episodes—equivalent to seven successful episodes. Every evaluated offline baseline recorded zero diamond successes. Dreamer 4 also obtained iron pickaxes in 29.0% of episodes, compared with 16.9% for the same world-model representation followed only by behavioral cloning and 11.2% for the Gemma 3-based vision-language-action baseline. This ablation supports the narrower claim that imagination training improved the policy beyond imitation from the offline dataset.\n\nPerformance was much higher on earlier milestones: Dreamer 4 obtained stone pickaxes in 90.1% of episodes, iron ore in 66.7%, furnaces in 58.1%, iron ingots in 39.5%, and iron pickaxes in 29.0%. The increasing advantage over behavioral-cloning systems on later milestones is consistent with imagination training helping most as the required behavior becomes longer and less common in the dataset.\n\nThe world model was also evaluated as an interactive Minecraft simulator. A human operator completed 14 of 16 selected interaction tasks inside Dreamer 4, compared with 5 of 16 in the large Oasis model and none in Lucid-v1. Dreamer 4 generated at 21 frames per second on one H100 GPU with 9.6 seconds of context, allowing real-time interaction while preserving a substantially longer context than the compared models.",
+        "context_changes_interpretation": "“Offline” describes the learning process, not the final evaluation. Dreamer 4 was evaluated in the actual Minecraft engine after training; it did not learn solely by executing inside an imagined game from random initialization. The world model, initial policy, and reward model first learned from recorded gameplay containing video, actions, and event annotations. Reinforcement learning inside the world model was the final improvement stage.\n\nThe system also did not receive one unrestricted instruction—such as “find a diamond”—and independently invent the entire plan. It was trained as a 20-task agent and guided during evaluation by a manually specified linear prompt sequence covering gathering wood, crafting successive tools, mining iron, building and using a furnace, and finally mining diamonds. This still requires executing the subtasks under changing procedural conditions, but it limits claims about autonomous task decomposition and open-ended planning.\n\nThe diamond success rate was only 0.7%. That is enough to establish a non-zero reported capability across a large evaluation, but it is not reliable task mastery. The result should therefore be interpreted as crossing the offline-training threshold, not as producing a dependable Minecraft agent.",
+        "reader_takeaway": "Dreamer 4 provides strong initial evidence that a learned world model can become accurate enough for reinforcement learning inside generated experience to improve a policy on a difficult, long-horizon task and transfer that improvement back into the real evaluation environment. Its key contribution is not that another agent can play Minecraft; earlier systems had already reached diamonds or diamond tools. The frontier change is that the policy reached the final milestone without online trial-and-error learning.\n\nThe result remains narrow. It establishes this capability in Minecraft under an authored task hierarchy, using a large action-labelled dataset, substantial training compute, and a low final success rate. It does not establish that the method can yet train reliable general-purpose agents or physical robots entirely through imagination."
+      },
+      "confirmed_significance": "Within the reported Minecraft experiment, Dreamer 4 moved the demonstrated frontier from online world-model reinforcement learning to offline world-model reinforcement learning for the complete diamond progression. Its imagination-trained policy was the only evaluated offline system to obtain diamonds and materially outperformed its behavioral-cloning counterpart on later milestones. This is direct evidence that the learned simulator was useful for policy improvement rather than only for generating visually plausible video.\n\nThe accompanying simulator evaluation also shows a substantial increase in the range of Minecraft mechanics that a real-time world model can preserve. Dreamer 4 supported 14 of 16 tested interactions while running faster than the game’s 20-Hz update rate on one H100, although its usable temporal context remained limited.",
+      "potential_significance_if_confirmed": "If independently reproduced and generalized beyond Minecraft, the result would support training agents from fixed records plus imagined rollouts in domains where online exploration is expensive, slow, difficult to reset, or unsafe. Possible applications include robotics, autonomous systems, and other physical-control settings where partially trained agents cannot be allowed to learn through unrestricted trial and error.\n\nDreamer 4 does not itself demonstrate this complete robotics pipeline. The paper separately shows that its world model can generate counterfactual robot interactions from a robotics dataset, but it does not show a physical robot policy trained entirely through imagined reinforcement learning and then deployed successfully in the real world. Robotics should therefore remain prospective significance rather than part of the confirmed milestone.",
+      "caveats": [
+        "**Developer-controlled evidence:** The paper, benchmark runs, evaluation procedure, project page, and released videos originate from Dreamer 4’s developers. The work remains a preprint and the exact Minecraft result has not been independently reproduced in the evidence attached here.",
+        "**Low final success rate:** Dreamer 4 obtained diamonds in 0.7% of episodes. The result demonstrates capability, not reliability or mastery.",
+        "**Authored subtask sequence:** Evaluation used a manually defined sequence of intermediate prompts rather than requiring the agent to infer the complete plan from one high-level objective.",
+        "**Not video-only training:** The diamond agent used gameplay video paired with low-level actions and event annotations. Separate experiments showed that action conditioning could benefit from large amounts of unlabelled video, but the diamond result was not obtained from action-free video alone.",
+        "**No demonstrated physical-world policy transfer:** Evaluation transferred the policy from a learned Minecraft model into the actual Minecraft engine. The robotics experiment evaluated generated counterfactual interactions, not deployment of an imagination-trained policy on a physical robot.",
+        "**Large training resources:** The reported models contained two billion parameters and were trained across 256 to 1,024 TPU-v5p accelerators. The paper does not provide everything necessary for an independent group to reproduce the complete Minecraft result from the public materials alone.",
+        "**World-model limitations:** Dreamer 4’s generated Minecraft state used 9.6 seconds of context, and the authors report that inventory items could become unclear or change over time. This constrains how literally the simulator should be treated as a persistent, exact internal copy of the environment."
+      ],
+      "evidence_types": [
+        "preprint",
+        "peer_reviewed_paper",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "dreamer-4-paper",
+          "title": "Training Agents Inside of Scalable World Models",
+          "publisher_or_domain": "arXiv / Google DeepMind researchers",
+          "url": "https://arxiv.org/abs/2509.24527",
+          "evidence_types": [
+            "preprint",
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Main Dreamer 4 claim, training procedure, dataset and evaluation setup, milestone success rates, behavioral-cloning ablations, world-model comparison, task prompt sequence, compute details, and disclosed limitations. Because the authors are reporting a result about their own system, this is a Developer / Vendor Claim rather than an Official Claim."
+        },
+        {
+          "citation_id": "dreamer-4-project-page",
+          "title": "Dreamer 4 project page and uncut evaluations",
+          "publisher_or_domain": "Dreamer 4 research team",
+          "url": "https://danijar.com/project/dreamer4/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public project description, uncut successful evaluation videos, decoded imagination-training sequences, interactive world-model comparisons, and robotics-world-model demonstrations."
+        },
+        {
+          "citation_id": "dreamer-3-nature-paper",
+          "title": "Mastering diverse control tasks through world models",
+          "publisher_or_domain": "Nature",
+          "url": "https://www.nature.com/articles/s41586-025-08744-2",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous frontier established by Dreamer 3, including online reinforcement learning from sparse rewards, Minecraft input and action accommodations, and diamond acquisition after environment interaction."
+        },
+        {
+          "citation_id": "unofficial-dreamer-4-pytorch",
+          "title": "Unofficial Dreamer 4 PyTorch implementation",
+          "publisher_or_domain": "Nicklas Hansen",
+          "url": "https://github.com/nicklashansen/dreamer4",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Reproducibility context. The repository explicitly describes itself as an unofficial and incomplete implementation applied to continuous-control tasks rather than a reproduction of the original Minecraft result. It must not be labelled Independent Replication."
+        },
+        {
+          "citation_id": "openai-vpt-paper",
+          "title": "Video PreTraining: Learning to Act by Watching Unlabeled Online Videos",
+          "publisher_or_domain": "NeurIPS 2022",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/9c7008aff45b5d8f0973b23e1a22ada0-Abstract-Conference.html",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Earlier native-interface Minecraft frontier, the estimated 24,000-action task horizon, large-scale video pretraining, and diamond-tool performance after online reinforcement-learning fine-tuning."
+        }
+      ]
+    },
+    {
+      "id": "019f95f1-29e6-706f-a250-e15e16b91b72",
+      "slug": "google-deepmind-gdmi-leading-hurricane-guidance-2025",
+      "canonical_url": "https://vydex.pages.dev/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
+      "revision_id": "019f95f1-29e6-77d3-bbe5-b31cc88a575c",
+      "revision_number": 1,
+      "revision_published_at": "2026-07-24T20:18:26Z",
+      "latest_update_summary": "Initial entry added. The claim is centred on formal 2025 NHC verification rather than DeepMind’s June 2025 launch announcement.",
+      "title": "NHC verification finds Google DeepMind’s GDMI leading individual hurricane guidance in 2025",
+      "claim": "During the first season in which the National Hurricane Center incorporated AI-based models into real-time operations, Google DeepMind’s GDMI ensemble mean slightly outperformed the official Atlantic track forecast at 12–72 hours, delivered comparable Atlantic intensity skill, and beat the official forecast and all consensus track aids in the eastern North Pacific at 48–120 hours.",
+      "claim_status": "confirmed",
+      "evidence_strength": "very_strong",
+      "evidence_strength_score": 4,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019f95f1-29e6-783b-9df9-0bc9b2342563",
+        "name": "AI in operational weather forecasting",
+        "slug": "ai-in-operational-weather-forecasting",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/ai-in-operational-weather-forecasting/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": "2025-11-30",
+        "date_disclosed": "2026-03-30",
+        "date_added": "2026-07-24",
+        "date_updated": "2026-07-24",
+        "date_last_checked": "2026-07-24",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Operational-style testing of GraphCast, Pangu-Weather, FourCastNet and related AI weather models found that their tropical-cyclone tracks could compete with strong operational models, but their intensity forecasts were worse than even simple climatology-and-persistence guidance. The models systematically weakened storms and did not improve the operational intensity consensus.",
+        "new_claim_result": "In its first season supplying real-time guidance to NHC, Google DeepMind’s GDMI became one of the leading individual hurricane models. It slightly outperformed NHC’s Atlantic track forecast at 12–72 hours, achieved comparable Atlantic intensity skill, and outperformed the official forecast and all consensus track aids in the eastern North Pacific at 48–120 hours.",
+        "delta": "AI hurricane forecasting moved from strong track predictions paired with largely unusable raw intensity forecasts to one AI ensemble providing operationally competitive guidance for both track and intensity during a live hurricane season."
+      },
+      "details": {
+        "what_happened": "On 12 June 2025, Google DeepMind and Google Research launched Weather Lab and began sharing live predictions from an experimental tropical-cyclone model with NHC forecasters. The system generated 50 possible cyclone scenarios extending as far as 15 days and attempted to predict formation, track, intensity, size and structure within one probabilistic model. DeepMind’s launch evidence was retrospective and developer-controlled, so the 2025 season was the first important prospective operational test.\n\nNHC later described 2025 as the first season in which it incorporated AI-based models into real-time operations. Its preliminary report called GDMI “very useful,” while warning that several AI systems remained under development and were not always delivered reliably enough for routine use. The completed seasonal verification subsequently showed that GDMI was not merely an interesting experimental output: it had become competitive with, and under defined conditions better than, established operational guidance.",
+        "what_evidence_shows": "In homogeneous Atlantic comparisons, meaning forecasts were compared only where every included model was available for the same cases, GDMI slightly outperformed the NHC official track forecast from 12 through 72 hours. Its Atlantic intensity forecasts had skill comparable to the official NHC forecast and placed it among the strongest individual intensity models at several lead times.\n\nIts strongest relative result came in the eastern North Pacific. From 48 through 120 hours, GDMI performed considerably better than the other individual track models and beat both the official NHC forecast and every tested consensus aid. That is especially notable because consensus aids combine several strong models and are normally more difficult for one individual system to outperform consistently.\n\nDeepMind later summarized the merged Atlantic and North Pacific results by saying WeatherNext was the season’s top-performing individual model for both track and intensity. That summary is useful, but it remains a **Developer / Vendor Claim** and compresses substantial variation between basins, forecast ranges and metrics. The more granular NHC findings above should therefore define the public VyDex claim.\n\nHurricane Melissa provides the clearest operational example. On 24 October, while Melissa was still a relatively weak tropical storm, every DeepMind ensemble member projected Category 4 strength or higher, and NHC said its track and intensity forecasts were being blended with GDMI guidance. By the following day, roughly four-fifths of the 50 members projected Category 5 strength, and an NHC discussion described GDMI as the best-performing intensity guidance to that point in the season. On 26 October, 48 of the 50 members still reached Category 5.\n\nMelissa ultimately struck Jamaica on 28 October with estimated sustained winds of 185 mph and a central pressure of 892 millibars. NHC had issued almost three days of advance notice of a Category 5 Jamaican landfall—the first time it had forecast Category 5 intensity while a storm was still only Category 1.",
+        "context_changes_interpretation": "This result does **not** mean GDMI beat NHC or the best consensus systems everywhere. Performance depended on basin, forecast horizon and metric. The strongest verified superiority was in eastern North Pacific track forecasting at 48–120 hours. Atlantic track advantages were smaller and concentrated at shorter ranges, while Atlantic intensity performance was described as comparable to the official forecast rather than universally superior.\n\nNHC’s official forecast remained the stronger overall decision product in several of the season’s hardest situations. Across Atlantic rapid-intensification cases, NHC achieved a higher probability of detection and critical success index than every real-time model. For Melissa specifically, its official intensity forecast outperformed every model at nearly every lead time. GDMI contributed valuable evidence to the human forecast; it did not independently produce the official warning or replace the observations, aircraft reconnaissance, physical models, consensus systems and forecaster judgment behind it.\n\nGDMI was also unavailable during the early portion of the season. The homogeneous comparisons excluded the first two Atlantic storms and the first five eastern North Pacific storms, so this was not a complete all-storm evaluation. NHC separately noted that some experimental AI systems were not consistently available in time for routine operational use.\n\nOne season is important prospective evidence, but it cannot establish performance across every possible hurricane environment. The Atlantic had fewer forecast cases than normal, while an unusual concentration of Category 5 storms and rapid-intensification episodes made intensity prediction particularly difficult. Future seasons could expose weaknesses that the 2025 sample did not.\n\nThe system’s ability to generate scenarios extending 15 days should also not be confused with verified, high-accuracy hurricane intensity guidance across that entire horizon. The central operational comparisons in the NHC report extend through five days. The 15-day horizon describes what the model can generate, not a demonstrated 15-day intensity-forecasting threshold.",
+        "reader_takeaway": "The supported conclusion is that AI hurricane forecasting crossed a meaningful operational threshold in 2025. Earlier global AI weather models could provide useful track guidance but generally smoothed away the strongest winds and failed badly at intensity. GDMI became a system that forecasters could consult in real time for both dimensions and that subsequently achieved leading individual-model performance under formal NHC verification.\n\nThe result should not be interpreted as hurricane forecasting being solved or human forecasters becoming unnecessary. It shows something narrower and more consequential: an AI model overcame a central documented limitation of the previous model generation well enough to become useful inside one of the world’s highest-stakes operational forecasting workflows."
+      },
+      "confirmed_significance": "This was the first formally verified season in which NHC incorporated AI-based model output into real-time hurricane operations. The system’s strongest contribution was not merely faster global weather prediction or improved track forecasting—areas where earlier AI models had already shown substantial capability—but competitive intensity guidance, historically the major weakness of global AI weather models.\n\nThe milestone is therefore the movement from retrospective model-development claims to prospective, real-time and institutionally verified performance. GDMI’s forecasts influenced operational discussions during major storms, survived comparison against final post-season storm records, and in some conditions outperformed both the official forecast and multi-model consensus guidance.",
+      "potential_significance_if_confirmed": "If comparable performance is reproduced across additional seasons, basins, and operational centres, AI guidance could become a durable part of high-stakes tropical-cyclone forecasting for both track and intensity, giving human forecasters stronger probabilistic evidence earlier in a storm’s development. The 2025 result does not establish worldwide generalisation, consistently longer warning lead times, or reduced casualties.",
+      "caveats": [
+        "**Performance was conditional.** GDMI’s relative position changed across basins, forecast horizons and metrics. “Leading individual model” must not be rewritten as “best forecast system everywhere.”",
+        "**The evaluation covered only part of the season.** GDMI was unavailable for the first two Atlantic storms and first five eastern North Pacific storms.",
+        "**Human forecasts remained stronger in crucial cases.** NHC performed better across the rapid-intensification subset and outperformed all individual models for Melissa’s intensity at almost every lead time.",
+        "**This is one season.** Formal operational verification makes the result much stronger than a retrospective demonstration, but it does not yet establish durable performance across different multi-year storm distributions.",
+        "**The system remained experimental.** NHC reported availability and timeliness problems, and DeepMind described Weather Lab as a research tool rather than an official warning service.",
+        "**The 15-day output horizon is easy to overread.** The strongest verified comparisons concern forecasts through 120 hours, not consistently accurate hurricane intensity prediction 15 days ahead.",
+        "**Melissa is supporting evidence, not the whole case.** Its forecast demonstrates practical relevance, but the entry’s status and evidence strength rest on the complete season verification rather than one successful storm."
+      ],
+      "evidence_types": [
+        "preprint",
+        "peer_reviewed_paper",
+        "official_claim",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "government_report",
+        "media_report"
+      ],
+      "sources": [
+        {
+          "citation_id": "nhc-2025-hurricane-season-verification",
+          "title": "Forecast Verification Report: 2025 Hurricane Season",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/verification/pdfs/Verification_2025.pdf",
+          "evidence_types": [
+            "benchmark_result",
+            "government_report"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Final post-season verification methodology; Atlantic and eastern North Pacific model comparisons; GDMI’s track and intensity performance; homogeneous sample boundaries; model availability limitations; official 2025 season findings. The report was published on 30 March 2026."
+        },
+        {
+          "citation_id": "nhc-2025-verification-preview",
+          "title": "2025 NHC Verification Report Preview",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/pdf/NHC_Verification_Report_2025_Preview.pdf",
+          "evidence_types": [
+            "benchmark_result",
+            "government_report"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Confirmation that 2025 was NHC’s first season incorporating AI models in real time; preliminary rapid-intensification evaluation; Melissa forecast verification; statement that GDMI was useful but experimental systems were not always available on time."
+        },
+        {
+          "citation_id": "melissa-landfall-update",
+          "title": "Category 5 Melissa makes landfall in Jamaica",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.update.10281700.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Official observed landfall outcome: Category 5 intensity, estimated 185 mph sustained winds and 892-millibar central pressure."
+        },
+        {
+          "citation_id": "melissa-discussion-13",
+          "title": "Hurricane Melissa Forecast Discussion 13",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.discus.013.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Real-time evidence that every DeepMind ensemble member forecast Category 4 intensity or higher; documentation that NHC blended GDMI into its track and intensity forecasts while Melissa was still weak."
+        },
+        {
+          "citation_id": "melissa-discussion-18",
+          "title": "Hurricane Melissa Forecast Discussion 18",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.discus.018.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Real-time evidence that approximately four-fifths of the DeepMind ensemble projected Category 5 intensity and that NHC regarded GDMI as its best-performing intensity guidance to that point in the season."
+        },
+        {
+          "citation_id": "melissa-discussion-22",
+          "title": "Hurricane Melissa Forecast Discussion 22",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.discus.022.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Confirmation that 48 of 50 DeepMind ensemble members projected Category 5 intensity and that GDMI remained part of NHC’s operational track blend."
+        },
+        {
+          "citation_id": "ai-tropical-cyclone-operations-evaluation",
+          "title": "An Operations-Based Evaluation of Tropical Cyclone Track and Intensity Forecasts from Artificial Intelligence Weather Prediction Models",
+          "publisher_or_domain": "DeMaria et al. / AMS",
+          "url": "https://journals.ametsoc.org/view/journals/aies/4/4/AIES-D-24-0085.1.xml",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous-frontier baseline showing that GraphCast, Pangu-Weather and FourCastNet produced competitive tracks but severe intensity underprediction, substantial low bias and no improvement to the intensity consensus."
+        },
+        {
+          "citation_id": "deepmind-tropical-cyclone-prediction",
+          "title": "How we’re supporting better tropical cyclone prediction with AI",
+          "publisher_or_domain": "Google DeepMind",
+          "url": "https://deepmind.google/blog/how-were-supporting-better-tropical-cyclone-prediction-with-ai/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Weather Lab launch date; 50-scenario and 15-day output design; training-data description; retrospective 2023–2024 testing; commencement of live NHC evaluation. Its performance claims are treated as developer evidence, not as independent verification."
+        },
+        {
+          "citation_id": "deepmind-hurricane-melissa",
+          "title": "How WeatherNext helped NHC better predict Hurricane Melissa",
+          "publisher_or_domain": "Google DeepMind",
+          "url": "https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "DeepMind’s merged-basin interpretation of the 2025 results; its account of WeatherNext’s Melissa probabilities; the developer’s description of its continuing NHC collaboration."
+        },
+        {
+          "citation_id": "skillful-joint-probabilistic-weather-forecasting",
+          "title": "Skillful joint probabilistic weather forecasting from marginals",
+          "publisher_or_domain": "Alet et al. / arXiv",
+          "url": "https://arxiv.org/abs/2506.10772",
+          "evidence_types": [
+            "preprint"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Technical description of the Forecast Generative Network underlying Weather Lab’s probabilistic forecasts. It supports architectural context but is not used to establish the season-level operational result."
+        },
+        {
+          "citation_id": "weather-network-ai-hurricane-model",
+          "title": "This AI weather model helped predict 2025’s huge hurricanes",
+          "publisher_or_domain": "The Weather Network",
+          "url": "https://www.theweathernetwork.com/en/news/weather/severe/this-ai-weather-model-helped-forecasters-predict-2025s-huge-hurricanes",
+          "evidence_types": [
+            "media_report"
+          ],
+          "source_role": "media_report",
+          "source_role_label": "Media Report",
+          "used_for": "Independent journalistic explanation of the completed NHC verification report, including the exact Atlantic and eastern North Pacific comparisons. It is contextual coverage rather than the primary basis for confirmation."
+        }
+      ]
+    },
+    {
+      "id": "019f95f1-29e6-7b1a-b120-8c2d9d628ed9",
+      "slug": "metr-software-task-horizons-doubling-seven-months",
+      "canonical_url": "https://vydex.pages.dev/entries/metr-software-task-horizons-doubling-seven-months/",
+      "revision_id": "019f95f1-29e6-7ad1-9775-b85f07fd5b10",
+      "revision_number": 1,
+      "revision_published_at": "2026-07-24T20:18:26Z",
+      "latest_update_summary": "Initial entry added from METR’s peer-reviewed task-horizon study, public analysis artifacts, Time Horizon 1.1, and the BRIDGE reproduction.",
+      "title": "METR finds frontier AI software-task horizons doubling about every seven months",
+      "claim": "Using a 170-task suite calibrated to expert human completion times, METR introduced the 50% task-completion time horizon and estimated that the frontier for model agents on software and research tasks doubled approximately every seven months from 2019 to early 2025.",
+      "claim_status": "confirmed",
+      "evidence_strength": "very_strong",
+      "evidence_strength_score": 4,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019f95f1-29e6-7321-8eae-45113baba7cd",
+        "name": "AI agents in software engineering",
+        "slug": "ai-agents-in-software-engineering",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/ai-agents-in-software-engineering/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": "2025-03-19",
+        "date_disclosed": "2025-03-19",
+        "date_added": "2026-07-24",
+        "date_updated": "2026-07-24",
+        "date_last_checked": "2026-07-24",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Agent evaluations generally produced benchmark-specific scores that were difficult to compare across model generations or translate into the amount of expert work represented.",
+        "new_claim_result": "METR fitted model-agent success against expert human task duration across a 170-task suite and reported Claude 3.7 Sonnet at roughly a 50-minute 50% horizon, alongside an approximately seven-month frontier doubling trend from 2019 to early 2025.",
+        "delta": "The measurement frontier moved from isolated benchmark scores toward a longitudinal, human-time-calibrated measure that could compare model-agent generations across software and research tasks ranging from seconds to hours."
+      },
+      "details": {
+        "what_happened": "On March 19, 2025, METR published a method for measuring model-agent capability using the estimated time a relevant human expert would need to complete a task. The original suite combined 97 HCAST software tasks, seven RE-Bench machine-learning research tasks, and 66 short Software Atomic Actions, covering 170 tasks in total.\n\nFor each agent, METR modelled success probability as a function of the logarithm of human completion time. Its 50% task-completion time horizon is the human task duration at which the fitted model predicts that the agent will succeed half the time. In METR’s original March 2025 disclosure and version, Claude 3.7 Sonnet’s estimate was approximately 50 minutes, while the fitted frontier trend implied a doubling roughly every seven months from 2019 to early 2025.\n\nThe peer-reviewed NeurIPS 2025 version later evaluated agents based on 12 frontier models and reported o3 at roughly a 110-minute 50% horizon, while retaining the approximately seven-month long-run doubling trend. METR later expanded the suite from 170 to 228 tasks in Time Horizon 1.1, increasing the number of tasks estimated to take humans at least eight hours from 14 to 31.",
+        "what_evidence_shows": "METR’s original March 2025 disclosure found a strong relationship between human task duration and model-agent success across the evaluated software and research tasks. It reported an approximately exponential increase in the frontier 50% horizon between 2019 and early 2025 and found a similar growth trend at the stricter 80% success threshold, although the 80% horizons were approximately five times shorter. The later peer-reviewed NeurIPS 2025 evaluation retained the approximately seven-month long-run trend while reporting its results for 12 frontier models, including o3 at roughly a 110-minute 50% horizon.\n\nThe later TH1.1 evaluation preserved the stitched long-run result: approximately 196.5 days per doubling, effectively the same as the original TH1 estimate of 195.8 days. Shorter-window estimates were faster—approximately 130.8 days from 2023 onward and 88.6 days from 2024 onward under TH1.1—but METR found that these recent slopes were more sensitive to task composition and the set of models included.\n\nA separate ICML 2026 paper, BRIDGE, used a two-parameter item-response model and performance data from METR, SWE-bench Verified, MLE-bench, GDPval, and Cybench. Its authors independently recovered an exponential frontier trend with a roughly six-month doubling time. This supports the broad scaling result, although BRIDGE still used METR’s human-time annotations to calibrate its latent difficulty scale and therefore is not fully independent of the original dataset.\n\nMETR has published the analysis pipeline and associated data used to calculate the time horizons, allowing the statistical analysis and generated figures to be inspected and rerun.",
+        "context_changes_interpretation": "A time horizon is **not** the amount of wall-clock time an AI can continuously operate without intervention. It is the amount of human expert task time associated with tasks the evaluated agent is predicted to complete at a specified success rate. Agents often finish successful tasks substantially faster than humans.\n\nThe result measures complete agent configurations rather than bare language models. Performance depends on the model, scaffold, prompts, tools, context management, resource limits, and elicitation effort. Most models in the original study used METR’s modular-public scaffold, while some models used modified setups because of differences in tool-use behaviour.\n\nThe evaluated distribution was concentrated on automatically gradable, self-contained software and research tasks. These tasks generally require less organizational context, collaboration, ambiguous goal interpretation, and accumulated codebase knowledge than normal long-running workplace projects. The original paper found that agents performed worse on “messier” tasks even after controlling for human task duration.\n\nHuman completion times are also an imperfect difficulty measure. Baselines were collected from people with different skills, some longer tasks used researcher estimates rather than measured completions, and successful runs were used to calculate task length. METR’s expanded TH1.1 suite had measured human baselines for only five of its 31 tasks estimated at eight hours or longer.\n\nLater analysis found that recent frontier estimates are increasingly sensitive to task selection, benchmark saturation, regularization, curve-fitting assumptions, and uncertainty in human task lengths. A corrected regularization mistake reduced some recent 50% horizon estimates by as much as 20%, while reasonable alternative modelling choices could shift recent estimates further. These issues affect precise model values more than the broad multi-year trend.",
+        "reader_takeaway": "The durable result is that model agents improved extremely rapidly on METR’s human-calibrated software and research tasks across multiple model generations, and that human task duration provided a useful common scale for comparing systems whose raw benchmark scores were otherwise difficult to relate.\n\nThe entry should not be read as evidence that a model with a one-hour horizon can perform every one-hour professional task, work independently for an hour, replace an hour of labour without supervision, or reliably complete tasks below that horizon. It also does not establish that the faster post-2024 slope will continue or that month-long general workplace autonomy will arrive on the paper’s extrapolated schedule."
+      },
+      "confirmed_significance": "METR established a human-interpretable method for expressing model-agent capability as the difficulty of tasks measured by expert human completion time. This allowed systems released across several years to be compared on one continuous scale rather than through unrelated benchmark percentages.\n\nWithin the evaluated software-and-research domain, the research provides strong evidence that the frontier 50% task-completion horizon increased exponentially between 2019 and early 2025 at approximately one doubling every six to seven months. The broad rate remained similar after peer review, expansion of the benchmark suite, and a separate-team reproduction using a different statistical framework.",
+      "potential_significance_if_confirmed": "If the measured trend remains robust across broader, messier, and substantially longer workplace tasks, it would imply rapidly increasing ability for model-agent systems to complete meaningful software and research projects with limited intervention. The current evidence does not show that the same doubling rate generalises beyond METR-like task distributions, continues indefinitely, or directly translates into equivalent labour automation.",
+      "caveats": [
+        "The time horizon measures the human duration of tasks associated with a fitted success probability, not how long the AI itself runs autonomously.",
+        "Results apply to model-and-scaffold agent configurations, not isolated base models.",
+        "The original suite is dominated by self-contained, automatically gradable software and research tasks and does not represent all professional work.",
+        "A 50% success rate is too low for many practical, safety-critical, expensive, or difficult-to-verify tasks.",
+        "Human baseline times are noisy and depend on expertise, familiarity, incentives, task context, and the treatment of failed human attempts.",
+        "Recent model estimates and shorter-window acceleration rates are more sensitive to task composition, benchmark saturation, and analysis choices than the long-run trend.",
+        "The independent BRIDGE result uses a separate method and additional benchmarks but calibrates its human-time scale using METR data, so it is not a completely data-independent replication.",
+        "Extrapolations to week-long or month-long projects remain conditional forecasts rather than demonstrated capabilities."
+      ],
+      "evidence_types": [
+        "peer_reviewed_paper",
+        "independent_replication",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "metr-neurips-time-horizon-paper",
+          "title": "Measuring AI Ability to Complete Long Software Tasks",
+          "publisher_or_domain": "NeurIPS 2025",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2025/hash/85069585133c4c168c865e65d72e9775-Abstract-Conference.html",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Peer-reviewed methodology, composition of the original task suite, model results, long-run doubling trend, robustness work, and limitations."
+        },
+        {
+          "citation_id": "metr-time-horizon-1-1",
+          "title": "Time Horizon 1.1",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/blog/2026-1-29-time-horizon-1-1/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Expansion from 170 to 228 tasks, revised model estimates, long-run and recent-window doubling rates, task-composition sensitivity, and updated Claude 3.7 Sonnet estimates."
+        },
+        {
+          "citation_id": "bridge-time-horizon-replication",
+          "title": "BRIDGE: Predicting Human Task Completion Time From Model Performance",
+          "publisher_or_domain": "ICML 2026 / arXiv",
+          "url": "https://arxiv.org/abs/2602.07267",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "independent_replication"
+          ],
+          "source_role": "independent_replication",
+          "source_role_label": "Independent Replication",
+          "used_for": "Separate-team reproduction of the exponential task-horizon trend using a different item-response framework and additional benchmark data; also used to assess how independent the replication is from METR’s calibration data."
+        },
+        {
+          "citation_id": "metr-time-horizon-analysis",
+          "title": "METR Time Horizon Analysis",
+          "publisher_or_domain": "METR / GitHub",
+          "url": "https://github.com/METR/eval-analysis-public",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public analysis code, data pipeline, logistic fitting procedure, bootstrap analysis, and reproducibility of the reported figures and time-horizon estimates."
+        },
+        {
+          "citation_id": "metr-time-horizon-limitations",
+          "title": "Clarifying Limitations of Time Horizon",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/notes/2026-01-22-time-horizon-limitations/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Clarification that time horizon is not wall-clock autonomous runtime, domain and task-distribution limits, uncertainty in individual estimates, reliability limits, and warnings against treating the metric as a direct automation rate."
+        },
+        {
+          "citation_id": "metr-modelling-assumptions",
+          "title": "Impact of Modelling Assumptions on Time Horizon Results",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/notes/2026-03-20-impact-of-modelling-assumptions-on-time-horizon-results/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "The corrected regularization mistake, benchmark-saturation concerns, sensitivity to curve fitting and task-length noise, and the scale of uncertainty in recent model estimates."
+        },
+        {
+          "citation_id": "metr-original-time-horizon-post",
+          "title": "Measuring AI Ability to Complete Long Tasks",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Original March 19, 2025 disclosure, public explanation of the 50% task-completion time horizon, original Claude 3.7 Sonnet result, and the approximately seven-month trend claim."
+        }
+      ]
+    }
+  ]
+}
