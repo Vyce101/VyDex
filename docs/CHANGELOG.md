@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added trusted pull-request release synchronization that validates and commits checksum-linked release state before updating the branch.
 - Added byte-based release selection checks and one-command synchronization so public output changes create a reviewed successor before deployment instead of failing during Pages preflight.
 - Added production sitemap generation for every public HTML page, `robots.txt` discovery, deployment-artifact validation, and hosted HTTP checks for both sitemap files.
 - Added Google Search Console ownership verification metadata to the shared static page layout with browser coverage that prevents missing or duplicate verification elements.
