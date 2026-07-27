@@ -101,7 +101,20 @@
 }
 
 .topic-trail-entries__list > li {
+  border-inline-start: 1px solid var(--atlas-color-rule-strong);
   min-inline-size: 0;
+  padding-inline-start: var(--atlas-space-20);
+  position: relative;
+}
+
+.topic-trail-entries__list > li::before {
+  background: var(--atlas-color-route);
+  block-size: var(--atlas-space-8);
+  content: "";
+  inline-size: var(--atlas-space-8);
+  inset-block-start: var(--atlas-space-16);
+  inset-inline-start: -0.28125rem;
+  position: absolute;
 }
 
 @media (min-width: 768px) {
