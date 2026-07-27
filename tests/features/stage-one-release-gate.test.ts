@@ -8,6 +8,7 @@ import { loadPersistedProductionApplicationRelease } from "../../src/adapters/ap
 import { parseRequiredPublicSiteOrigin } from "../../src/adapters/public-site-origin";
 import { createStageOneReleaseDescriptor } from "../../src/adapters/stage-one-release-descriptor";
 import { generateVyDexDatasetSchemaV1, type ReleaseModel } from "../../src/domain";
+import { selectHomepageEntries } from "../../src/features/homepage";
 import {
   collectStageOneRedirects,
   runStageOneRelease,
@@ -77,13 +78,13 @@ async function materializeVerifiedOutput(
   const preparedResult = prepareApplicationExport(release);
   if (!preparedResult.success) throw new Error("Synthetic output requires a valid prepared export.");
   const prepared = preparedResult.data;
-  const orderedEntries = [...release.current_entries];
+  const homepageSelection = selectHomepageEntries(release.current_entries);
   await writeRoute(
     outputRoot,
     release.routes.home,
     shell(
-      `<section data-homepage-latest>${preview(orderedEntries[0]!)}</section>` +
-        `<section id="latest" data-homepage-recent-list>${orderedEntries.slice(0, 5).map(preview).join("")}</section>`,
+      `<section data-homepage-latest>${preview(homepageSelection.latest_update)}</section>` +
+        `<section id="latest" data-homepage-recent-list>${homepageSelection.recent_entries.map(preview).join("")}</section>`,
     ),
   );
   await writeRoute(outputRoot, release.routes.about, shell("<h1>About</h1>", `${release.site_origin}${release.routes.about}`));
