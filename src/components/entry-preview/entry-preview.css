@@ -9,6 +9,19 @@
   border-radius: var(--atlas-radius);
 }
 
+.entry-preview--quiet .entry-preview__metadata {
+  border-block-end: 0;
+  padding-block-end: var(--atlas-space-8);
+}
+
+.entry-preview--quiet .entry-preview__body {
+  padding-block-start: var(--atlas-space-8);
+}
+
+.entry-preview--quiet .entry-preview__footer {
+  padding-block-start: var(--atlas-space-12);
+}
+
 .entry-preview__metadata {
   border-block-end: 1px solid var(--atlas-color-rule-record);
   display: flex;
@@ -61,6 +74,11 @@
   flex-wrap: wrap;
   gap: var(--atlas-space-8);
   min-inline-size: 0;
+}
+
+.entry-preview__statuses [data-entry-preview-field="claim-status"] {
+  border-color: var(--atlas-color-rule-strong);
+  font-weight: 700;
 }
 
 .entry-preview__footer {

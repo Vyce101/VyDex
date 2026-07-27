@@ -36,15 +36,17 @@ const { model } = Astro.props;
             >
               Read Latest Entries
             </a>
-            <a
-              class="atlas-button atlas-button--secondary"
-              href={STAGE_ONE_FIXED_PUBLIC_PATHS.methodology_current}
-            >
-              View Methodology
-            </a>
-            <a class="homepage-hero__about-link" href={STAGE_ONE_FIXED_PUBLIC_PATHS.about}>
-              About VyDex
-            </a>
+            <div class="homepage-hero__secondary-actions">
+              <a
+                class="atlas-button atlas-button--secondary"
+                href={STAGE_ONE_FIXED_PUBLIC_PATHS.methodology_current}
+              >
+                View Methodology
+              </a>
+              <a class="homepage-hero__about-link" href={STAGE_ONE_FIXED_PUBLIC_PATHS.about}>
+                About VyDex
+              </a>
+            </div>
           </div>
         </div>
 
@@ -62,7 +64,7 @@ const { model } = Astro.props;
           {
             model.selection.recent_entries.map((entry) => (
               <li>
-                <EntryPreview entry={entry} />
+                <EntryPreview entry={entry} treatment="quiet" />
               </li>
             ))
           }
