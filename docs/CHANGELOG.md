@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed release selection verification so Homepage recent-entry checks follow the non-repeating featured-entry selection.
 - Fixed release validation on clean GitHub Actions runners by creating its temporary workspace before use.
 - Fixed Cloudflare production-deployment discovery to use a supported paginated request size during rollback rehearsal.
 - Fixed hosted verification so it retries the complete suite while Cloudflare Pages edges converge after production switches.
