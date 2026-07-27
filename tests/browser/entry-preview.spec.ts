@@ -31,20 +31,30 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test("renders Latest again as the first of three real recent Entries", async ({ page }) => {
+test("renders one featured Latest preview and two quieter distinct recent previews", async ({ page }) => {
   await expect(latestPreview(page)).toHaveCount(1);
-  await expect(recentPreviews(page)).toHaveCount(3);
-  expect(await latestPreview(page).innerHTML()).toBe(await recentPreviews(page).first().innerHTML());
+  await expect(recentPreviews(page)).toHaveCount(2);
+  expect(await recentPreviews(page).allTextContents()).not.toContainEqual(
+    expect.stringContaining(LATEST_ENTRY_TITLE),
+  );
+  await expect(latestPreview(page)).toHaveAttribute("data-entry-preview-treatment", "default");
+  await expect(latestPreview(page)).toHaveAttribute("class", "entry-preview atlas-sheet");
 
   const entries = page.locator("[data-entry-preview]");
-  await expect(entries).toHaveCount(4);
+  await expect(entries).toHaveCount(3);
   for (const entry of await entries.all()) {
-    await expect(entry).toHaveAttribute("class", "entry-preview atlas-sheet");
     expect(
       await entry.locator("[data-entry-preview-field]").evaluateAll((fields) =>
         fields.map((field) => field.getAttribute("data-entry-preview-field")),
       ),
     ).toEqual(FIELD_SEQUENCE);
+  }
+  for (const entry of await recentPreviews(page).all()) {
+    await expect(entry).toHaveAttribute("data-entry-preview-treatment", "quiet");
+    await expect(entry).toHaveAttribute(
+      "class",
+      "entry-preview atlas-sheet entry-preview--quiet",
+    );
   }
 });
 
@@ -90,7 +100,10 @@ test("preserves neutral evidence treatment without card-wide interaction", async
     const status = entry.locator(`[data-entry-preview-field="${field}"]`);
     await expect(status).toHaveCSS("color", "rgb(53, 67, 78)");
     await expect(status).toHaveCSS("background-color", "rgb(245, 246, 244)");
-    await expect(status).toHaveCSS("border-top-color", "rgb(185, 196, 203)");
+    await expect(status).toHaveCSS(
+      "border-top-color",
+      field === "claim-status" ? "rgb(124, 140, 151)" : "rgb(185, 196, 203)",
+    );
   }
 
   await expect(entry.locator("img, svg, canvas, figure, progress")).toHaveCount(0);

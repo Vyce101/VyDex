@@ -26,7 +26,7 @@ function createResolvedEntry(sequence: number): ResolvedPublicEntry {
 }
 
 describe("selectHomepageEntries", () => {
-  test("returns the latest Entry, caps recent Entries at five, and keeps Latest in the list", () => {
+  test("returns the latest Entry and caps the distinct recent Entries at five", () => {
     const input = [1, 2, 3, 4, 5, 6].map(createResolvedEntry).reverse();
     const originalOrder = input.map(({ entry }) => entry.id);
 
@@ -34,17 +34,27 @@ describe("selectHomepageEntries", () => {
 
     expect(selection.latest_update.entry.id).toBe(input[0]?.entry.id);
     expect(selection.recent_entries).toHaveLength(5);
-    expect(selection.recent_entries[0]).toBe(selection.latest_update);
+    expect(selection.recent_entries).not.toContain(selection.latest_update);
     expect(input.map(({ entry }) => entry.id)).toEqual(originalOrder);
   });
 
-  test("returns only real Entries when fewer than five are available", () => {
+  test("returns only non-featured Entries when fewer than five are available", () => {
     const input = [1, 2, 3].map(createResolvedEntry);
 
     const selection = selectHomepageEntries(input);
 
-    expect(selection.recent_entries).toHaveLength(3);
-    expect(new Set(selection.recent_entries)).toEqual(new Set(input));
+    expect(selection.recent_entries).toHaveLength(2);
+    expect(selection.recent_entries).not.toContain(selection.latest_update);
+    expect(new Set([selection.latest_update, ...selection.recent_entries])).toEqual(new Set(input));
+  });
+
+  test("returns an empty recent list when the latest Entry is the only Entry", () => {
+    const input = [createResolvedEntry(1)];
+
+    const selection = selectHomepageEntries(input);
+
+    expect(selection.latest_update).toBe(input[0]);
+    expect(selection.recent_entries).toEqual([]);
   });
 
   test("keeps Homepage order when current wording changes without new material activity", () => {
