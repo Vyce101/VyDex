@@ -104,6 +104,14 @@ test("uses a quieter preview treatment without changing its content or links", a
   await expect(preview).toHaveCSS("border-radius", "2px");
   await expect(preview.locator("[data-entry-preview-field]")).toHaveCount(9);
   await expect(preview.getByRole("link", { name: `Read Entry: ${DEFAULT_TRAIL.entryTitle}` })).toBeVisible();
+  const listItem = page.locator("[data-topic-trail-entry-list] > li");
+  await expect(listItem).toHaveCSS("border-left-width", "1px");
+  const marker = await listItem.evaluate((element) => {
+    const styles = getComputedStyle(element, "::before");
+    return { backgroundColor: styles.backgroundColor, width: styles.width };
+  });
+  expect(marker.backgroundColor).toBe("rgb(0, 109, 156)");
+  expect(marker.width).toBe("8px");
 });
 
 test("stacks metadata, keeps compact text readable, and prevents horizontal overflow", async ({ page }) => {

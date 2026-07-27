@@ -124,10 +124,15 @@ test("opens the mobile disclosure from the keyboard and restores focus on Escape
   const menuBox = await menu.boundingBox();
   expect(menuBox?.height).toBeGreaterThanOrEqual(44);
   expect(menuBox?.width).toBeGreaterThanOrEqual(44);
+  expect(menuBox?.width).toBeLessThan((await header.boundingBox())?.width ?? 0);
+  await expect(disclosure.locator(".site-header__mobile-disclosure-state-closed")).toBeVisible();
+  await expect(disclosure.locator(".site-header__mobile-disclosure-state-open")).toBeHidden();
 
   await menu.focus();
   await page.keyboard.press("Enter");
   await expect(disclosure).toHaveAttribute("open", "");
+  await expect(disclosure.locator(".site-header__mobile-disclosure-state-closed")).toBeHidden();
+  await expect(disclosure.locator(".site-header__mobile-disclosure-state-open")).toBeVisible();
   expect(await getDisclosureExpandedState(page)).toBe(true);
   await expect(mobileNavigation).toBeVisible();
   await expectOrderedLinks(mobileNavigation, HEADER_LINKS);
@@ -172,7 +177,11 @@ test("moves focus through the skip link and shell regions in document order", as
     await page.keyboard.press("Tab");
     await expect(page.getByRole("banner").getByRole("link", { name: "VyDex home" })).toBeFocused();
     await page.keyboard.press("Tab");
-    const nextHeaderControl = await page.evaluate(() => document.activeElement?.textContent?.trim());
+    const nextHeaderControl = await page.evaluate(() => {
+      const activeElement = document.activeElement;
+      return activeElement?.querySelector("span")?.textContent?.trim()
+        ?? activeElement?.textContent?.trim();
+    });
     expect(nextHeaderControl).toBe(width < 768 ? "Menu" : "Latest");
 
     await page.goto("/");

@@ -71,6 +71,27 @@ test("renders the exact Entry hierarchy and continuous record order", async ({ p
     "methodology-used",
   ]);
   await expect(page.locator('[data-entry-section="caution"]')).toHaveCount(0);
+  const sectionIndex = page.getByRole("navigation", { name: "Entry sections" });
+  await expect(sectionIndex.getByRole("link")).toHaveText([
+    "Frontier Delta",
+    "Details",
+    "Significance",
+    "Caveats",
+    "Metadata",
+    "Sources",
+  ]);
+  expect(
+    await sectionIndex.getByRole("link").evaluateAll((links) =>
+      links.map((link) => link.getAttribute("href")),
+    ),
+  ).toEqual([
+    "#frontier-delta",
+    "#details",
+    "#significance",
+    "#caveats",
+    "#dates-and-metadata",
+    "#sources",
+  ]);
   await expect(page.getByRole("link", { name: "← Back to Latest" })).toHaveAttribute(
     "href",
     "/#latest",
@@ -185,6 +206,13 @@ test("uses the approved continuous-sheet responsive transformations without over
   await expect(sheet).toHaveCSS("box-shadow", "none");
 
   await page.setViewportSize({ width: 1024, height: 1000 });
+  const proseMeasures = await page.evaluate(() => ({
+    details: getComputedStyle(document.querySelector(".entry-details .entry-prose")!).maxWidth,
+    frontier: getComputedStyle(document.querySelector(".entry-frontier .entry-prose")!).maxWidth,
+  }));
+  expect(proseMeasures.details).not.toBe("none");
+  expect(proseMeasures.frontier).toBe("none");
+
   const sectionLayout = await page.evaluate(() => {
     const details = document.querySelector(".entry-details")!.getBoundingClientRect();
     const significance = document.querySelector(".entry-significance")!.getBoundingClientRect();

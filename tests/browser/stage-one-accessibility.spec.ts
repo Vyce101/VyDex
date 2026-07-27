@@ -13,7 +13,7 @@ const REQUIRED_SURFACES = [
   ["Changelog", "/changelog/"],
   ["Export", "/export/"],
 ] as const;
-const SUPPORTED_WIDTHS = [320, 375, 768, 1024, 1440] as const;
+const SUPPORTED_WIDTHS = [320, 375, 720, 768, 1024, 1440] as const;
 
 async function expectNoHeadingLevelSkips(page: Page): Promise<void> {
   const levels = await page.locator("main h1, main h2, main h3, main h4, main h5, main h6")
