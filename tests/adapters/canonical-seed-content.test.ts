@@ -15,6 +15,7 @@ const SITE_ORIGIN = "https://vydex-preview-123.pages.dev";
 const METHODOLOGY_ID = "019f9593-391e-79d1-8f4a-3c88e68fc069";
 const PUBLISHED_AT = "2026-07-24T20:18:26Z";
 const DREAMER_REVIEW_PUBLISHED_AT = "2026-07-25T13:03:03Z";
+const UMASS_PUBLISHED_AT = "2026-07-30T13:28:14Z";
 
 const SEEDS = {
   dreamer: {
@@ -44,6 +45,15 @@ const SEEDS = {
     aliases: [],
     update_summary:
       "Initial entry added from METR’s peer-reviewed task-horizon study, public analysis artifacts, Time Horizon 1.1, and the BRIDGE reproduction.",
+  },
+  umass: {
+    entry_id: "019fb336-18b1-7652-9af7-fdbe971db4f0",
+    revision_id: "019fb336-18b5-76e4-90c9-fdaf74f0e0cf",
+    trail_id: "019fb336-18b5-76e4-90c9-f8aa8dbaae4f",
+    slug: "artificial-neuron-biological-voltage-energy",
+    aliases: [],
+    update_summary:
+      "Initial entry added from the peer-reviewed device study, source data, transparent peer review, prior bio-voltage and biointerface research, and later field context.",
   },
 } as const;
 
@@ -76,6 +86,14 @@ const EXPECTED_SOURCE_ROLES = {
     "metr-time-horizon-limitations": "context_source",
     "metr-modelling-assumptions": "context_source",
     "metr-original-time-horizon-post": "context_source",
+  },
+  [SEEDS.umass.entry_id]: {
+    "fu-2025-nature-communications": "primary_evidence",
+    "fu-2025-source-data": "strong_artifact",
+    "fu-2025-transparent-peer-review": "context_source",
+    "fu-2020-bio-voltage-memristors": "context_source",
+    "sarkar-2022-organic-artificial-neuron": "context_source",
+    "zhao-2025-diffusive-memristor-neuron": "context_source",
   },
 } as const;
 
@@ -116,9 +134,9 @@ describe("canonical Stage 1 seed content", () => {
 
   test("loads the complete seed ledger without diagnostics", () => {
     expect(records.diagnostics).toEqual([]);
-    expect(entries).toHaveLength(3);
-    expect(trails).toHaveLength(3);
-    expect(snapshots).toHaveLength(4);
+    expect(entries).toHaveLength(4);
+    expect(trails).toHaveLength(4);
+    expect(snapshots).toHaveLength(5);
     expect(records.methodologies).toHaveLength(1);
     expect(records.methodology_publication_events).toHaveLength(1);
   });
@@ -150,6 +168,11 @@ describe("canonical Stage 1 seed content", () => {
         review_reason: null,
       });
     }
+    expect(entries.find(({ id }) => id === SEEDS.umass.entry_id)).toMatchObject({
+      date_last_checked: "2026-07-30",
+      review_status: "stable",
+      review_reason: null,
+    });
 
     expect(trails.map(({ id, slug, aliases, name, description }) => ({ id, slug, aliases, name, description }))).toEqual([
       {
@@ -167,6 +190,14 @@ describe("canonical Stage 1 seed content", () => {
         name: "AI in operational weather forecasting",
         description:
           "Tracks the use and verified performance of AI systems inside real-world weather-forecasting workflows.",
+      },
+      {
+        id: SEEDS.umass.trail_id,
+        slug: "brain-inspired-hardware-biological-function",
+        aliases: ["neuromorphic-hardware-biological-function"],
+        name: "Brain-inspired hardware approaching biological function",
+        description:
+          "Tracks progress in hardware that reproduces or interoperates with biological neural signaling and information processing.",
       },
       {
         id: SEEDS.dreamer.trail_id,
@@ -222,7 +253,7 @@ describe("canonical Stage 1 seed content", () => {
         revision_id: seed.revision_id,
         entry_id: seed.entry_id,
         revision_number: 1,
-        published_at: PUBLISHED_AT,
+        published_at: seed === SEEDS.umass ? UMASS_PUBLISHED_AT : PUBLISHED_AT,
         methodology_id: METHODOLOGY_ID,
         methodology_public_version: "1.0.0",
         revision_category: "initial_publication",
@@ -255,13 +286,14 @@ describe("canonical Stage 1 seed content", () => {
   });
 
   test("constructs the complete production release with URLs, relationships, and activity dates", () => {
-    expect(release.current_entries).toHaveLength(3);
+    expect(release.current_entries).toHaveLength(4);
     expect(release.current_entries.map(({ entry }) => entry.id)).toEqual([
+      SEEDS.umass.entry_id,
       SEEDS.dreamer.entry_id,
       SEEDS.gdmi.entry_id,
       SEEDS.metr.entry_id,
     ]);
-    expect(release.topic_trails).toHaveLength(3);
+    expect(release.topic_trails).toHaveLength(4);
     expect(release.topic_trails.every(({ entry_count }) => entry_count === 1)).toBe(true);
 
     for (const seed of Object.values(SEEDS)) {
@@ -270,8 +302,9 @@ describe("canonical Stage 1 seed content", () => {
       expect(entry.primary_topic_trail.id).toBe(seed.trail_id);
       expect(entry.secondary_topic_trails).toEqual([]);
       expect(entry.activity).toMatchObject({
-        date_added: "2026-07-24",
-        date_updated: seed === SEEDS.dreamer ? "2026-07-25" : "2026-07-24",
+        date_added: seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
+        date_updated:
+          seed === SEEDS.umass ? "2026-07-30" : seed === SEEDS.dreamer ? "2026-07-25" : "2026-07-24",
       });
     }
 
@@ -286,17 +319,24 @@ describe("canonical Stage 1 seed content", () => {
         record_type: "entry",
         record_id: SEEDS.gdmi.entry_id,
       },
+      {
+        source: "/topic-trails/neuromorphic-hardware-biological-function/",
+        destination: "/topic-trails/brain-inspired-hardware-biological-function/",
+        status: 301,
+        record_type: "topic_trail",
+        record_id: SEEDS.umass.trail_id,
+      },
     ]);
   });
 
-  test("derives the three Added events, Dreamer update, and existing Methodology event", () => {
+  test("derives the four Added events, Dreamer update, and existing Methodology event", () => {
     const entryEvents = release.changelog_events.filter(({ type }) => type === "added");
     const updateEvents = release.changelog_events.filter(({ type }) => type === "updated");
     const methodologyEvents = release.changelog_events.filter(
       ({ type }) => type === "methodology_change",
     );
 
-    expect(entryEvents).toHaveLength(3);
+    expect(entryEvents).toHaveLength(4);
     expect(updateEvents).toEqual([
       expect.objectContaining({
         date: "2026-07-25",
@@ -312,7 +352,7 @@ describe("canonical Stage 1 seed content", () => {
       published_at: "2026-07-24T19:21:21.438Z",
       source_identity: "019f9593-391e-79d1-8f4a-3c88e68fc069",
     });
-    expect(release.changelog_events).toHaveLength(5);
+    expect(release.changelog_events).toHaveLength(6);
     expect(entryEvents.map(({ source_identity }) => source_identity).sort()).toEqual(
       Object.values(SEEDS).map(({ revision_id }) => revision_id).sort(),
     );
@@ -320,14 +360,14 @@ describe("canonical Stage 1 seed content", () => {
       Object.values(SEEDS).map(({ update_summary }) => update_summary).sort(),
     );
     expect(entryEvents.map(({ title }) => title).sort()).toEqual(entries.map(({ title }) => title).sort());
-    expect(
-      entryEvents.every(
-        (event) =>
-          event.type === "added" &&
-          event.date === "2026-07-24" &&
-          event.published_at === PUBLISHED_AT,
-      ),
-    ).toBe(true);
+    for (const seed of Object.values(SEEDS)) {
+      const event = entryEvents.find(({ source_identity }) => source_identity === seed.revision_id)!;
+      expect(event).toMatchObject({
+        type: "added",
+        date: seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
+        published_at: seed === SEEDS.umass ? UMASS_PUBLISHED_AT : PUBLISHED_AT,
+      });
+    }
     expect(release.current_entries.every(({ entry }) => entry.entry_state !== "removed")).toBe(true);
   });
 });

@@ -43,9 +43,9 @@ describe("Changelog Page projection", () => {
         description: "Rules, labels, categories, or judgment standards changed.",
       },
     ]);
-    expect(model.date_groups.map(({ date }) => date)).toEqual(["2026-07-25", "2026-07-24"]);
-    expect(model.date_groups.map(({ records }) => records.length)).toEqual([1, 4]);
-    expect(model.date_groups[1]!.records.map(({ type }) => type)).toEqual([
+    expect(model.date_groups.map(({ date }) => date)).toEqual(["2026-07-30", "2026-07-25", "2026-07-24"]);
+    expect(model.date_groups.map(({ records }) => records.length)).toEqual([1, 1, 4]);
+    expect(model.date_groups[2]!.records.map(({ type }) => type)).toEqual([
       "added",
       "added",
       "added",
@@ -56,8 +56,8 @@ describe("Changelog Page projection", () => {
   });
 
   test("preserves release ordering while grouping consecutive derived dates", () => {
-    const added = events.find(({ type }) => type === "added")!;
     const methodology = events.find(({ type }) => type === "methodology_change")!;
+    const added = events.find(({ type, date }) => type === "added" && date === methodology.date)!;
     const model = createChangelogPageViewModel([methodology, added]);
 
     expect(model.date_groups).toHaveLength(1);
@@ -68,8 +68,10 @@ describe("Changelog Page projection", () => {
   });
 
   test("creates title-specific accessible links and omits legitimately unavailable links", () => {
-    const added = structuredClone(events.find(({ type }) => type === "added")!);
     const methodology = events.find(({ type }) => type === "methodology_change")!;
+    const added = structuredClone(
+      events.find(({ type, date }) => type === "added" && date === methodology.date)!,
+    );
     const linkedModel = createChangelogPageViewModel([added, methodology]);
 
     expect(linkedModel.date_groups[0]!.records[0]!.link).toEqual({
