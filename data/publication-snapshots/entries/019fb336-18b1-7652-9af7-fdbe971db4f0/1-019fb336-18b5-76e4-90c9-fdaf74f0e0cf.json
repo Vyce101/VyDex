@@ -1,0 +1,131 @@
+{
+  "revision_id": "019fb336-18b5-76e4-90c9-fdaf74f0e0cf",
+  "entry_id": "019fb336-18b1-7652-9af7-fdbe971db4f0",
+  "revision_number": 1,
+  "published_at": "2026-07-30T13:28:14Z",
+  "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+  "methodology_public_version": "1.0.0",
+  "revision_category": "initial_publication",
+  "materiality": "material",
+  "update_summary": "Initial entry added from the peer-reviewed device study, source data, transparent peer review, prior bio-voltage and biointerface research, and later field context.",
+  "entry": {
+    "id": "019fb336-18b1-7652-9af7-fdbe971db4f0",
+    "slug": "artificial-neuron-biological-voltage-energy",
+    "aliases": [],
+    "title": "Artificial neuron repeatedly fires within living-neuron voltage and energy ranges",
+    "claim": "Fu et al. demonstrated a memristor–RC artificial neuron that repeatedly produced output spikes up to ~120 mV with a calculated energy of ~37 pJ per spike in its 4.7 nF configuration—placing both within the biological ranges used by the study—while its live-cell test processed amplified, pulse-converted cardiomyocyte signals in real time.",
+    "claim_status": "supported",
+    "evidence_strength": "strong",
+    "review_status": "stable",
+    "review_reason": null,
+    "entry_state": "main_entry",
+    "domains": [
+      "biology",
+      "physical_sciences",
+      "hardware"
+    ],
+    "primary_topic_trail_id": "019fb336-18b5-76e4-90c9-f8aa8dbaae4f",
+    "secondary_topic_trail_ids": [],
+    "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+    "date_happened": null,
+    "date_disclosed": "2025-09-29",
+    "date_last_checked": "2026-07-30",
+    "next_check_date": null,
+    "frontier_delta": {
+      "previous_frontier": "Earlier devices had matched parts of biological-neuron operation separately. Protein-nanowire memristors switched at biological voltages and accepted biological-amplitude inputs, while organic artificial neurons operated in liquid, responded to chemical conditions, and formed real-time biological interfaces. Those systems did not demonstrate repeated voltage-output spikes while keeping both spike voltage and energy inside the biological ranges used by the 2025 study.",
+      "new_claim_result": "The UMass-led team combined a volatile protein-nanowire memristor with a resistor–capacitor circuit that repeatedly produced voltage spikes up to ~120 mV. In the 4.7 nF configuration, its calculated spiking energy was ~37 pJ, placing voltage and energy inside the study's cited biological ranges at the same time. The output could also trigger a second artificial neuron.",
+      "delta": "The demonstrated frontier moved from artificial-neuron components that separately matched biological voltage, energy, environmental responsiveness, or interface behavior to one repeatedly firing circuit that combined living-neuron-scale voltage output with living-neuron-scale spiking energy."
+    },
+    "details": {
+      "what_happened": "Nature Communications published the peer-reviewed study on 29 September 2025. Researchers primarily affiliated with the University of Massachusetts Amherst, with additional participation from MIT, fabricated a volatile silver memristor containing protein nanowires harvested from *Geobacter sulfurreducens*. They combined it with resistor and capacitor elements to emulate signal integration, threshold firing, repolarization, and a refractory-like interval.\n\nThe memristor's conductive filament accumulated under repeated input until the device switched on and charged the capacitor. The charged capacitor then reverse-biased and reset the memristor, allowing the circuit to return toward its resting voltage and fire again. The researchers also coupled chemical sensors to the circuit and connected a graphene-mesh cardiomyocyte sensor through standalone analog signal-conditioning hardware.",
+      "what_evidence_shows": "Across 1,000 consecutive voltage sweeps with a 28 MΩ series resistor, the memristor switched at approximately 60 ± 3 mV and 1.76 ± 0.06 nA. The complete artificial neuron accepted 120 mV pulses, produced repeated output spikes reaching approximately 120 mV, returned close to zero between spikes, and drove a downstream artificial neuron in a cascade test.\n\nWith a 4.7 nF capacitor, the final paper calculated approximately 37 pJ per spike. The authors estimated approximately 3.5 pJ for 0.5 nF and 0.2 pJ for 50 pF. The published calculation includes current through both the resistor and capacitor and was validated in a 33 nF configuration by comparing the voltage-based result with direct circuit-current measurement. The official source-data workbook contains the plotted measurement series, although it does not constitute independent replication.\n\nIn the living-cell experiment, untreated cardiomyocyte tissue produced signals at approximately 0.4 Hz and left the artificial neuron silent. After treatment with 10 µM norepinephrine, the measured cellular frequency increased to approximately 0.6 Hz and the artificial neuron began firing. This demonstrates real-time differentiation between two cardiomyocyte firing-rate states in the tested signal path.",
+      "context_changes_interpretation": "The living-cell experiment did not demonstrate direct, amplification-free communication. Signals captured from cardiomyocytes were converted to voltage, filtered, amplified, transformed into 5 V pulses, and attenuated into standardized 120 mV, 70 ms inputs before reaching the artificial neuron. The pathway avoided programmable microcontroller or computer-based preprocessing, but five operational amplifiers and two timers remained essential signal-conditioning components.\n\nThe device was also not the first artificial neuron to respond to ions or dopamine, operate in a biological environment, or participate in a real-time biohybrid interface. A 2022 organic artificial neuron had already demonstrated those broader capabilities. The narrower advance is the combination of repeated voltage output with biological-range voltage and calculated spiking energy in one circuit.\n\nThe chemical behavior is engineered functional emulation. Attached chemiresistors changed circuit resistance and firing frequency; the system did not recreate biological receptors, intracellular signaling pathways, or synaptic plasticity. The study demonstrated a discrete bench-top circuit and one downstream-neuron activation, not a dense computing network, implantable neuron, or bidirectional neural prosthesis.",
+      "reader_takeaway": "This work crosses a meaningful component-level threshold: one artificial-neuron circuit repeatedly fired at voltage and calculated energy levels comparable to living neurons. Matching both quantities in the same design reduces an electrical mismatch that has complicated cascading and biological–electronic integration.\n\nIt does not complete a deployable biological interface. The live-cell pathway still conditioned and converted the measured signal, used cardiomyocytes rather than neurons, and operated only from biology to electronics. Its importance is the closer alignment of core electrical operating parameters within one device, not the demonstration of an artificial replacement neuron or scalable brain-like computer."
+    },
+    "confirmed_significance": "The study provides strong initial evidence that repeated artificial-neuron firing no longer inherently requires choosing between living-neuron-scale voltage and living-neuron-scale spiking energy. The ~120 mV output and calculated ~37 pJ result coexist in one tested design, and its output can activate a downstream artificial neuron.\n\nIt also demonstrates an analog pathway that distinguished two cardiomyocyte firing-rate states in real time without programmable microcontroller or computer preprocessing. That is a useful interface proof of concept, although amplification, pulse conversion, and conventional analog components remained in the pathway.",
+    "potential_significance_if_confirmed": "If the voltage and energy results are independently reproduced and retained after miniaturization, large-scale integration, and long-duration operation, the architecture could support artificial-neuron networks that communicate using signal levels closer to biological tissue without conventional voltage-conversion stages between every component.\n\nIf future sensors capture biological signals at sufficient amplitude to remove the demonstrated conditioning hardware, and if the device operates with neural tissue, the design could simplify biological-to-electronic signal paths. Bidirectional communication, implantability, network learning, tissue safety, and chronic operation remain prospective rather than demonstrated.",
+    "caveats": [
+      "**Amplification remained in the live-cell pathway:** Cardiomyocyte signals passed through filtering, amplification, pulse generation, and attenuation before reaching the artificial neuron as standardized 120 mV, 70 ms inputs.",
+      "**Cardiomyocytes were not neurons:** The living tissue consisted of human embryonic stem cell-derived cardiomyocytes, selected for their robust spontaneous electrical activity.",
+      "**Firstness remains author-controlled:** The claim that this was the first design to keep voltage and energy inside biological ranges rests on the authors' literature comparison and supplementary table rather than an independent novelty assessment.",
+      "**The energy result is calculated and configuration-dependent:** Approximately 37 pJ was calculated for the 4.7 nF configuration using a method validated by direct current measurement in a separate 33 nF configuration. The 3.5 pJ and 0.2 pJ figures came from smaller-capacitance configurations and were reported as estimates.",
+      "**The complete stated energy range was not inside the cited biological range:** The paper cites 0.3–100 pJ for biological neurons, making its lowest 0.2 pJ estimate slightly below that comparison range.",
+      "**Chemical behavior was engineered emulation:** Sodium and dopamine changed attached sensor resistance and circuit firing; the experiments did not reproduce biological receptor or intracellular signaling mechanisms.",
+      "**No functional network was demonstrated:** Triggering a downstream artificial neuron shows cascade potential, not scalable multi-neuron computation, learning, or network stability.",
+      "**This remains a bench-top proof of concept:** The work does not demonstrate implantation, chronic operation, neural-tissue communication, biocompatibility of the complete system, or bidirectional control of living cells.",
+      "**Independent replication was not located:** Peer review and released source data strengthen the evidence, but no separate group was found to have reproduced the complete voltage-and-energy result as of 30 July 2026."
+    ],
+    "sources": [
+      {
+        "citation_id": "fu-2025-nature-communications",
+        "title": "Constructing artificial neurons with functional parameters comprehensively matching biological values",
+        "publisher_or_domain": "Nature Communications",
+        "url": "https://www.nature.com/articles/s41467-025-63640-7",
+        "evidence_types": [
+          "peer_reviewed_paper",
+          "developer_vendor_claim"
+        ],
+        "source_role": "primary_evidence",
+        "used_for": "Publication metadata; device construction; voltage, current, and repeated-spiking measurements; energy calculation; cascade test; chemical experiments; cardiomyocyte setup and results; methods; and disclosed limitations. Because the authors report a result about the device they developed, the paper is also a Developer / Vendor Claim."
+      },
+      {
+        "citation_id": "fu-2025-source-data",
+        "title": "Source data for Constructing artificial neurons with functional parameters comprehensively matching biological values",
+        "publisher_or_domain": "Nature Communications",
+        "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-63640-7/MediaObjects/41467_2025_63640_MOESM3_ESM.xlsx",
+        "evidence_types": [
+          "technical_artifact"
+        ],
+        "source_role": "strong_artifact",
+        "used_for": "Official plotted measurement series for memristor switching, repeated output spikes, capacitor-dependent firing, chemical sensing, energy-validation traces, and the cardiomyocyte signal path."
+      },
+      {
+        "citation_id": "fu-2025-transparent-peer-review",
+        "title": "Transparent peer review file for Constructing artificial neurons with functional parameters comprehensively matching biological values",
+        "publisher_or_domain": "Nature Communications",
+        "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-63640-7/MediaObjects/41467_2025_63640_MOESM2_ESM.pdf",
+        "evidence_types": [
+          "audit"
+        ],
+        "source_role": "context_source",
+        "used_for": "Independent reviewer scrutiny of the energy accounting, comparison against lower-energy CMOS designs, chemical-sensing power, selectivity, and the complexity of the cardiomyocyte interface; author revisions and final validation of the energy calculation."
+      },
+      {
+        "citation_id": "fu-2020-bio-voltage-memristors",
+        "title": "Bioinspired bio-voltage memristors",
+        "publisher_or_domain": "Nature Communications",
+        "url": "https://www.nature.com/articles/s41467-020-15759-y",
+        "evidence_types": [
+          "peer_reviewed_paper",
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Previous frontier established by protein-nanowire memristors operating at approximately 40–100 mV and artificial-neuron functions driven by biological-amplitude inputs."
+      },
+      {
+        "citation_id": "sarkar-2022-organic-artificial-neuron",
+        "title": "An organic artificial spiking neuron for in situ neuromorphic sensing and biointerfacing",
+        "publisher_or_domain": "Nature Electronics",
+        "url": "https://www.nature.com/articles/s41928-022-00859-y",
+        "evidence_types": [
+          "peer_reviewed_paper",
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Prior operation in liquid, chemical responsiveness, real-time biological interfacing, and the earlier artificial neuron's higher bias and spiking-energy requirements. Its publisher correction did not affect these cited results."
+      },
+      {
+        "citation_id": "zhao-2025-diffusive-memristor-neuron",
+        "title": "A spiking artificial neuron based on one diffusive memristor, one transistor and one resistor",
+        "publisher_or_domain": "Nature Electronics",
+        "url": "https://www.nature.com/articles/s41928-025-01488-x",
+        "evidence_types": [
+          "peer_reviewed_paper",
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Post-publication context showing a different compact artificial-neuron design with picojoule-per-spike energy and cascade behavior. It is not an independent reproduction of the UMass biological-amplitude device."
+      }
+    ]
+  }
+}
