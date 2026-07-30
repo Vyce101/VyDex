@@ -47,7 +47,7 @@ The feature accepts one complete `ResolvedPublicEntry` from the application rele
 5. The feature projects and renders the complete record into HTML during the build.
 6. Slugs absent from `getStaticPaths()` fall through to the generated `404.html`. Built-site preview and Cloudflare Pages return an HTTP `404` without redirecting to the Homepage.
 
-The three genuine Stage 1 seed Entries currently produce three Entry routes. Removed Entries do not produce routes.
+Every current genuine Entry produces one Entry route. Removed Entries do not produce routes.
 
 ## Record Structure
 

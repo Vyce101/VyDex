@@ -56,7 +56,7 @@ VyDex is not a daily newsletter, prediction market, leaderboard, or general tech
 
 ## Current Status
 
-Stage 1 contains the Homepage, three public Entry pages, three Topic Trail pages, the material Changelog, Methodology `1.0.0`, the About and Scope Limits page, the Export JSON page, and a static not-found page. These surfaces share the Frontier Atlas design system and remain readable without browser JavaScript. Production builds also generate a complete sitemap index and child sitemap, and `robots.txt` advertises the production sitemap index.
+Stage 1 contains the Homepage, generated public Entry and Topic Trail pages, the material Changelog, Methodology `1.0.0`, the About and Scope Limits page, the Export JSON page, and a static not-found page. These surfaces share the Frontier Atlas design system and remain readable without browser JavaScript. Production builds also generate a complete sitemap index and child sitemap, and `robots.txt` advertises the production sitemap index.
 
 The active committed release is successor `019fa07e-b516-774e-b1c4-75d38ecb36d5`, with canonical origin `https://vydex.pages.dev` and immutable export filename `vydex-latest-entry-versions-v1-0-0-2026-07-26.json`. Earlier releases `019fa023-d4fa-775e-af1f-25aa42de7cf9` and `019f9b40-a3a8-75ad-b2b2-05a7100bcc34`, together with their immutable Datasets, remain retained in the committed history and archive under `generated/release-data/`.
 

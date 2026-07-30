@@ -55,7 +55,7 @@ The existing activity field is derived from the newest snapshot whose `materiali
 
 The Header has no active item on the Homepage. The Hero contains one H1, a short description, the product boundary statement, and links to Latest Entries, Methodology, and About. Latest Entries uses a normal `/#latest` anchor.
 
-The Latest Update label sits outside the selected Entry Preview. Recent Entries and Evidence Updates shows one vertical list with up to five real records. With the current seed release, the Dreamer 4 Entry appears as Latest Update and again as the first of all three recent Entries.
+The Latest Update label sits outside the selected Entry Preview. Recent Entries and Evidence Updates shows one vertical list with up to five real records. The latest Entry appears in both placements because they serve different reading contexts.
 
 How VyDex Reads Claims presents Claim, Evidence, and Caveat in one continuous Atlas Sheet, followed by the Methodology link. The page does not add search, sorting, placeholders, media, scores, importance language, or news-feed patterns.
 
