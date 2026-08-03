@@ -17,6 +17,18 @@ const TRAILS = [
       "NHC verification finds Google DeepMind’s GDMI leading individual hurricane guidance in 2025",
   },
   {
+    path: "/topic-trails/brain-inspired-hardware-biological-function/",
+    name: "Brain-inspired hardware approaching biological function",
+    lastActivity: "2026-07-30",
+    entryTitle: "Artificial neuron repeatedly fires within living-neuron voltage and energy ranges",
+  },
+  {
+    path: "/topic-trails/frontier-ai-capability-progress-over-time/",
+    name: "Frontier AI capability progress over time",
+    lastActivity: "2026-08-03",
+    entryTitle: "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024",
+  },
+  {
     path: "/topic-trails/world-models-for-agent-training/",
     name: "World models for agent training",
     lastActivity: "2026-07-25",
@@ -25,14 +37,14 @@ const TRAILS = [
   },
 ] as const;
 
-const DEFAULT_TRAIL = TRAILS[2];
+const DEFAULT_TRAIL = TRAILS[4];
 
 async function openDefaultTrail(page: Page): Promise<void> {
   await page.goto(DEFAULT_TRAIL.path);
 }
 
 test("generates exactly one working route for every seed Topic Trail", async ({ request }) => {
-  expect(new Set(TRAILS.map(({ path }) => path)).size).toBe(3);
+  expect(new Set(TRAILS.map(({ path }) => path)).size).toBe(5);
   for (const trail of TRAILS) {
     const response = await request.get(trail.path);
     expect(response.status(), trail.path).toBe(200);

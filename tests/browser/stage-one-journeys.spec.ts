@@ -10,11 +10,16 @@ const ENTRY_PATHS = [
   "/entries/dreamer-4-offline-minecraft-diamonds/",
   "/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
   "/entries/metr-software-task-horizons-doubling-seven-months/",
+  "/entries/artificial-neuron-biological-voltage-energy/",
+  "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/",
 ] as const;
+const LATEST_ENTRY_PATH = "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/";
 const TOPIC_TRAIL_PATHS = [
   "/topic-trails/world-models-for-agent-training/",
   "/topic-trails/ai-in-operational-weather-forecasting/",
   "/topic-trails/ai-agents-in-software-engineering/",
+  "/topic-trails/brain-inspired-hardware-biological-function/",
+  "/topic-trails/frontier-ai-capability-progress-over-time/",
 ] as const;
 const REPRESENTATIVE_ROUTES = [
   ["Homepage", "/", "Versioned Evidence for Frontier Claims"],
@@ -55,7 +60,7 @@ test("completes every required cross-page reading journey", async ({ page }) => 
   await proxyPublicOriginToLocalOutput(page);
   await page.goto("/");
   await page.locator('[data-homepage-latest] [data-entry-preview-field="title"] a').click();
-  await expectPath(page, ENTRY_PATHS[0]);
+  await expectPath(page, LATEST_ENTRY_PATH);
 
   await page.goto("/");
   await page.getByRole("link", { name: "View Methodology" }).click();

@@ -16,6 +16,7 @@ const METHODOLOGY_ID = "019f9593-391e-79d1-8f4a-3c88e68fc069";
 const PUBLISHED_AT = "2026-07-24T20:18:26Z";
 const DREAMER_REVIEW_PUBLISHED_AT = "2026-07-25T13:03:03Z";
 const UMASS_PUBLISHED_AT = "2026-07-30T13:28:14Z";
+const EPOCH_PUBLISHED_AT = "2026-08-03T10:50:41Z";
 
 const SEEDS = {
   dreamer: {
@@ -54,6 +55,15 @@ const SEEDS = {
     aliases: [],
     update_summary:
       "Initial entry added from the peer-reviewed device study, source data, transparent peer review, prior bio-voltage and biointerface research, and later field context.",
+  },
+  epoch: {
+    entry_id: "019fc73f-49c8-736d-9522-4826f88a1134",
+    revision_id: "019fc73f-49c8-736d-9522-4d2307d8c225",
+    trail_id: "019fc73f-49c1-739c-ad74-1cce0679efe7",
+    slug: "epoch-frontier-ai-benchmark-progress-acceleration-2024",
+    aliases: [],
+    update_summary:
+      "Initial publication of Epoch’s December 2025 ECI acceleration estimate with later cross-metric and Anthropic context.",
   },
 } as const;
 
@@ -95,6 +105,16 @@ const EXPECTED_SOURCE_ROLES = {
     "sarkar-2022-organic-artificial-neuron": "context_source",
     "zhao-2025-diffusive-memristor-neuron": "context_source",
   },
+  [SEEDS.epoch.entry_id]: {
+    "epoch-eci-acceleration-analysis": "primary_evidence",
+    "epoch-capabilities-acceleration-follow-up": "primary_evidence",
+    "epoch-eci-public-code": "strong_artifact",
+    "rosetta-stone-ai-benchmarks": "context_source",
+    "epoch-eci-methodology": "context_source",
+    "epoch-eci-benchmark-page": "context_source",
+    "metr-neurips-time-horizon-paper": "context_source",
+    "anthropic-mythos-preview-system-card": "context_source",
+  },
 } as const;
 
 describe("canonical Stage 1 seed content", () => {
@@ -134,9 +154,9 @@ describe("canonical Stage 1 seed content", () => {
 
   test("loads the complete seed ledger without diagnostics", () => {
     expect(records.diagnostics).toEqual([]);
-    expect(entries).toHaveLength(4);
-    expect(trails).toHaveLength(4);
-    expect(snapshots).toHaveLength(5);
+    expect(entries).toHaveLength(5);
+    expect(trails).toHaveLength(5);
+    expect(snapshots).toHaveLength(6);
     expect(records.methodologies).toHaveLength(1);
     expect(records.methodology_publication_events).toHaveLength(1);
   });
@@ -173,6 +193,13 @@ describe("canonical Stage 1 seed content", () => {
       review_status: "stable",
       review_reason: null,
     });
+    expect(entries.find(({ id }) => id === SEEDS.epoch.entry_id)).toMatchObject({
+      date_happened: null,
+      date_disclosed: "2025-12-23",
+      date_last_checked: "2026-08-03",
+      review_status: "stable",
+      review_reason: null,
+    });
 
     expect(trails.map(({ id, slug, aliases, name, description }) => ({ id, slug, aliases, name, description }))).toEqual([
       {
@@ -198,6 +225,14 @@ describe("canonical Stage 1 seed content", () => {
         name: "Brain-inspired hardware approaching biological function",
         description:
           "Tracks progress in hardware that reproduces or interoperates with biological neural signaling and information processing.",
+      },
+      {
+        id: SEEDS.epoch.trail_id,
+        slug: "frontier-ai-capability-progress-over-time",
+        aliases: [],
+        name: "Frontier AI capability progress over time",
+        description:
+          "Tracks evidence about how quickly and consistently frontier AI capabilities are changing over time, including acceleration, slowdowns, plateaus, and breaks in long-run trends.",
       },
       {
         id: SEEDS.dreamer.trail_id,
@@ -236,6 +271,20 @@ describe("canonical Stage 1 seed content", () => {
     );
     expect(metr.details.what_evidence_shows).toContain("A separate ICML 2026 paper, BRIDGE");
     expect(metr.details.what_evidence_shows).not.toContain("A separate 2026 preprint");
+
+    const epoch = entries.find(({ id }) => id === SEEDS.epoch.entry_id)!;
+    expect(epoch).toMatchObject({
+      title: "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024",
+      claim_status: "supported",
+      evidence_strength: "strong",
+      domains: ["ai_capabilities", "ai_evaluation"],
+      primary_topic_trail_id: SEEDS.epoch.trail_id,
+      secondary_topic_trail_ids: [],
+    });
+    expect(epoch.details.what_evidence_shows).toContain("Anthropic provided separate-organization convergent evidence");
+    expect(epoch.caveats).toContain(
+      "No independent reproduction of Epoch’s exact public ECI series, April 2024 breakpoint, and 1.85× slope ratio was located; Anthropic’s internal ECI fork used non-comparable scores and a different timeframe.",
+    );
   });
 
   test("stores the approved significance text and immutable revision-1 snapshots", () => {
@@ -253,7 +302,12 @@ describe("canonical Stage 1 seed content", () => {
         revision_id: seed.revision_id,
         entry_id: seed.entry_id,
         revision_number: 1,
-        published_at: seed === SEEDS.umass ? UMASS_PUBLISHED_AT : PUBLISHED_AT,
+        published_at:
+          seed === SEEDS.epoch
+            ? EPOCH_PUBLISHED_AT
+            : seed === SEEDS.umass
+              ? UMASS_PUBLISHED_AT
+              : PUBLISHED_AT,
         methodology_id: METHODOLOGY_ID,
         methodology_public_version: "1.0.0",
         revision_category: "initial_publication",
@@ -286,14 +340,15 @@ describe("canonical Stage 1 seed content", () => {
   });
 
   test("constructs the complete production release with URLs, relationships, and activity dates", () => {
-    expect(release.current_entries).toHaveLength(4);
+    expect(release.current_entries).toHaveLength(5);
     expect(release.current_entries.map(({ entry }) => entry.id)).toEqual([
+      SEEDS.epoch.entry_id,
       SEEDS.umass.entry_id,
       SEEDS.dreamer.entry_id,
       SEEDS.gdmi.entry_id,
       SEEDS.metr.entry_id,
     ]);
-    expect(release.topic_trails).toHaveLength(4);
+    expect(release.topic_trails).toHaveLength(5);
     expect(release.topic_trails.every(({ entry_count }) => entry_count === 1)).toBe(true);
 
     for (const seed of Object.values(SEEDS)) {
@@ -302,9 +357,16 @@ describe("canonical Stage 1 seed content", () => {
       expect(entry.primary_topic_trail.id).toBe(seed.trail_id);
       expect(entry.secondary_topic_trails).toEqual([]);
       expect(entry.activity).toMatchObject({
-        date_added: seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
+        date_added:
+          seed === SEEDS.epoch ? "2026-08-03" : seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
         date_updated:
-          seed === SEEDS.umass ? "2026-07-30" : seed === SEEDS.dreamer ? "2026-07-25" : "2026-07-24",
+          seed === SEEDS.epoch
+            ? "2026-08-03"
+            : seed === SEEDS.umass
+              ? "2026-07-30"
+              : seed === SEEDS.dreamer
+                ? "2026-07-25"
+                : "2026-07-24",
       });
     }
 
@@ -329,14 +391,14 @@ describe("canonical Stage 1 seed content", () => {
     ]);
   });
 
-  test("derives the four Added events, Dreamer update, and existing Methodology event", () => {
+  test("derives the five Added events, Dreamer update, and existing Methodology event", () => {
     const entryEvents = release.changelog_events.filter(({ type }) => type === "added");
     const updateEvents = release.changelog_events.filter(({ type }) => type === "updated");
     const methodologyEvents = release.changelog_events.filter(
       ({ type }) => type === "methodology_change",
     );
 
-    expect(entryEvents).toHaveLength(4);
+    expect(entryEvents).toHaveLength(5);
     expect(updateEvents).toEqual([
       expect.objectContaining({
         date: "2026-07-25",
@@ -352,7 +414,7 @@ describe("canonical Stage 1 seed content", () => {
       published_at: "2026-07-24T19:21:21.438Z",
       source_identity: "019f9593-391e-79d1-8f4a-3c88e68fc069",
     });
-    expect(release.changelog_events).toHaveLength(6);
+    expect(release.changelog_events).toHaveLength(7);
     expect(entryEvents.map(({ source_identity }) => source_identity).sort()).toEqual(
       Object.values(SEEDS).map(({ revision_id }) => revision_id).sort(),
     );
@@ -364,8 +426,13 @@ describe("canonical Stage 1 seed content", () => {
       const event = entryEvents.find(({ source_identity }) => source_identity === seed.revision_id)!;
       expect(event).toMatchObject({
         type: "added",
-        date: seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
-        published_at: seed === SEEDS.umass ? UMASS_PUBLISHED_AT : PUBLISHED_AT,
+        date: seed === SEEDS.epoch ? "2026-08-03" : seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
+        published_at:
+          seed === SEEDS.epoch
+            ? EPOCH_PUBLISHED_AT
+            : seed === SEEDS.umass
+              ? UMASS_PUBLISHED_AT
+              : PUBLISHED_AT,
       });
     }
     expect(release.current_entries.every(({ entry }) => entry.entry_state !== "removed")).toBe(true);

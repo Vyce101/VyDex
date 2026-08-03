@@ -3,10 +3,13 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { EXPECTED_SITE_ORIGIN } from "./playwright-config";
 
+const METR_ENTRY_PATH = "/entries/metr-software-task-horizons-doubling-seven-months/";
 const ENTRY_PATHS = [
   "/entries/dreamer-4-offline-minecraft-diamonds/",
+  "/entries/artificial-neuron-biological-voltage-energy/",
+  "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/",
   "/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
-  "/entries/metr-software-task-horizons-doubling-seven-months/",
+  METR_ENTRY_PATH,
 ] as const;
 
 async function openEntry(page: Page): Promise<void> {
@@ -136,7 +139,7 @@ test("shows all Domains, relationships, statuses, follow-up context, and metadat
 });
 
 test("renders resolved sources in role order with intact context and descriptive links", async ({ page }) => {
-  await page.goto(ENTRY_PATHS[2]);
+  await page.goto(METR_ENTRY_PATH);
   const records = page.locator(".entry-source");
 
   await expect(records).toHaveCount(7);

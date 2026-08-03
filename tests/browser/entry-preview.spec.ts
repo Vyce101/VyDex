@@ -3,10 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const LATEST_ENTRY_TITLE =
-  "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data";
-const LATEST_ENTRY_PATH = "/entries/dreamer-4-offline-minecraft-diamonds/";
-const LATEST_TRAIL_NAME = "World models for agent training";
-const LATEST_TRAIL_PATH = "/topic-trails/world-models-for-agent-training/";
+  "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024";
+const LATEST_ENTRY_PATH = "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/";
+const LATEST_TRAIL_NAME = "Frontier AI capability progress over time";
+const LATEST_TRAIL_PATH = "/topic-trails/frontier-ai-capability-progress-over-time/";
 const FIELD_SEQUENCE = [
   "domain",
   "date-updated",
@@ -31,9 +31,9 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test("renders one featured Latest preview and two quieter distinct recent previews", async ({ page }) => {
+test("renders one featured Latest preview and four quieter distinct recent previews", async ({ page }) => {
   await expect(latestPreview(page)).toHaveCount(1);
-  await expect(recentPreviews(page)).toHaveCount(2);
+  await expect(recentPreviews(page)).toHaveCount(4);
   expect(await recentPreviews(page).allTextContents()).not.toContainEqual(
     expect.stringContaining(LATEST_ENTRY_TITLE),
   );
@@ -41,7 +41,7 @@ test("renders one featured Latest preview and two quieter distinct recent previe
   await expect(latestPreview(page)).toHaveAttribute("class", "entry-preview atlas-sheet");
 
   const entries = page.locator("[data-entry-preview]");
-  await expect(entries).toHaveCount(3);
+  await expect(entries).toHaveCount(5);
   for (const entry of await entries.all()) {
     expect(
       await entry.locator("[data-entry-preview-field]").evaluateAll((fields) =>
@@ -62,8 +62,8 @@ test("shows resolved fields, canonical links, and contextual accessible names", 
   const entry = latestPreview(page);
   await expect(entry.locator('[data-entry-preview-field="domain"]')).toHaveText("AI Capabilities");
   const date = entry.locator('[data-entry-preview-field="date-updated"]');
-  await expect(date).toHaveAttribute("datetime", "2026-07-25");
-  await expect(date).toHaveText("Date Updated: 2026-07-25");
+  await expect(date).toHaveAttribute("datetime", "2026-08-03");
+  await expect(date).toHaveText("Date Updated: 2026-08-03");
 
   await expect(entry.getByRole("link", { name: LATEST_ENTRY_TITLE, exact: true })).toHaveAttribute(
     "href",
