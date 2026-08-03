@@ -1,0 +1,158 @@
+{
+  "revision_id": "019fc73f-49c8-736d-9522-4d2307d8c225",
+  "entry_id": "019fc73f-49c8-736d-9522-4826f88a1134",
+  "revision_number": 1,
+  "published_at": "2026-08-03T10:50:41Z",
+  "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+  "methodology_public_version": "1.0.0",
+  "revision_category": "initial_publication",
+  "materiality": "material",
+  "update_summary": "Initial publication of Epoch’s December 2025 ECI acceleration estimate with later cross-metric and Anthropic context.",
+  "entry": {
+    "id": "019fc73f-49c8-736d-9522-4826f88a1134",
+    "slug": "epoch-frontier-ai-benchmark-progress-acceleration-2024",
+    "aliases": [],
+    "title": "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024",
+    "claim": "Epoch AI’s December 2025 retrospective analysis estimated that the frontier trend in its composite capability index increased from 8.337 to 15.459 ECI points per year at a best-fit breakpoint of 8 April 2024—a 1.85× acceleration—while the index’s arbitrary scale and wide breakpoint interval limit the finding to a relative trend claim.",
+    "claim_status": "supported",
+    "evidence_strength": "strong",
+    "review_status": "stable",
+    "review_reason": null,
+    "entry_state": "main_entry",
+    "domains": [
+      "ai_capabilities",
+      "ai_evaluation"
+    ],
+    "primary_topic_trail_id": "019fc73f-49c1-739c-ad74-1cce0679efe7",
+    "secondary_topic_trail_ids": [],
+    "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+    "date_happened": null,
+    "date_disclosed": "2025-12-23",
+    "date_last_checked": "2026-08-03",
+    "next_check_date": null,
+    "frontier_delta": {
+      "previous_frontier": "Individual benchmarks frequently became unusable for long-term trend measurement once leading models approached their score ceilings, while raw scores from successive benchmark generations were difficult to compare directly. METR had separately reported that software-agent task horizons followed an approximately seven-month historical doubling trend and may have accelerated during 2024, but that evidence concerned a narrower operational measure rather than a composite of conventional benchmarks.",
+      "new_claim_result": "Epoch retrospectively fitted its composite capability index to 149 models released from December 2021 through December 2025, selected the 17 models that established new running maxima, and estimated that the frontier slope increased from 8.337 to 15.459 ECI points per year at a best-fit breakpoint of 8 April 2024.",
+      "delta": "The frontier evidence moved from suggestive acceleration on a narrower operational measure to a quantified 1.85× slope change on a composite benchmark index, with explicit model comparisons, bootstrap uncertainty, and a public implementation of the underlying index."
+    },
+    "details": {
+      "what_happened": "Epoch AI developed the Epoch Capabilities Index, or ECI, to place results from heterogeneous benchmarks on one inferred capability scale. Its statistical model assigns each model a latent capability value and each benchmark difficulty and discrimination parameters, then predicts benchmark performance through a logistic function. The scale has no natural zero or fixed physical unit and is currently anchored so that Claude 3.5 Sonnet equals 130 and GPT-5 equals 150.\n\nOn 23 December 2025, Epoch published a retrospective analysis asking whether the best ECI score was improving faster than before. It extended the dataset to 149 models released from December 2021 through December 2025, relaxed ordinary data filters for some early models, retained the 17 observations that established new running maxima, and fitted a continuous two-segment linear model. The analysis evaluated 5,000 possible breakpoint dates between the 10th and 90th percentiles of the release-date distribution.\n\nThe minimum-residual breakpoint was 8 April 2024. The fitted slope was 8.337 ECI points per year before the breakpoint and 15.459 afterward, producing a 1.85× ratio. Epoch had initially reported 9 April, but revised its fitting method after external feedback about how continuity was imposed between the two segments. The corrected joint optimization shifted the breakpoint by one day and changed each slope by only about 0.1 ECI point per year.\n\nOn 16 April 2026, Epoch published a broader follow-up comparing eight trend families across ECI, the logarithm of METR’s 50%-success task horizon, a combined mathematics index, and a WeirdML V2 index under four dataset-preparation modes.",
+      "what_evidence_shows": "For the December 2025 analysis, the two-segment fit described the selected frontier observations better than one constant linear slope under both AIC and BIC. Across 2,000 resampled frontier datasets, it beat the single-line model on AIC in 90% of runs and on BIC in approximately 80%. The 90% bootstrap interval placed the pre-breakpoint slope between 6 and 11 ECI points per year, the post-breakpoint slope between 13 and 18, the acceleration ratio between 1.3× and 3.1×, and the breakpoint between 17 March 2023 and 19 August 2024.\n\nEpoch’s later four-metric study strengthened the broader proposition that some measured capability trends accelerated around the emergence of reasoning-oriented systems. ECI, METR time horizon, and the mathematics index showed evidence of acceleration relative to a global linear trend, while WeirdML V2 did not. Across the three positive metrics, the best-performing specification separated reasoning and non-reasoning models; reasoning models showed both an upward level shift and a trend approximately two to three times as steep. Several other superlinear curve families also predicted individual metrics well, preventing the authors from identifying one precise universal growth law.\n\nAnthropic provided separate-organization convergent evidence in its April 2026 Claude Mythos Preview system card. Using an internal fork of ECI built from its own benchmark results, Anthropic reported slope ratios from 1.86× to 4.3× depending on the selected breakpoint. Those internal scores, model population, and timeframe are not directly comparable with Epoch’s public ECI, so the result supports the broader possibility of an upward bend without reproducing Epoch’s April 2024 breakpoint or 1.85× estimate.\n\nEpoch released the ECI fitting package, including the capability–difficulty logistic model, data-loading path, fitting script, bootstrap procedure, and scale anchoring. This permits inspection and rerunning of the index implementation, but the reviewed sources do not identify a fixed archival commit and complete analysis path that exactly reproduce the December breakpoint result.",
+      "context_changes_interpretation": "An ECI point is not a stable natural unit. Epoch states that absolute score values and absolute slopes are meaningless in isolation; the relative difference between models or fitted slopes carries the interpretation. Adding models, evaluations, and benchmarks can alter historical estimates because the latent-variable model is refitted. The 1.85× ratio is therefore more interpretable than either points-per-year value on its own.\n\nApril 8 is an inferred statistical changepoint selected from thousands of candidate dates, not the date of a model release or directly observed event. Its 90% bootstrap interval spans approximately seventeen months, making claims about a precise transition date or causal trigger inappropriate.\n\nThe original analysis compared a segmented linear trend with a single linear trend but did not compare it with smooth exponential growth. A smooth acceleration could therefore resemble a discrete breakpoint. Epoch’s 2026 follow-up tested several superlinear alternatives, but multiple forms performed well enough that the precise shape and rate could not be pinned down.\n\nThe association with reasoning models and reinforcement learning is correlational. Greater inference-time compute, heavier reinforcement-learning post-training, and explicit reasoning tokens emerged over a similar period and are difficult to separate observationally. The breakpoint analysis does not estimate the causal contribution of any one technique.\n\nThe three metrics showing acceleration in Epoch’s follow-up were concentrated in mathematics, programming, and other tasks whose correctness can often be verified automatically. WeirdML V2 showed no acceleration, although its shorter history reduced statistical power. Skills that are difficult to verify, socially situated, poorly represented by benchmarks, or dependent on real-world reliability may be advancing at different rates.\n\nFinally, ECI assumes that benchmark results can be substantially explained by one shared latent capability dimension. This supports long-run comparison but compresses domain differences, specialization, prompting sensitivity, tool access, inference budgets, and evaluation quality into one value. It is not a complete measure of intelligence, autonomy, or economic usefulness.",
+      "reader_takeaway": "Epoch’s composite benchmark record is better described by a substantially faster frontier trend after approximately 2024 than by one constant linear rate across the full 2021–2025 period.\n\nThe analysis does not show that every kind of AI capability accelerated by 85%, that progress changed suddenly on precisely 8 April 2024, or that reasoning models or reinforcement learning caused the change. The evidence is strongest for accelerated measured progress on benchmark-heavy, readily verifiable reasoning, mathematics, and programming capabilities."
+    },
+    "confirmed_significance": "The current evidence supports treating recent acceleration in selected measured capability trends as more than an impression created by a few prominent model launches. The ECI result supplies a quantitative composite estimate, while Epoch’s later multi-metric study finds compatible acceleration in ECI, software-task horizon, and mathematics measures under several data-processing and trend-fitting choices.\n\nThe result also demonstrates how benchmark stitching can support frontier monitoring across evaluation generations that individually saturate or cover different model sets. What is supported is acceleration in selected measured capability trends; a universal acceleration across all AI abilities, a fixed 1.85× law, and a causal explanation based on reinforcement learning remain unsupported.",
+    "potential_significance_if_confirmed": "If independent researchers reproduce the acceleration after varying benchmark selection, model-score aggregation, elicitation conditions, breakpoint procedures, and capability domains, forecasting methods that assume one stable linear rate would need revision. Capability projections, evaluation schedules, and governance monitoring could require models that permit regime changes or sustained superlinear growth.\n\nIf similar acceleration appears in tasks whose success is difficult to verify automatically—such as open-ended research, long-duration autonomy, social reasoning, real-world operation, and robust decision-making—the result would support a broader claim about general capability progress. The present evidence does not establish that extension.",
+    "caveats": [
+      "ECI points are rescaled latent values rather than natural capability units; the 1.85× slope ratio is more meaningful than the absolute slopes.",
+      "April 8, 2024 is the best-fitting statistical breakpoint, not a directly observed transition event, and its 90% interval extends from 17 March 2023 to 19 August 2024.",
+      "The main trend fit used only 17 running-maximum observations derived from 149 model records.",
+      "The original analysis did not compare its breakpoint fit against smooth exponential growth, and later work found that several superlinear forms could explain individual metrics.",
+      "The timing does not establish whether reasoning tokens, inference-time compute, reinforcement-learning post-training, benchmark targeting, or another correlated change caused the acceleration.",
+      "The strongest later evidence is concentrated in mathematics, programming, and other readily verifiable tasks.",
+      "WeirdML V2 showed no acceleration in Epoch’s four-metric comparison, although its shorter history limited statistical power.",
+      "Epoch created ECI and performed both the original breakpoint analysis and the later multi-metric follow-up.",
+      "No independent reproduction of Epoch’s exact public ECI series, April 2024 breakpoint, and 1.85× slope ratio was located; Anthropic’s internal ECI fork used non-comparable scores and a different timeframe.",
+      "ECI is refitted as models, benchmarks, and evaluations are added, so historical scores and derived trends can move.",
+      "The specially refitted December 2025 trend dataset does not have a verified fixed benchmark count in the reviewed sources."
+    ],
+    "sources": [
+      {
+        "citation_id": "epoch-eci-acceleration-analysis",
+        "title": "AI capabilities progress has sped up",
+        "publisher_or_domain": "Epoch AI",
+        "url": "https://epoch.ai/data-insights/ai-capabilities-progress-has-sped-up",
+        "evidence_types": [
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "primary_evidence",
+        "used_for": "Disclosure date, retrospective dataset scope, frontier-point selection, breakpoint-search procedure, corrected 8 April 2024 estimate, pre- and post-breakpoint slopes, 1.85× ratio, model comparisons, resampling results, bootstrap intervals, assumptions, limitations, and erratum."
+      },
+      {
+        "citation_id": "epoch-capabilities-acceleration-follow-up",
+        "title": "Have AI Capabilities Accelerated?",
+        "publisher_or_domain": "Epoch AI",
+        "url": "https://epoch.ai/publications/have-ai-capabilities-accelerated",
+        "evidence_types": [
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "primary_evidence",
+        "used_for": "Later testing across ECI, METR time horizon, a combined mathematics index, and WeirdML V2; comparison of eight trend families and four dataset-preparation modes; reasoning-versus-non-reasoning results; domain-generalization limits; and the non-accelerating WeirdML result."
+      },
+      {
+        "citation_id": "epoch-eci-public-code",
+        "title": "ECI: Epoch Capabilities Index",
+        "publisher_or_domain": "Epoch AI / GitHub",
+        "url": "https://github.com/epoch-research/eci-public",
+        "evidence_types": [
+          "technical_artifact"
+        ],
+        "source_role": "strong_artifact",
+        "used_for": "Public implementation of the ECI model, fitting scripts, benchmark-data loading, capability, difficulty and discrimination parameters, bootstrap outputs, confidence intervals, and scale anchoring."
+      },
+      {
+        "citation_id": "rosetta-stone-ai-benchmarks",
+        "title": "A Rosetta Stone for AI Benchmarks",
+        "publisher_or_domain": "arXiv / Epoch AI and collaborating researchers",
+        "url": "https://arxiv.org/abs/2512.00193",
+        "evidence_types": [
+          "preprint",
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "context_source",
+        "used_for": "Technical basis for placing heterogeneous benchmarks on one latent capability scale, benchmark-stitching assumptions, simulation-based validation, applications to capability trends, and limitations of representing model capability with one number."
+      },
+      {
+        "citation_id": "epoch-eci-methodology",
+        "title": "ECI Documentation – Methodology",
+        "publisher_or_domain": "Epoch AI",
+        "url": "https://epoch.ai/data/eci-documentation/methodology",
+        "evidence_types": [
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Current logistic model specification, nonlinear least-squares fitting, regularization, arbitrary scale construction, anchor models, and bootstrap confidence intervals."
+      },
+      {
+        "citation_id": "epoch-eci-benchmark-page",
+        "title": "Epoch Capabilities Index",
+        "publisher_or_domain": "Epoch AI",
+        "url": "https://epoch.ai/benchmarks/eci",
+        "evidence_types": [
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "context_source",
+        "used_for": "Purpose of the composite index, current benchmark breadth, interpretation of absolute scores and slopes, ongoing rescaling, domain-specific limitations, and the public implementation link."
+      },
+      {
+        "citation_id": "metr-neurips-time-horizon-paper",
+        "title": "Measuring AI Ability to Complete Long Software Tasks",
+        "publisher_or_domain": "NeurIPS 2025",
+        "url": "https://proceedings.neurips.cc/paper_files/paper/2025/hash/85069585133c4c168c865e65d72e9775-Abstract-Conference.html",
+        "evidence_types": [
+          "peer_reviewed_paper",
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "context_source",
+        "used_for": "Separate evidence that software-agent task horizons followed a rapid historical growth trend and may have accelerated during 2024; used as convergent context based on a different metric, not as a reproduction of ECI."
+      },
+      {
+        "citation_id": "anthropic-mythos-preview-system-card",
+        "title": "System Card: Claude Mythos Preview",
+        "publisher_or_domain": "Anthropic",
+        "url": "https://www-cdn.anthropic.com/08ab9158070959f88f296514c21b7facce6f52bc.pdf",
+        "evidence_types": [
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "context_source",
+        "used_for": "A separate organization’s internal ECI-style trend analysis, its 1.86× to 4.3× slope-ratio range across breakpoint choices, and sensitivity to benchmark selection; not used as a reproduction of Epoch’s exact result."
+      }
+    ]
+  }
+}
