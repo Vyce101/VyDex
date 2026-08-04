@@ -1,0 +1,107 @@
+{
+  "id": "019fcc3d-5f44-706a-8286-8a6bdaa6a9bf",
+  "slug": "gpt-5-erdos-literature-search-status-changes",
+  "aliases": [],
+  "title": "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
+  "claim": "By 14 October 2025, human-reviewed GPT-5 literature searches had found earlier published results that led the Erdős Problems project to change six database entries—Problems 339, 494, 621, 822, 903, and 1043—from open or falsifiable to solved, proved, or disproved without GPT-5 producing new proofs.",
+  "claim_status": "supported",
+  "evidence_strength": "strong",
+  "review_status": "stable",
+  "review_reason": null,
+  "entry_state": "main_entry",
+  "domains": [
+    "ai_capabilities",
+    "mathematics"
+  ],
+  "primary_topic_trail_id": "019fcc3d-5f46-75ff-9ae8-fd9a65062332",
+  "secondary_topic_trail_ids": [
+    "019fcc3d-5f46-75ff-9ae9-02c7d98621f7"
+  ],
+  "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+  "date_happened": "2025-10-14",
+  "date_disclosed": "2025-10-16",
+  "date_last_checked": "2026-08-04",
+  "next_check_date": null,
+  "frontier_delta": {
+    "previous_frontier": "Open-problem databases depended on maintainers and subject experts recognizing equivalent formulations, searching older terminology, and following references across specialized literatures. AI tools had already assisted individual searches and the Erdős Problems website, but those uses had not yet produced a publicly identified cluster of several human-verified status changes.",
+    "new_claim_result": "GPT-5-assisted searches surfaced earlier human results for six entries that the Erdős Problems project had still listed as open or falsifiable. After human review, the project changed Problems 339, 494, 621, 822, 903, and 1043 to solved, proved, or disproved by 14 October 2025.",
+    "delta": "The demonstrated frontier moved from isolated literature-search assistance to a repeatable multi-problem sweep that connected differently stated mathematical questions with existing literature and produced accepted changes to a maintained research database."
+  },
+  "details": {
+    "what_happened": "The Erdős Problems project maintains more than one thousand problems associated with Paul Erdős, including their status, references, and known partial results. Because the relevant literature spans decades, languages, and mathematical subfields, a database entry can remain provisionally open even when a relevant result already exists under different terminology or in an unexpected source.\n\nResearchers used GPT-5 through ChatGPT, the OpenAI API, and internal OpenAI tools to search the collection in parallel and filter candidate references. The model's outputs were not accepted directly: contributors examined the returned papers and checked whether the results actually matched each problem.\n\nA 12 October 2025 repository commit changed Problem 339 from open to proved and Problem 1043 from falsifiable to disproved. A 14 October commit changed Problems 494, 822, and 903 from open to solved and Problem 621 from falsifiable to solved. On 16 October, Terence Tao identified those exact six entries as a cluster of AI-assisted literature recoveries.\n\nA later November 2025 preprint described a broader experiment that found previously published solutions for ten entries: Problems 223, 339, 494, 515, 621, 822, 883 part 2, 903, 1043, and 1079, plus noteworthy partial progress for ten more. That later total is subsequent evidence about the expanded search, not a replacement for the dated six-entry milestone.",
+    "what_evidence_shows": "The two repository commits are durable evidence that the six named records changed status. Tao's contemporaneous report connects those exact changes to AI-assisted searches and states that contributors reviewed the outputs before adding relevant findings. The project's maintained AI-contributions table independently records GPT-5 literature-search contributions for the six problems with dates from 11 through 14 October.\n\nThe later preprint documents why some matches required more than keyword retrieval. For Problem 339, the relevant result was buried in a roughly one-hundred-page paper with hundreds of citations. For Problem 515 in the expanded set, the connection depended on translating the problem into the language of subharmonic functions. For Problem 1043, the relevant observation appeared as a brief comment connected to earlier German-language work that GPT-5 helped translate and explain for human checking.\n\nThe evidence supports a capability for scaled candidate discovery and literature reconciliation. It does not establish that GPT-5 could reliably adjudicate arbitrary open problems without expert review, and the public materials do not provide a frozen log of every query, rejected candidate, or unsuccessful search.",
+    "context_changes_interpretation": "The status changes corrected the project's knowledge record; they did not change when the underlying mathematics was first solved. Earlier human work supplied the results, while GPT-5 helped locate and connect that work to the database entries.\n\nThe project's labels are provisional rather than formal declarations by a mathematical authority. Its own contribution page warns that the collection is not a benchmark, many entries have not received exhaustive literature review, and success counts are affected by selection and reporting bias.\n\nSearch and mathematical reasoning are not cleanly separable in every example. Some matches required recognizing equivalent formulations, translating sources, or supplying a short implication between a paper's result and the stated problem. Even so, humans remained responsible for deciding that the literature answered the database entry.\n\nThe expanded ten-result study used public ChatGPT access alongside API automation and internal OpenAI tools. Its general procedure is described, but the complete query set, model configuration, filtering history, and human-review record were not released in a form that supports an independent end-to-end reproduction.",
+    "reader_takeaway": "GPT-5 did not solve six previously unsolved Erdős problems. It helped researchers find earlier human results that had been missed by a maintained problem database, and those findings survived expert review strongly enough to change six public status records.\n\nThe milestone matters because it shows that AI-assisted literature review can operate across many differently worded research questions and surface useful candidates at a scale that is difficult to sustain manually. It remains a human-supervised knowledge-recovery result, not evidence of autonomous theorem proving."
+  },
+  "confirmed_significance": "The event provides strong evidence that frontier language models can contribute to mathematical research infrastructure by recovering relevant literature across differences in vocabulary, subfield, language, and presentation. The result was externally observable in project history: six database records changed status, and an independently maintained contribution table attributes the associated literature searches to GPT-5.\n\nThe demonstrated advantage is scale. An expert can investigate one problem more deeply, while an automated search can examine many problems, vary terminology, follow candidate connections, and route promising references to specialists. Within the stated scope, the evidence supports repeatable literature discovery with human verification; it does not support autonomous mathematical adjudication or original proof generation.",
+  "potential_significance_if_confirmed": "If independently reproduced with complete logs, calibrated error rates, and other scientific databases, this approach could support systematic audits of open-problem collections, theorem databases, surveys, and review articles. It could identify missing citations, equivalent formulations, duplicate conjectures, and results known in one specialty but overlooked in another.\n\nA mature version could also reduce false novelty claims by checking proposed arguments against a wider literature before publication. Those broader uses remain conditional because the October event did not establish comprehensive coverage, low false-positive rates, or reliable operation without expert review.",
+  "caveats": [
+    "GPT-5 found earlier human results; it did not produce the proofs that changed the six database records.",
+    "The October dates mark changes to a maintained knowledge record, not the historical dates on which the mathematical results were first established.",
+    "Human reviewers had to check the returned papers for exact relevance, assumptions, quantifiers, and completeness.",
+    "The detailed methodological account was written by researchers affiliated with OpenAI and collaborators, and the complete workflow was not independently reproduced.",
+    "Public materials do not include a frozen record of every prompt, model configuration, candidate reference, rejected match, or unsuccessful search.",
+    "The Erdős Problems collection varies widely in problem difficulty, prior scrutiny, and literature-review completeness, so raw success counts are not a calibrated benchmark of general mathematical intelligence.",
+    "Literature recovery is selected toward cases where an answer already exists and therefore says little about performance on problems requiring genuinely new mathematics.",
+    "Some matches involved mathematical interpretation as well as retrieval, but humans—not GPT-5—made the final status decisions.",
+    "A later report expanded the literature-search result to ten full matches and ten partial-progress matches; those later figures should not be substituted for this dated six-entry milestone."
+  ],
+  "sources": [
+    {
+      "citation_id": "tao-october-ai-literature-review-thread",
+      "title": "I am increasingly of the opinion that the most productive near-term adoptions of AI in mathematics…",
+      "publisher_or_domain": "Terence Tao / Mathstodon",
+      "url": "https://mathstodon.xyz/@tao/115385022005130505",
+      "evidence_types": [
+        "developer_vendor_claim"
+      ],
+      "source_role": "primary_evidence",
+      "used_for": "Contemporaneous identification of the exact six-entry cluster, the 16 October disclosure date, the use of systematic AI-assisted literature review, and the requirement for contributor review before findings were added to the project."
+    },
+    {
+      "citation_id": "erdos-status-commit-339-1043",
+      "title": "Update 339 to proved and 1043 to disproved",
+      "publisher_or_domain": "Erdős Problems project / GitHub",
+      "url": "https://github.com/teorth/erdosproblems/commit/f9502bad032dce9a572f1824923e5d0336a5606b",
+      "evidence_types": [
+        "technical_artifact"
+      ],
+      "source_role": "strong_artifact",
+      "used_for": "Direct repository evidence that Problem 339 changed from open to proved and Problem 1043 changed from falsifiable to disproved on 12 October 2025."
+    },
+    {
+      "citation_id": "erdos-status-commit-october-14",
+      "title": "Mark various problems as solved, add 1081",
+      "publisher_or_domain": "Erdős Problems project / GitHub",
+      "url": "https://github.com/teorth/erdosproblems/commit/2b5bce4617fa80d369561d37049ba24b07dae0c2",
+      "evidence_types": [
+        "technical_artifact"
+      ],
+      "source_role": "strong_artifact",
+      "used_for": "Direct repository evidence that Problems 494, 621, 822, and 903 changed to solved on 14 October 2025, establishing the event date for the six-entry cluster."
+    },
+    {
+      "citation_id": "early-science-acceleration-gpt-5",
+      "title": "Early science acceleration experiments with GPT-5",
+      "publisher_or_domain": "arXiv / OpenAI researchers and collaborators",
+      "url": "https://arxiv.org/abs/2511.16072",
+      "evidence_types": [
+        "preprint",
+        "developer_vendor_claim"
+      ],
+      "source_role": "primary_evidence",
+      "used_for": "Search methodology; use of ChatGPT, the OpenAI API, and internal tools; human verification; the later ten-problem full-solution list; partial-progress findings; detailed examples; and reproducibility limits."
+    },
+    {
+      "citation_id": "erdos-ai-contributions-table",
+      "title": "AI contributions to Erdős problems",
+      "publisher_or_domain": "Erdős Problems project / GitHub",
+      "url": "https://github.com/teorth/erdosproblems/wiki/AI-contributions-to-Erd%C5%91s-problems",
+      "evidence_types": [
+        "technical_artifact"
+      ],
+      "source_role": "strong_artifact",
+      "used_for": "Maintained attribution and dates for GPT-5 literature-search contributions, the distinction between literature recovery and primary mathematical contributions, and project warnings about incompleteness, selection bias, and benchmark interpretation."
+    }
+  ]
+}
