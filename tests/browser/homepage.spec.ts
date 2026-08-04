@@ -4,13 +4,14 @@ import { expect, test, type Page } from "@playwright/test";
 import { IS_PREVIOUS_PRODUCTION_BROWSER_VERIFICATION } from "./playwright-config";
 
 const RECENT_ENTRY_TITLES = [
+  "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024",
   "Artificial neuron repeatedly fires within living-neuron voltage and energy ranges",
   "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data",
   "NHC verification finds Google DeepMind’s GDMI leading individual hurricane guidance in 2025",
   "METR finds frontier AI software-task horizons doubling about every seven months",
 ];
 const LATEST_ENTRY_TITLE =
-  "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024";
+  "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results";
 
 async function setViewport(page: Page, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 1000 });
@@ -74,7 +75,7 @@ test("renders the exact Homepage hierarchy, copy, actions, and section order", a
   ).toEqual(["homepage-hero", "homepage-recent", "homepage-reading"]);
 });
 
-test("renders the selected latest Entry once and the four distinct recent Entries", async ({ page }) => {
+test("renders the selected latest Entry once and the five distinct recent Entries", async ({ page }) => {
   const latestTitle = page.locator(
     '[data-homepage-latest] [data-entry-preview-field="title"] a',
   );
@@ -84,7 +85,7 @@ test("renders the selected latest Entry once and the four distinct recent Entrie
 
   await expect(latestTitle).toHaveText(LATEST_ENTRY_TITLE);
   await expect(recentTitles).toHaveText(RECENT_ENTRY_TITLES);
-  await expect(recentTitles).toHaveCount(4);
+  await expect(recentTitles).toHaveCount(5);
   expect(await recentTitles.allTextContents()).not.toContain(LATEST_ENTRY_TITLE);
   await expect(page.getByText("No entries have been added yet.")).toHaveCount(0);
 });

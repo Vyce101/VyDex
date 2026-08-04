@@ -10,11 +10,25 @@ const TRAILS = [
     entryTitle: "METR finds frontier AI software-task horizons doubling about every seven months",
   },
   {
+    path: "/topic-trails/ai-assisted-scientific-literature-discovery/",
+    name: "AI-assisted scientific literature discovery",
+    lastActivity: "2026-08-04",
+    entryTitle:
+      "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
+  },
+  {
     path: "/topic-trails/ai-in-operational-weather-forecasting/",
     name: "AI in operational weather forecasting",
     lastActivity: "2026-07-24",
     entryTitle:
       "NHC verification finds Google DeepMind’s GDMI leading individual hurricane guidance in 2025",
+  },
+  {
+    path: "/topic-trails/ai-in-research-mathematics/",
+    name: "AI in research mathematics",
+    lastActivity: "2026-08-04",
+    entryTitle:
+      "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
   },
   {
     path: "/topic-trails/brain-inspired-hardware-biological-function/",
@@ -37,14 +51,14 @@ const TRAILS = [
   },
 ] as const;
 
-const DEFAULT_TRAIL = TRAILS[4];
+const DEFAULT_TRAIL = TRAILS[6];
 
 async function openDefaultTrail(page: Page): Promise<void> {
   await page.goto(DEFAULT_TRAIL.path);
 }
 
 test("generates exactly one working route for every seed Topic Trail", async ({ request }) => {
-  expect(new Set(TRAILS.map(({ path }) => path)).size).toBe(5);
+  expect(new Set(TRAILS.map(({ path }) => path)).size).toBe(7);
   for (const trail of TRAILS) {
     const response = await request.get(trail.path);
     expect(response.status(), trail.path).toBe(200);

@@ -3,10 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const LATEST_ENTRY_TITLE =
-  "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024";
-const LATEST_ENTRY_PATH = "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/";
-const LATEST_TRAIL_NAME = "Frontier AI capability progress over time";
-const LATEST_TRAIL_PATH = "/topic-trails/frontier-ai-capability-progress-over-time/";
+  "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results";
+const LATEST_ENTRY_PATH = "/entries/gpt-5-erdos-literature-search-status-changes/";
+const LATEST_TRAIL_NAME = "AI-assisted scientific literature discovery";
+const LATEST_TRAIL_PATH = "/topic-trails/ai-assisted-scientific-literature-discovery/";
 const FIELD_SEQUENCE = [
   "domain",
   "date-updated",
@@ -31,9 +31,9 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test("renders one featured Latest preview and four quieter distinct recent previews", async ({ page }) => {
+test("renders one featured Latest preview and five quieter distinct recent previews", async ({ page }) => {
   await expect(latestPreview(page)).toHaveCount(1);
-  await expect(recentPreviews(page)).toHaveCount(4);
+  await expect(recentPreviews(page)).toHaveCount(5);
   expect(await recentPreviews(page).allTextContents()).not.toContainEqual(
     expect.stringContaining(LATEST_ENTRY_TITLE),
   );
@@ -41,7 +41,7 @@ test("renders one featured Latest preview and four quieter distinct recent previ
   await expect(latestPreview(page)).toHaveAttribute("class", "entry-preview atlas-sheet");
 
   const entries = page.locator("[data-entry-preview]");
-  await expect(entries).toHaveCount(5);
+  await expect(entries).toHaveCount(6);
   for (const entry of await entries.all()) {
     expect(
       await entry.locator("[data-entry-preview-field]").evaluateAll((fields) =>
@@ -62,8 +62,8 @@ test("shows resolved fields, canonical links, and contextual accessible names", 
   const entry = latestPreview(page);
   await expect(entry.locator('[data-entry-preview-field="domain"]')).toHaveText("AI Capabilities");
   const date = entry.locator('[data-entry-preview-field="date-updated"]');
-  await expect(date).toHaveAttribute("datetime", "2026-08-03");
-  await expect(date).toHaveText("Date Updated: 2026-08-03");
+  await expect(date).toHaveAttribute("datetime", "2026-08-04");
+  await expect(date).toHaveText("Date Updated: 2026-08-04");
 
   await expect(entry.getByRole("link", { name: LATEST_ENTRY_TITLE, exact: true })).toHaveAttribute(
     "href",

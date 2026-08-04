@@ -12,14 +12,17 @@ const ENTRY_PATHS = [
   "/entries/metr-software-task-horizons-doubling-seven-months/",
   "/entries/artificial-neuron-biological-voltage-energy/",
   "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/",
+  "/entries/gpt-5-erdos-literature-search-status-changes/",
 ] as const;
-const LATEST_ENTRY_PATH = "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/";
+const LATEST_ENTRY_PATH = "/entries/gpt-5-erdos-literature-search-status-changes/";
 const TOPIC_TRAIL_PATHS = [
   "/topic-trails/world-models-for-agent-training/",
   "/topic-trails/ai-in-operational-weather-forecasting/",
   "/topic-trails/ai-agents-in-software-engineering/",
   "/topic-trails/brain-inspired-hardware-biological-function/",
   "/topic-trails/frontier-ai-capability-progress-over-time/",
+  "/topic-trails/ai-assisted-scientific-literature-discovery/",
+  "/topic-trails/ai-in-research-mathematics/",
 ] as const;
 const REPRESENTATIVE_ROUTES = [
   ["Homepage", "/", "Versioned Evidence for Frontier Claims"],

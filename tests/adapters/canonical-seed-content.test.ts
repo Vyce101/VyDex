@@ -17,6 +17,7 @@ const PUBLISHED_AT = "2026-07-24T20:18:26Z";
 const DREAMER_REVIEW_PUBLISHED_AT = "2026-07-25T13:03:03Z";
 const UMASS_PUBLISHED_AT = "2026-07-30T13:28:14Z";
 const EPOCH_PUBLISHED_AT = "2026-08-03T10:50:41Z";
+const GPT5_ERDOS_PUBLISHED_AT = "2026-08-04T10:06:42Z";
 
 const SEEDS = {
   dreamer: {
@@ -24,8 +25,12 @@ const SEEDS = {
     revision_id: "019f95f1-29e6-7e79-b6e4-85196b9c0ec3",
     current_revision_id: "019f995f-3e13-7666-94f1-4331d5503e5f",
     trail_id: "019f95f1-29e6-73e2-8d15-188f7e0593bf",
+    secondary_trail_ids: [],
     slug: "dreamer-4-offline-minecraft-diamonds",
     aliases: [],
+    published_at: PUBLISHED_AT,
+    date_added: "2026-07-24",
+    date_updated: "2026-07-25",
     update_summary:
       "Initial entry added from the Dreamer 4 preprint, project artifacts, and prior Minecraft-agent baselines.",
   },
@@ -33,8 +38,12 @@ const SEEDS = {
     entry_id: "019f95f1-29e6-706f-a250-e15e16b91b72",
     revision_id: "019f95f1-29e6-77d3-bbe5-b31cc88a575c",
     trail_id: "019f95f1-29e6-783b-9df9-0bc9b2342563",
+    secondary_trail_ids: [],
     slug: "google-deepmind-gdmi-leading-hurricane-guidance-2025",
     aliases: ["google-deepmind-gdmi-hurricane-forecasting-2025"],
+    published_at: PUBLISHED_AT,
+    date_added: "2026-07-24",
+    date_updated: "2026-07-24",
     update_summary:
       "Initial entry added. The claim is centred on formal 2025 NHC verification rather than DeepMind’s June 2025 launch announcement.",
   },
@@ -42,8 +51,12 @@ const SEEDS = {
     entry_id: "019f95f1-29e6-7b1a-b120-8c2d9d628ed9",
     revision_id: "019f95f1-29e6-7ad1-9775-b85f07fd5b10",
     trail_id: "019f95f1-29e6-7321-8eae-45113baba7cd",
+    secondary_trail_ids: [],
     slug: "metr-software-task-horizons-doubling-seven-months",
     aliases: [],
+    published_at: PUBLISHED_AT,
+    date_added: "2026-07-24",
+    date_updated: "2026-07-24",
     update_summary:
       "Initial entry added from METR’s peer-reviewed task-horizon study, public analysis artifacts, Time Horizon 1.1, and the BRIDGE reproduction.",
   },
@@ -51,8 +64,12 @@ const SEEDS = {
     entry_id: "019fb336-18b1-7652-9af7-fdbe971db4f0",
     revision_id: "019fb336-18b5-76e4-90c9-fdaf74f0e0cf",
     trail_id: "019fb336-18b5-76e4-90c9-f8aa8dbaae4f",
+    secondary_trail_ids: [],
     slug: "artificial-neuron-biological-voltage-energy",
     aliases: [],
+    published_at: UMASS_PUBLISHED_AT,
+    date_added: "2026-07-30",
+    date_updated: "2026-07-30",
     update_summary:
       "Initial entry added from the peer-reviewed device study, source data, transparent peer review, prior bio-voltage and biointerface research, and later field context.",
   },
@@ -60,10 +77,27 @@ const SEEDS = {
     entry_id: "019fc73f-49c8-736d-9522-4826f88a1134",
     revision_id: "019fc73f-49c8-736d-9522-4d2307d8c225",
     trail_id: "019fc73f-49c1-739c-ad74-1cce0679efe7",
+    secondary_trail_ids: [],
     slug: "epoch-frontier-ai-benchmark-progress-acceleration-2024",
     aliases: [],
+    published_at: EPOCH_PUBLISHED_AT,
+    date_added: "2026-08-03",
+    date_updated: "2026-08-03",
     update_summary:
       "Initial publication of Epoch’s December 2025 ECI acceleration estimate with later cross-metric and Anthropic context.",
+  },
+  gpt5Erdos: {
+    entry_id: "019fcc3d-5f44-706a-8286-8a6bdaa6a9bf",
+    revision_id: "019fcc3d-5f46-75ff-9ae8-fad825ad77a2",
+    trail_id: "019fcc3d-5f46-75ff-9ae8-fd9a65062332",
+    secondary_trail_ids: ["019fcc3d-5f46-75ff-9ae9-02c7d98621f7"],
+    slug: "gpt-5-erdos-literature-search-status-changes",
+    aliases: [],
+    published_at: GPT5_ERDOS_PUBLISHED_AT,
+    date_added: "2026-08-04",
+    date_updated: "2026-08-04",
+    update_summary:
+      "Initial publication of six GPT-5-assisted Erdős Problems literature recoveries and their human-verified status changes.",
   },
 } as const;
 
@@ -115,6 +149,13 @@ const EXPECTED_SOURCE_ROLES = {
     "metr-neurips-time-horizon-paper": "context_source",
     "anthropic-mythos-preview-system-card": "context_source",
   },
+  [SEEDS.gpt5Erdos.entry_id]: {
+    "tao-october-ai-literature-review-thread": "primary_evidence",
+    "erdos-status-commit-339-1043": "strong_artifact",
+    "erdos-status-commit-october-14": "strong_artifact",
+    "early-science-acceleration-gpt-5": "primary_evidence",
+    "erdos-ai-contributions-table": "strong_artifact",
+  },
 } as const;
 
 describe("canonical Stage 1 seed content", () => {
@@ -154,9 +195,9 @@ describe("canonical Stage 1 seed content", () => {
 
   test("loads the complete seed ledger without diagnostics", () => {
     expect(records.diagnostics).toEqual([]);
-    expect(entries).toHaveLength(5);
-    expect(trails).toHaveLength(5);
-    expect(snapshots).toHaveLength(6);
+    expect(entries).toHaveLength(6);
+    expect(trails).toHaveLength(7);
+    expect(snapshots).toHaveLength(7);
     expect(records.methodologies).toHaveLength(1);
     expect(records.methodology_publication_events).toHaveLength(1);
   });
@@ -170,7 +211,7 @@ describe("canonical Stage 1 seed content", () => {
         aliases: seed.aliases,
         entry_state: "main_entry",
         primary_topic_trail_id: seed.trail_id,
-        secondary_topic_trail_ids: [],
+        secondary_topic_trail_ids: seed.secondary_trail_ids,
         methodology_id: METHODOLOGY_ID,
         next_check_date: null,
       });
@@ -200,6 +241,18 @@ describe("canonical Stage 1 seed content", () => {
       review_status: "stable",
       review_reason: null,
     });
+    expect(entries.find(({ id }) => id === SEEDS.gpt5Erdos.entry_id)).toMatchObject({
+      title:
+        "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
+      claim_status: "supported",
+      evidence_strength: "strong",
+      review_status: "stable",
+      review_reason: null,
+      domains: ["ai_capabilities", "mathematics"],
+      date_happened: "2025-10-14",
+      date_disclosed: "2025-10-16",
+      date_last_checked: "2026-08-04",
+    });
 
     expect(trails.map(({ id, slug, aliases, name, description }) => ({ id, slug, aliases, name, description }))).toEqual([
       {
@@ -211,12 +264,28 @@ describe("canonical Stage 1 seed content", () => {
           "Tracks the capability of AI agents to complete software-engineering tasks across increasing scope, duration, and autonomy.",
       },
       {
+        id: SEEDS.gpt5Erdos.trail_id,
+        slug: "ai-assisted-scientific-literature-discovery",
+        aliases: [],
+        name: "AI-assisted scientific literature discovery",
+        description:
+          "Tracks evidence that AI systems can find, interpret, and connect scientific literature well enough to change expert-maintained knowledge records or research decisions.",
+      },
+      {
         id: SEEDS.gdmi.trail_id,
         slug: "ai-in-operational-weather-forecasting",
         aliases: [],
         name: "AI in operational weather forecasting",
         description:
           "Tracks the use and verified performance of AI systems inside real-world weather-forecasting workflows.",
+      },
+      {
+        id: SEEDS.gpt5Erdos.secondary_trail_ids[0],
+        slug: "ai-in-research-mathematics",
+        aliases: [],
+        name: "AI in research mathematics",
+        description:
+          "Tracks verified changes in how AI systems contribute to research mathematics through literature discovery, proof development, formalization, computation, and expert collaboration.",
       },
       {
         id: SEEDS.umass.trail_id,
@@ -302,12 +371,7 @@ describe("canonical Stage 1 seed content", () => {
         revision_id: seed.revision_id,
         entry_id: seed.entry_id,
         revision_number: 1,
-        published_at:
-          seed === SEEDS.epoch
-            ? EPOCH_PUBLISHED_AT
-            : seed === SEEDS.umass
-              ? UMASS_PUBLISHED_AT
-              : PUBLISHED_AT,
+        published_at: seed.published_at,
         methodology_id: METHODOLOGY_ID,
         methodology_public_version: "1.0.0",
         revision_category: "initial_publication",
@@ -340,33 +404,26 @@ describe("canonical Stage 1 seed content", () => {
   });
 
   test("constructs the complete production release with URLs, relationships, and activity dates", () => {
-    expect(release.current_entries).toHaveLength(5);
+    expect(release.current_entries).toHaveLength(6);
     expect(release.current_entries.map(({ entry }) => entry.id)).toEqual([
+      SEEDS.gpt5Erdos.entry_id,
       SEEDS.epoch.entry_id,
       SEEDS.umass.entry_id,
       SEEDS.dreamer.entry_id,
       SEEDS.gdmi.entry_id,
       SEEDS.metr.entry_id,
     ]);
-    expect(release.topic_trails).toHaveLength(5);
+    expect(release.topic_trails).toHaveLength(7);
     expect(release.topic_trails.every(({ entry_count }) => entry_count === 1)).toBe(true);
 
     for (const seed of Object.values(SEEDS)) {
       const entry = release.current_entries.find(({ entry }) => entry.id === seed.entry_id)!;
       expect(entry.canonical_url).toBe(`${SITE_ORIGIN}/entries/${seed.slug}/`);
       expect(entry.primary_topic_trail.id).toBe(seed.trail_id);
-      expect(entry.secondary_topic_trails).toEqual([]);
+      expect(entry.secondary_topic_trails.map(({ id }) => id)).toEqual(seed.secondary_trail_ids);
       expect(entry.activity).toMatchObject({
-        date_added:
-          seed === SEEDS.epoch ? "2026-08-03" : seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
-        date_updated:
-          seed === SEEDS.epoch
-            ? "2026-08-03"
-            : seed === SEEDS.umass
-              ? "2026-07-30"
-              : seed === SEEDS.dreamer
-                ? "2026-07-25"
-                : "2026-07-24",
+        date_added: seed.date_added,
+        date_updated: seed.date_updated,
       });
     }
 
@@ -391,14 +448,14 @@ describe("canonical Stage 1 seed content", () => {
     ]);
   });
 
-  test("derives the five Added events, Dreamer update, and existing Methodology event", () => {
+  test("derives the six Added events, Dreamer update, and existing Methodology event", () => {
     const entryEvents = release.changelog_events.filter(({ type }) => type === "added");
     const updateEvents = release.changelog_events.filter(({ type }) => type === "updated");
     const methodologyEvents = release.changelog_events.filter(
       ({ type }) => type === "methodology_change",
     );
 
-    expect(entryEvents).toHaveLength(5);
+    expect(entryEvents).toHaveLength(6);
     expect(updateEvents).toEqual([
       expect.objectContaining({
         date: "2026-07-25",
@@ -414,7 +471,7 @@ describe("canonical Stage 1 seed content", () => {
       published_at: "2026-07-24T19:21:21.438Z",
       source_identity: "019f9593-391e-79d1-8f4a-3c88e68fc069",
     });
-    expect(release.changelog_events).toHaveLength(7);
+    expect(release.changelog_events).toHaveLength(8);
     expect(entryEvents.map(({ source_identity }) => source_identity).sort()).toEqual(
       Object.values(SEEDS).map(({ revision_id }) => revision_id).sort(),
     );
@@ -426,13 +483,8 @@ describe("canonical Stage 1 seed content", () => {
       const event = entryEvents.find(({ source_identity }) => source_identity === seed.revision_id)!;
       expect(event).toMatchObject({
         type: "added",
-        date: seed === SEEDS.epoch ? "2026-08-03" : seed === SEEDS.umass ? "2026-07-30" : "2026-07-24",
-        published_at:
-          seed === SEEDS.epoch
-            ? EPOCH_PUBLISHED_AT
-            : seed === SEEDS.umass
-              ? UMASS_PUBLISHED_AT
-              : PUBLISHED_AT,
+        date: seed.date_added,
+        published_at: seed.published_at,
       });
     }
     expect(release.current_entries.every(({ entry }) => entry.entry_state !== "removed")).toBe(true);

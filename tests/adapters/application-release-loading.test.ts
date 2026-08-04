@@ -28,7 +28,7 @@ describe("application release loading", { timeout: 15_000 }, () => {
     const second = await loadFixedMetadataDevelopmentApplicationRelease(input);
 
     expect(first.release_metadata).toEqual(second.release_metadata);
-    expect(first.current_entries).toHaveLength(5);
+    expect(first.current_entries).toHaveLength(6);
     expect(first).toEqual(second);
   });
 });
