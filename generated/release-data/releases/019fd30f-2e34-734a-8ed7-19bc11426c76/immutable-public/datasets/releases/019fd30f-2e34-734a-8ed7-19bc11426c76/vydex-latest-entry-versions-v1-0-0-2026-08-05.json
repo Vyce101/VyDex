@@ -1,0 +1,1187 @@
+{
+  "$schema": "https://vydex.pages.dev/schemas/vydex-dataset/1.0.0.json",
+  "dataset_name": "VyDex",
+  "dataset_schema_version": "1.0.0",
+  "release_id": "019fd30f-2e34-734a-8ed7-19bc11426c76",
+  "generated_at": "2026-08-05T17:53:35.286Z",
+  "scope": "latest_entry_versions",
+  "entry_count": 7,
+  "methodology_versions": [
+    "1.0.0"
+  ],
+  "entries": [
+    {
+      "id": "019fb336-18b1-7652-9af7-fdbe971db4f0",
+      "slug": "artificial-neuron-biological-voltage-energy",
+      "canonical_url": "https://vydex.pages.dev/entries/artificial-neuron-biological-voltage-energy/",
+      "revision_id": "019fb336-18b5-76e4-90c9-fdaf74f0e0cf",
+      "revision_number": 1,
+      "revision_published_at": "2026-07-30T13:28:14Z",
+      "latest_update_summary": "Initial entry added from the peer-reviewed device study, source data, transparent peer review, prior bio-voltage and biointerface research, and later field context.",
+      "title": "Artificial neuron repeatedly fires within living-neuron voltage and energy ranges",
+      "claim": "Fu et al. demonstrated a memristor–RC artificial neuron that repeatedly produced output spikes up to ~120 mV with a calculated energy of ~37 pJ per spike in its 4.7 nF configuration—placing both within the biological ranges used by the study—while its live-cell test processed amplified, pulse-converted cardiomyocyte signals in real time.",
+      "claim_status": "supported",
+      "evidence_strength": "strong",
+      "evidence_strength_score": 3,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "biology",
+        "physical_sciences",
+        "hardware"
+      ],
+      "primary_topic_trail": {
+        "id": "019fb336-18b5-76e4-90c9-f8aa8dbaae4f",
+        "name": "Brain-inspired hardware approaching biological function",
+        "slug": "brain-inspired-hardware-biological-function",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/brain-inspired-hardware-biological-function/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": null,
+        "date_disclosed": "2025-09-29",
+        "date_added": "2026-07-30",
+        "date_updated": "2026-07-30",
+        "date_last_checked": "2026-07-30",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Earlier devices had matched parts of biological-neuron operation separately. Protein-nanowire memristors switched at biological voltages and accepted biological-amplitude inputs, while organic artificial neurons operated in liquid, responded to chemical conditions, and formed real-time biological interfaces. Those systems did not demonstrate repeated voltage-output spikes while keeping both spike voltage and energy inside the biological ranges used by the 2025 study.",
+        "new_claim_result": "The UMass-led team combined a volatile protein-nanowire memristor with a resistor–capacitor circuit that repeatedly produced voltage spikes up to ~120 mV. In the 4.7 nF configuration, its calculated spiking energy was ~37 pJ, placing voltage and energy inside the study's cited biological ranges at the same time. The output could also trigger a second artificial neuron.",
+        "delta": "The demonstrated frontier moved from artificial-neuron components that separately matched biological voltage, energy, environmental responsiveness, or interface behavior to one repeatedly firing circuit that combined living-neuron-scale voltage output with living-neuron-scale spiking energy."
+      },
+      "details": {
+        "what_happened": "Nature Communications published the peer-reviewed study on 29 September 2025. Researchers primarily affiliated with the University of Massachusetts Amherst, with additional participation from MIT, fabricated a volatile silver memristor containing protein nanowires harvested from *Geobacter sulfurreducens*. They combined it with resistor and capacitor elements to emulate signal integration, threshold firing, repolarization, and a refractory-like interval.\n\nThe memristor's conductive filament accumulated under repeated input until the device switched on and charged the capacitor. The charged capacitor then reverse-biased and reset the memristor, allowing the circuit to return toward its resting voltage and fire again. The researchers also coupled chemical sensors to the circuit and connected a graphene-mesh cardiomyocyte sensor through standalone analog signal-conditioning hardware.",
+        "what_evidence_shows": "Across 1,000 consecutive voltage sweeps with a 28 MΩ series resistor, the memristor switched at approximately 60 ± 3 mV and 1.76 ± 0.06 nA. The complete artificial neuron accepted 120 mV pulses, produced repeated output spikes reaching approximately 120 mV, returned close to zero between spikes, and drove a downstream artificial neuron in a cascade test.\n\nWith a 4.7 nF capacitor, the final paper calculated approximately 37 pJ per spike. The authors estimated approximately 3.5 pJ for 0.5 nF and 0.2 pJ for 50 pF. The published calculation includes current through both the resistor and capacitor and was validated in a 33 nF configuration by comparing the voltage-based result with direct circuit-current measurement. The official source-data workbook contains the plotted measurement series, although it does not constitute independent replication.\n\nIn the living-cell experiment, untreated cardiomyocyte tissue produced signals at approximately 0.4 Hz and left the artificial neuron silent. After treatment with 10 µM norepinephrine, the measured cellular frequency increased to approximately 0.6 Hz and the artificial neuron began firing. This demonstrates real-time differentiation between two cardiomyocyte firing-rate states in the tested signal path.",
+        "context_changes_interpretation": "The living-cell experiment did not demonstrate direct, amplification-free communication. Signals captured from cardiomyocytes were converted to voltage, filtered, amplified, transformed into 5 V pulses, and attenuated into standardized 120 mV, 70 ms inputs before reaching the artificial neuron. The pathway avoided programmable microcontroller or computer-based preprocessing, but five operational amplifiers and two timers remained essential signal-conditioning components.\n\nThe device was also not the first artificial neuron to respond to ions or dopamine, operate in a biological environment, or participate in a real-time biohybrid interface. A 2022 organic artificial neuron had already demonstrated those broader capabilities. The narrower advance is the combination of repeated voltage output with biological-range voltage and calculated spiking energy in one circuit.\n\nThe chemical behavior is engineered functional emulation. Attached chemiresistors changed circuit resistance and firing frequency; the system did not recreate biological receptors, intracellular signaling pathways, or synaptic plasticity. The study demonstrated a discrete bench-top circuit and one downstream-neuron activation, not a dense computing network, implantable neuron, or bidirectional neural prosthesis.",
+        "reader_takeaway": "This work crosses a meaningful component-level threshold: one artificial-neuron circuit repeatedly fired at voltage and calculated energy levels comparable to living neurons. Matching both quantities in the same design reduces an electrical mismatch that has complicated cascading and biological–electronic integration.\n\nIt does not complete a deployable biological interface. The live-cell pathway still conditioned and converted the measured signal, used cardiomyocytes rather than neurons, and operated only from biology to electronics. Its importance is the closer alignment of core electrical operating parameters within one device, not the demonstration of an artificial replacement neuron or scalable brain-like computer."
+      },
+      "confirmed_significance": "The study provides strong initial evidence that repeated artificial-neuron firing no longer inherently requires choosing between living-neuron-scale voltage and living-neuron-scale spiking energy. The ~120 mV output and calculated ~37 pJ result coexist in one tested design, and its output can activate a downstream artificial neuron.\n\nIt also demonstrates an analog pathway that distinguished two cardiomyocyte firing-rate states in real time without programmable microcontroller or computer preprocessing. That is a useful interface proof of concept, although amplification, pulse conversion, and conventional analog components remained in the pathway.",
+      "potential_significance_if_confirmed": "If the voltage and energy results are independently reproduced and retained after miniaturization, large-scale integration, and long-duration operation, the architecture could support artificial-neuron networks that communicate using signal levels closer to biological tissue without conventional voltage-conversion stages between every component.\n\nIf future sensors capture biological signals at sufficient amplitude to remove the demonstrated conditioning hardware, and if the device operates with neural tissue, the design could simplify biological-to-electronic signal paths. Bidirectional communication, implantability, network learning, tissue safety, and chronic operation remain prospective rather than demonstrated.",
+      "caveats": [
+        "**Amplification remained in the live-cell pathway:** Cardiomyocyte signals passed through filtering, amplification, pulse generation, and attenuation before reaching the artificial neuron as standardized 120 mV, 70 ms inputs.",
+        "**Cardiomyocytes were not neurons:** The living tissue consisted of human embryonic stem cell-derived cardiomyocytes, selected for their robust spontaneous electrical activity.",
+        "**Firstness remains author-controlled:** The claim that this was the first design to keep voltage and energy inside biological ranges rests on the authors' literature comparison and supplementary table rather than an independent novelty assessment.",
+        "**The energy result is calculated and configuration-dependent:** Approximately 37 pJ was calculated for the 4.7 nF configuration using a method validated by direct current measurement in a separate 33 nF configuration. The 3.5 pJ and 0.2 pJ figures came from smaller-capacitance configurations and were reported as estimates.",
+        "**The complete stated energy range was not inside the cited biological range:** The paper cites 0.3–100 pJ for biological neurons, making its lowest 0.2 pJ estimate slightly below that comparison range.",
+        "**Chemical behavior was engineered emulation:** Sodium and dopamine changed attached sensor resistance and circuit firing; the experiments did not reproduce biological receptor or intracellular signaling mechanisms.",
+        "**No functional network was demonstrated:** Triggering a downstream artificial neuron shows cascade potential, not scalable multi-neuron computation, learning, or network stability.",
+        "**This remains a bench-top proof of concept:** The work does not demonstrate implantation, chronic operation, neural-tissue communication, biocompatibility of the complete system, or bidirectional control of living cells.",
+        "**Independent replication was not located:** Peer review and released source data strengthen the evidence, but no separate group was found to have reproduced the complete voltage-and-energy result as of 30 July 2026."
+      ],
+      "evidence_types": [
+        "peer_reviewed_paper",
+        "developer_vendor_claim",
+        "technical_artifact",
+        "audit"
+      ],
+      "sources": [
+        {
+          "citation_id": "fu-2025-nature-communications",
+          "title": "Constructing artificial neurons with functional parameters comprehensively matching biological values",
+          "publisher_or_domain": "Nature Communications",
+          "url": "https://www.nature.com/articles/s41467-025-63640-7",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "developer_vendor_claim"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Publication metadata; device construction; voltage, current, and repeated-spiking measurements; energy calculation; cascade test; chemical experiments; cardiomyocyte setup and results; methods; and disclosed limitations. Because the authors report a result about the device they developed, the paper is also a Developer / Vendor Claim."
+        },
+        {
+          "citation_id": "fu-2025-source-data",
+          "title": "Source data for Constructing artificial neurons with functional parameters comprehensively matching biological values",
+          "publisher_or_domain": "Nature Communications",
+          "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-63640-7/MediaObjects/41467_2025_63640_MOESM3_ESM.xlsx",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Official plotted measurement series for memristor switching, repeated output spikes, capacitor-dependent firing, chemical sensing, energy-validation traces, and the cardiomyocyte signal path."
+        },
+        {
+          "citation_id": "zhao-2025-diffusive-memristor-neuron",
+          "title": "A spiking artificial neuron based on one diffusive memristor, one transistor and one resistor",
+          "publisher_or_domain": "Nature Electronics",
+          "url": "https://www.nature.com/articles/s41928-025-01488-x",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Post-publication context showing a different compact artificial-neuron design with picojoule-per-spike energy and cascade behavior. It is not an independent reproduction of the UMass biological-amplitude device."
+        },
+        {
+          "citation_id": "sarkar-2022-organic-artificial-neuron",
+          "title": "An organic artificial spiking neuron for in situ neuromorphic sensing and biointerfacing",
+          "publisher_or_domain": "Nature Electronics",
+          "url": "https://www.nature.com/articles/s41928-022-00859-y",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Prior operation in liquid, chemical responsiveness, real-time biological interfacing, and the earlier artificial neuron's higher bias and spiking-energy requirements. Its publisher correction did not affect these cited results."
+        },
+        {
+          "citation_id": "fu-2020-bio-voltage-memristors",
+          "title": "Bioinspired bio-voltage memristors",
+          "publisher_or_domain": "Nature Communications",
+          "url": "https://www.nature.com/articles/s41467-020-15759-y",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous frontier established by protein-nanowire memristors operating at approximately 40–100 mV and artificial-neuron functions driven by biological-amplitude inputs."
+        },
+        {
+          "citation_id": "fu-2025-transparent-peer-review",
+          "title": "Transparent peer review file for Constructing artificial neurons with functional parameters comprehensively matching biological values",
+          "publisher_or_domain": "Nature Communications",
+          "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-025-63640-7/MediaObjects/41467_2025_63640_MOESM2_ESM.pdf",
+          "evidence_types": [
+            "audit"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Independent reviewer scrutiny of the energy accounting, comparison against lower-energy CMOS designs, chemical-sensing power, selectivity, and the complexity of the cardiomyocyte interface; author revisions and final validation of the energy calculation."
+        }
+      ]
+    },
+    {
+      "id": "019f95f1-29e5-7ea2-a96e-03b7e9d296cb",
+      "slug": "dreamer-4-offline-minecraft-diamonds",
+      "canonical_url": "https://vydex.pages.dev/entries/dreamer-4-offline-minecraft-diamonds/",
+      "revision_id": "019f995f-3e13-7666-94f1-4331d5503e5f",
+      "revision_number": 2,
+      "revision_published_at": "2026-07-25T13:03:03Z",
+      "latest_update_summary": "Completed the evidence review and marked the Entry stable.",
+      "title": "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data",
+      "claim": "Google DeepMind researchers report that Dreamer 4 obtained diamonds in 0.7% of 1,000 one-hour Minecraft evaluations after learning from a fixed 2,541-hour gameplay dataset and improving its policy through reinforcement learning entirely inside a learned world model, without online environment interaction during training.",
+      "claim_status": "supported",
+      "evidence_strength": "strong",
+      "evidence_strength_score": 3,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019f95f1-29e6-73e2-8d15-188f7e0593bf",
+        "name": "World models for agent training",
+        "slug": "world-models-for-agent-training",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/world-models-for-agent-training/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": null,
+        "date_disclosed": "2025-09-29",
+        "date_added": "2026-07-24",
+        "date_updated": "2026-07-25",
+        "date_last_checked": "2026-07-25",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Dreamer 3 had learned from online interaction to collect Minecraft diamonds from sparse rewards, reaching its first diamond after 30 million environment steps, while OpenAI’s VPT used large-scale video pretraining followed by online reinforcement learning to craft diamond tools. Dreamer 3 also received inventory information and abstract crafting actions rather than relying exclusively on the native visual interface.",
+        "new_claim_result": "Dreamer 4 obtained diamonds after training only on a fixed offline dataset, using raw pixel observations and low-level mouse and keyboard actions. Its policy was first initialized from the recorded dataset and then improved through reinforcement learning on trajectories generated inside its learned world model, without collecting additional experience from Minecraft during learning.",
+        "delta": "The reported frontier moved from Minecraft diamond acquisition requiring online trial and error to rare but measurable diamond acquisition after fully offline policy training, with learned imagined experience replacing environment interaction during reinforcement learning."
+      },
+      "details": {
+        "what_happened": "Dreamer 4 is a two-billion-parameter world-model agent developed by Google DeepMind researchers Danijar Hafner, Wilson Yan, and Timothy Lillicrap. Its training has three broad stages: world-model pretraining on recorded video and actions, task-conditioned policy and reward-model training from the dataset, and reinforcement learning on trajectories generated inside the frozen world model. The final policy is then evaluated in the actual Minecraft engine, but the evaluation environment does not supply new training experience.\n\nFor the Offline Diamond Challenge, the researchers used 2,541 hours of contractor gameplay containing 360p video, mouse and keyboard actions, and event annotations. Evaluations began in randomly generated worlds with empty inventories, lasted up to 60 minutes, and used raw pixels with the native low-level control interface. The paper estimates that an experienced human needs about 20 minutes, corresponding to approximately 24,000 mouse and keyboard actions, to obtain a diamond.",
+        "what_evidence_shows": "Dreamer 4 obtained diamonds in 0.7% of 1,000 evaluation episodes—equivalent to seven successful episodes. Every evaluated offline baseline recorded zero diamond successes. Dreamer 4 also obtained iron pickaxes in 29.0% of episodes, compared with 16.9% for the same world-model representation followed only by behavioral cloning and 11.2% for the Gemma 3-based vision-language-action baseline. This ablation supports the narrower claim that imagination training improved the policy beyond imitation from the offline dataset.\n\nPerformance was much higher on earlier milestones: Dreamer 4 obtained stone pickaxes in 90.1% of episodes, iron ore in 66.7%, furnaces in 58.1%, iron ingots in 39.5%, and iron pickaxes in 29.0%. The increasing advantage over behavioral-cloning systems on later milestones is consistent with imagination training helping most as the required behavior becomes longer and less common in the dataset.\n\nThe world model was also evaluated as an interactive Minecraft simulator. A human operator completed 14 of 16 selected interaction tasks inside Dreamer 4, compared with 5 of 16 in the large Oasis model and none in Lucid-v1. Dreamer 4 generated at 21 frames per second on one H100 GPU with 9.6 seconds of context, allowing real-time interaction while preserving a substantially longer context than the compared models.",
+        "context_changes_interpretation": "“Offline” describes the learning process, not the final evaluation. Dreamer 4 was evaluated in the actual Minecraft engine after training; it did not learn solely by executing inside an imagined game from random initialization. The world model, initial policy, and reward model first learned from recorded gameplay containing video, actions, and event annotations. Reinforcement learning inside the world model was the final improvement stage.\n\nThe system also did not receive one unrestricted instruction—such as “find a diamond”—and independently invent the entire plan. It was trained as a 20-task agent and guided during evaluation by a manually specified linear prompt sequence covering gathering wood, crafting successive tools, mining iron, building and using a furnace, and finally mining diamonds. This still requires executing the subtasks under changing procedural conditions, but it limits claims about autonomous task decomposition and open-ended planning.\n\nThe diamond success rate was only 0.7%. That is enough to establish a non-zero reported capability across a large evaluation, but it is not reliable task mastery. The result should therefore be interpreted as crossing the offline-training threshold, not as producing a dependable Minecraft agent.",
+        "reader_takeaway": "Dreamer 4 provides strong initial evidence that a learned world model can become accurate enough for reinforcement learning inside generated experience to improve a policy on a difficult, long-horizon task and transfer that improvement back into the real evaluation environment. Its key contribution is not that another agent can play Minecraft; earlier systems had already reached diamonds or diamond tools. The frontier change is that the policy reached the final milestone without online trial-and-error learning.\n\nThe result remains narrow. It establishes this capability in Minecraft under an authored task hierarchy, using a large action-labelled dataset, substantial training compute, and a low final success rate. It does not establish that the method can yet train reliable general-purpose agents or physical robots entirely through imagination."
+      },
+      "confirmed_significance": "Within the reported Minecraft experiment, Dreamer 4 moved the demonstrated frontier from online world-model reinforcement learning to offline world-model reinforcement learning for the complete diamond progression. Its imagination-trained policy was the only evaluated offline system to obtain diamonds and materially outperformed its behavioral-cloning counterpart on later milestones. This is direct evidence that the learned simulator was useful for policy improvement rather than only for generating visually plausible video.\n\nThe accompanying simulator evaluation also shows a substantial increase in the range of Minecraft mechanics that a real-time world model can preserve. Dreamer 4 supported 14 of 16 tested interactions while running faster than the game’s 20-Hz update rate on one H100, although its usable temporal context remained limited.",
+      "potential_significance_if_confirmed": "If independently reproduced and generalized beyond Minecraft, the result would support training agents from fixed records plus imagined rollouts in domains where online exploration is expensive, slow, difficult to reset, or unsafe. Possible applications include robotics, autonomous systems, and other physical-control settings where partially trained agents cannot be allowed to learn through unrestricted trial and error.\n\nDreamer 4 does not itself demonstrate this complete robotics pipeline. The paper separately shows that its world model can generate counterfactual robot interactions from a robotics dataset, but it does not show a physical robot policy trained entirely through imagined reinforcement learning and then deployed successfully in the real world. Robotics should therefore remain prospective significance rather than part of the confirmed milestone.",
+      "caveats": [
+        "**Developer-controlled evidence:** The paper, benchmark runs, evaluation procedure, project page, and released videos originate from Dreamer 4’s developers. The work remains a preprint and the exact Minecraft result has not been independently reproduced in the evidence attached here.",
+        "**Low final success rate:** Dreamer 4 obtained diamonds in 0.7% of episodes. The result demonstrates capability, not reliability or mastery.",
+        "**Authored subtask sequence:** Evaluation used a manually defined sequence of intermediate prompts rather than requiring the agent to infer the complete plan from one high-level objective.",
+        "**Not video-only training:** The diamond agent used gameplay video paired with low-level actions and event annotations. Separate experiments showed that action conditioning could benefit from large amounts of unlabelled video, but the diamond result was not obtained from action-free video alone.",
+        "**No demonstrated physical-world policy transfer:** Evaluation transferred the policy from a learned Minecraft model into the actual Minecraft engine. The robotics experiment evaluated generated counterfactual interactions, not deployment of an imagination-trained policy on a physical robot.",
+        "**Large training resources:** The reported models contained two billion parameters and were trained across 256 to 1,024 TPU-v5p accelerators. The paper does not provide everything necessary for an independent group to reproduce the complete Minecraft result from the public materials alone.",
+        "**World-model limitations:** Dreamer 4’s generated Minecraft state used 9.6 seconds of context, and the authors report that inventory items could become unclear or change over time. This constrains how literally the simulator should be treated as a persistent, exact internal copy of the environment."
+      ],
+      "evidence_types": [
+        "preprint",
+        "peer_reviewed_paper",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "dreamer-4-paper",
+          "title": "Training Agents Inside of Scalable World Models",
+          "publisher_or_domain": "arXiv / Google DeepMind researchers",
+          "url": "https://arxiv.org/abs/2509.24527",
+          "evidence_types": [
+            "preprint",
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Main Dreamer 4 claim, training procedure, dataset and evaluation setup, milestone success rates, behavioral-cloning ablations, world-model comparison, task prompt sequence, compute details, and disclosed limitations. Because the authors are reporting a result about their own system, this is a Developer / Vendor Claim rather than an Official Claim."
+        },
+        {
+          "citation_id": "dreamer-4-project-page",
+          "title": "Dreamer 4 project page and uncut evaluations",
+          "publisher_or_domain": "Dreamer 4 research team",
+          "url": "https://danijar.com/project/dreamer4/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public project description, uncut successful evaluation videos, decoded imagination-training sequences, interactive world-model comparisons, and robotics-world-model demonstrations."
+        },
+        {
+          "citation_id": "dreamer-3-nature-paper",
+          "title": "Mastering diverse control tasks through world models",
+          "publisher_or_domain": "Nature",
+          "url": "https://www.nature.com/articles/s41586-025-08744-2",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous frontier established by Dreamer 3, including online reinforcement learning from sparse rewards, Minecraft input and action accommodations, and diamond acquisition after environment interaction."
+        },
+        {
+          "citation_id": "unofficial-dreamer-4-pytorch",
+          "title": "Unofficial Dreamer 4 PyTorch implementation",
+          "publisher_or_domain": "Nicklas Hansen",
+          "url": "https://github.com/nicklashansen/dreamer4",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Reproducibility context. The repository explicitly describes itself as an unofficial and incomplete implementation applied to continuous-control tasks rather than a reproduction of the original Minecraft result. It must not be labelled Independent Replication."
+        },
+        {
+          "citation_id": "openai-vpt-paper",
+          "title": "Video PreTraining: Learning to Act by Watching Unlabeled Online Videos",
+          "publisher_or_domain": "NeurIPS 2022",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/9c7008aff45b5d8f0973b23e1a22ada0-Abstract-Conference.html",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Earlier native-interface Minecraft frontier, the estimated 24,000-action task horizon, large-scale video pretraining, and diamond-tool performance after online reinforcement-learning fine-tuning."
+        }
+      ]
+    },
+    {
+      "id": "019fc73f-49c8-736d-9522-4826f88a1134",
+      "slug": "epoch-frontier-ai-benchmark-progress-acceleration-2024",
+      "canonical_url": "https://vydex.pages.dev/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/",
+      "revision_id": "019fc73f-49c8-736d-9522-4d2307d8c225",
+      "revision_number": 1,
+      "revision_published_at": "2026-08-03T10:50:41Z",
+      "latest_update_summary": "Initial publication of Epoch’s December 2025 ECI acceleration estimate with later cross-metric and Anthropic context.",
+      "title": "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024",
+      "claim": "Epoch AI’s December 2025 retrospective analysis estimated that the frontier trend in its composite capability index increased from 8.337 to 15.459 ECI points per year at a best-fit breakpoint of 8 April 2024—a 1.85× acceleration—while the index’s arbitrary scale and wide breakpoint interval limit the finding to a relative trend claim.",
+      "claim_status": "supported",
+      "evidence_strength": "strong",
+      "evidence_strength_score": 3,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019fc73f-49c1-739c-ad74-1cce0679efe7",
+        "name": "Frontier AI capability progress over time",
+        "slug": "frontier-ai-capability-progress-over-time",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/frontier-ai-capability-progress-over-time/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": null,
+        "date_disclosed": "2025-12-23",
+        "date_added": "2026-08-03",
+        "date_updated": "2026-08-03",
+        "date_last_checked": "2026-08-03",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Individual benchmarks frequently became unusable for long-term trend measurement once leading models approached their score ceilings, while raw scores from successive benchmark generations were difficult to compare directly. METR had separately reported that software-agent task horizons followed an approximately seven-month historical doubling trend and may have accelerated during 2024, but that evidence concerned a narrower operational measure rather than a composite of conventional benchmarks.",
+        "new_claim_result": "Epoch retrospectively fitted its composite capability index to 149 models released from December 2021 through December 2025, selected the 17 models that established new running maxima, and estimated that the frontier slope increased from 8.337 to 15.459 ECI points per year at a best-fit breakpoint of 8 April 2024.",
+        "delta": "The frontier evidence moved from suggestive acceleration on a narrower operational measure to a quantified 1.85× slope change on a composite benchmark index, with explicit model comparisons, bootstrap uncertainty, and a public implementation of the underlying index."
+      },
+      "details": {
+        "what_happened": "Epoch AI developed the Epoch Capabilities Index, or ECI, to place results from heterogeneous benchmarks on one inferred capability scale. Its statistical model assigns each model a latent capability value and each benchmark difficulty and discrimination parameters, then predicts benchmark performance through a logistic function. The scale has no natural zero or fixed physical unit and is currently anchored so that Claude 3.5 Sonnet equals 130 and GPT-5 equals 150.\n\nOn 23 December 2025, Epoch published a retrospective analysis asking whether the best ECI score was improving faster than before. It extended the dataset to 149 models released from December 2021 through December 2025, relaxed ordinary data filters for some early models, retained the 17 observations that established new running maxima, and fitted a continuous two-segment linear model. The analysis evaluated 5,000 possible breakpoint dates between the 10th and 90th percentiles of the release-date distribution.\n\nThe minimum-residual breakpoint was 8 April 2024. The fitted slope was 8.337 ECI points per year before the breakpoint and 15.459 afterward, producing a 1.85× ratio. Epoch had initially reported 9 April, but revised its fitting method after external feedback about how continuity was imposed between the two segments. The corrected joint optimization shifted the breakpoint by one day and changed each slope by only about 0.1 ECI point per year.\n\nOn 16 April 2026, Epoch published a broader follow-up comparing eight trend families across ECI, the logarithm of METR’s 50%-success task horizon, a combined mathematics index, and a WeirdML V2 index under four dataset-preparation modes.",
+        "what_evidence_shows": "For the December 2025 analysis, the two-segment fit described the selected frontier observations better than one constant linear slope under both AIC and BIC. Across 2,000 resampled frontier datasets, it beat the single-line model on AIC in 90% of runs and on BIC in approximately 80%. The 90% bootstrap interval placed the pre-breakpoint slope between 6 and 11 ECI points per year, the post-breakpoint slope between 13 and 18, the acceleration ratio between 1.3× and 3.1×, and the breakpoint between 17 March 2023 and 19 August 2024.\n\nEpoch’s later four-metric study strengthened the broader proposition that some measured capability trends accelerated around the emergence of reasoning-oriented systems. ECI, METR time horizon, and the mathematics index showed evidence of acceleration relative to a global linear trend, while WeirdML V2 did not. Across the three positive metrics, the best-performing specification separated reasoning and non-reasoning models; reasoning models showed both an upward level shift and a trend approximately two to three times as steep. Several other superlinear curve families also predicted individual metrics well, preventing the authors from identifying one precise universal growth law.\n\nAnthropic provided separate-organization convergent evidence in its April 2026 Claude Mythos Preview system card. Using an internal fork of ECI built from its own benchmark results, Anthropic reported slope ratios from 1.86× to 4.3× depending on the selected breakpoint. Those internal scores, model population, and timeframe are not directly comparable with Epoch’s public ECI, so the result supports the broader possibility of an upward bend without reproducing Epoch’s April 2024 breakpoint or 1.85× estimate.\n\nEpoch released the ECI fitting package, including the capability–difficulty logistic model, data-loading path, fitting script, bootstrap procedure, and scale anchoring. This permits inspection and rerunning of the index implementation, but the reviewed sources do not identify a fixed archival commit and complete analysis path that exactly reproduce the December breakpoint result.",
+        "context_changes_interpretation": "An ECI point is not a stable natural unit. Epoch states that absolute score values and absolute slopes are meaningless in isolation; the relative difference between models or fitted slopes carries the interpretation. Adding models, evaluations, and benchmarks can alter historical estimates because the latent-variable model is refitted. The 1.85× ratio is therefore more interpretable than either points-per-year value on its own.\n\nApril 8 is an inferred statistical changepoint selected from thousands of candidate dates, not the date of a model release or directly observed event. Its 90% bootstrap interval spans approximately seventeen months, making claims about a precise transition date or causal trigger inappropriate.\n\nThe original analysis compared a segmented linear trend with a single linear trend but did not compare it with smooth exponential growth. A smooth acceleration could therefore resemble a discrete breakpoint. Epoch’s 2026 follow-up tested several superlinear alternatives, but multiple forms performed well enough that the precise shape and rate could not be pinned down.\n\nThe association with reasoning models and reinforcement learning is correlational. Greater inference-time compute, heavier reinforcement-learning post-training, and explicit reasoning tokens emerged over a similar period and are difficult to separate observationally. The breakpoint analysis does not estimate the causal contribution of any one technique.\n\nThe three metrics showing acceleration in Epoch’s follow-up were concentrated in mathematics, programming, and other tasks whose correctness can often be verified automatically. WeirdML V2 showed no acceleration, although its shorter history reduced statistical power. Skills that are difficult to verify, socially situated, poorly represented by benchmarks, or dependent on real-world reliability may be advancing at different rates.\n\nFinally, ECI assumes that benchmark results can be substantially explained by one shared latent capability dimension. This supports long-run comparison but compresses domain differences, specialization, prompting sensitivity, tool access, inference budgets, and evaluation quality into one value. It is not a complete measure of intelligence, autonomy, or economic usefulness.",
+        "reader_takeaway": "Epoch’s composite benchmark record is better described by a substantially faster frontier trend after approximately 2024 than by one constant linear rate across the full 2021–2025 period.\n\nThe analysis does not show that every kind of AI capability accelerated by 85%, that progress changed suddenly on precisely 8 April 2024, or that reasoning models or reinforcement learning caused the change. The evidence is strongest for accelerated measured progress on benchmark-heavy, readily verifiable reasoning, mathematics, and programming capabilities."
+      },
+      "confirmed_significance": "The current evidence supports treating recent acceleration in selected measured capability trends as more than an impression created by a few prominent model launches. The ECI result supplies a quantitative composite estimate, while Epoch’s later multi-metric study finds compatible acceleration in ECI, software-task horizon, and mathematics measures under several data-processing and trend-fitting choices.\n\nThe result also demonstrates how benchmark stitching can support frontier monitoring across evaluation generations that individually saturate or cover different model sets. What is supported is acceleration in selected measured capability trends; a universal acceleration across all AI abilities, a fixed 1.85× law, and a causal explanation based on reinforcement learning remain unsupported.",
+      "potential_significance_if_confirmed": "If independent researchers reproduce the acceleration after varying benchmark selection, model-score aggregation, elicitation conditions, breakpoint procedures, and capability domains, forecasting methods that assume one stable linear rate would need revision. Capability projections, evaluation schedules, and governance monitoring could require models that permit regime changes or sustained superlinear growth.\n\nIf similar acceleration appears in tasks whose success is difficult to verify automatically—such as open-ended research, long-duration autonomy, social reasoning, real-world operation, and robust decision-making—the result would support a broader claim about general capability progress. The present evidence does not establish that extension.",
+      "caveats": [
+        "ECI points are rescaled latent values rather than natural capability units; the 1.85× slope ratio is more meaningful than the absolute slopes.",
+        "April 8, 2024 is the best-fitting statistical breakpoint, not a directly observed transition event, and its 90% interval extends from 17 March 2023 to 19 August 2024.",
+        "The main trend fit used only 17 running-maximum observations derived from 149 model records.",
+        "The original analysis did not compare its breakpoint fit against smooth exponential growth, and later work found that several superlinear forms could explain individual metrics.",
+        "The timing does not establish whether reasoning tokens, inference-time compute, reinforcement-learning post-training, benchmark targeting, or another correlated change caused the acceleration.",
+        "The strongest later evidence is concentrated in mathematics, programming, and other readily verifiable tasks.",
+        "WeirdML V2 showed no acceleration in Epoch’s four-metric comparison, although its shorter history limited statistical power.",
+        "Epoch created ECI and performed both the original breakpoint analysis and the later multi-metric follow-up.",
+        "No independent reproduction of Epoch’s exact public ECI series, April 2024 breakpoint, and 1.85× slope ratio was located; Anthropic’s internal ECI fork used non-comparable scores and a different timeframe.",
+        "ECI is refitted as models, benchmarks, and evaluations are added, so historical scores and derived trends can move.",
+        "The specially refitted December 2025 trend dataset does not have a verified fixed benchmark count in the reviewed sources."
+      ],
+      "evidence_types": [
+        "preprint",
+        "peer_reviewed_paper",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "epoch-eci-acceleration-analysis",
+          "title": "AI capabilities progress has sped up",
+          "publisher_or_domain": "Epoch AI",
+          "url": "https://epoch.ai/data-insights/ai-capabilities-progress-has-sped-up",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Disclosure date, retrospective dataset scope, frontier-point selection, breakpoint-search procedure, corrected 8 April 2024 estimate, pre- and post-breakpoint slopes, 1.85× ratio, model comparisons, resampling results, bootstrap intervals, assumptions, limitations, and erratum."
+        },
+        {
+          "citation_id": "epoch-capabilities-acceleration-follow-up",
+          "title": "Have AI Capabilities Accelerated?",
+          "publisher_or_domain": "Epoch AI",
+          "url": "https://epoch.ai/publications/have-ai-capabilities-accelerated",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Later testing across ECI, METR time horizon, a combined mathematics index, and WeirdML V2; comparison of eight trend families and four dataset-preparation modes; reasoning-versus-non-reasoning results; domain-generalization limits; and the non-accelerating WeirdML result."
+        },
+        {
+          "citation_id": "epoch-eci-public-code",
+          "title": "ECI: Epoch Capabilities Index",
+          "publisher_or_domain": "Epoch AI / GitHub",
+          "url": "https://github.com/epoch-research/eci-public",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public implementation of the ECI model, fitting scripts, benchmark-data loading, capability, difficulty and discrimination parameters, bootstrap outputs, confidence intervals, and scale anchoring."
+        },
+        {
+          "citation_id": "rosetta-stone-ai-benchmarks",
+          "title": "A Rosetta Stone for AI Benchmarks",
+          "publisher_or_domain": "arXiv / Epoch AI and collaborating researchers",
+          "url": "https://arxiv.org/abs/2512.00193",
+          "evidence_types": [
+            "preprint",
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Technical basis for placing heterogeneous benchmarks on one latent capability scale, benchmark-stitching assumptions, simulation-based validation, applications to capability trends, and limitations of representing model capability with one number."
+        },
+        {
+          "citation_id": "epoch-eci-methodology",
+          "title": "ECI Documentation – Methodology",
+          "publisher_or_domain": "Epoch AI",
+          "url": "https://epoch.ai/data/eci-documentation/methodology",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Current logistic model specification, nonlinear least-squares fitting, regularization, arbitrary scale construction, anchor models, and bootstrap confidence intervals."
+        },
+        {
+          "citation_id": "epoch-eci-benchmark-page",
+          "title": "Epoch Capabilities Index",
+          "publisher_or_domain": "Epoch AI",
+          "url": "https://epoch.ai/benchmarks/eci",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Purpose of the composite index, current benchmark breadth, interpretation of absolute scores and slopes, ongoing rescaling, domain-specific limitations, and the public implementation link."
+        },
+        {
+          "citation_id": "metr-neurips-time-horizon-paper",
+          "title": "Measuring AI Ability to Complete Long Software Tasks",
+          "publisher_or_domain": "NeurIPS 2025",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2025/hash/85069585133c4c168c865e65d72e9775-Abstract-Conference.html",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Separate evidence that software-agent task horizons followed a rapid historical growth trend and may have accelerated during 2024; used as convergent context based on a different metric, not as a reproduction of ECI."
+        },
+        {
+          "citation_id": "anthropic-mythos-preview-system-card",
+          "title": "System Card: Claude Mythos Preview",
+          "publisher_or_domain": "Anthropic",
+          "url": "https://www-cdn.anthropic.com/08ab9158070959f88f296514c21b7facce6f52bc.pdf",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "A separate organization’s internal ECI-style trend analysis, its 1.86× to 4.3× slope-ratio range across breakpoint choices, and sensitivity to benchmark selection; not used as a reproduction of Epoch’s exact result."
+        }
+      ]
+    },
+    {
+      "id": "019f95f1-29e6-706f-a250-e15e16b91b72",
+      "slug": "google-deepmind-gdmi-leading-hurricane-guidance-2025",
+      "canonical_url": "https://vydex.pages.dev/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
+      "revision_id": "019f95f1-29e6-77d3-bbe5-b31cc88a575c",
+      "revision_number": 1,
+      "revision_published_at": "2026-07-24T20:18:26Z",
+      "latest_update_summary": "Initial entry added. The claim is centred on formal 2025 NHC verification rather than DeepMind’s June 2025 launch announcement.",
+      "title": "NHC verification finds Google DeepMind’s GDMI leading individual hurricane guidance in 2025",
+      "claim": "During the first season in which the National Hurricane Center incorporated AI-based models into real-time operations, Google DeepMind’s GDMI ensemble mean slightly outperformed the official Atlantic track forecast at 12–72 hours, delivered comparable Atlantic intensity skill, and beat the official forecast and all consensus track aids in the eastern North Pacific at 48–120 hours.",
+      "claim_status": "confirmed",
+      "evidence_strength": "very_strong",
+      "evidence_strength_score": 4,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019f95f1-29e6-783b-9df9-0bc9b2342563",
+        "name": "AI in operational weather forecasting",
+        "slug": "ai-in-operational-weather-forecasting",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/ai-in-operational-weather-forecasting/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": "2025-11-30",
+        "date_disclosed": "2026-03-30",
+        "date_added": "2026-07-24",
+        "date_updated": "2026-07-24",
+        "date_last_checked": "2026-07-24",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Operational-style testing of GraphCast, Pangu-Weather, FourCastNet and related AI weather models found that their tropical-cyclone tracks could compete with strong operational models, but their intensity forecasts were worse than even simple climatology-and-persistence guidance. The models systematically weakened storms and did not improve the operational intensity consensus.",
+        "new_claim_result": "In its first season supplying real-time guidance to NHC, Google DeepMind’s GDMI became one of the leading individual hurricane models. It slightly outperformed NHC’s Atlantic track forecast at 12–72 hours, achieved comparable Atlantic intensity skill, and outperformed the official forecast and all consensus track aids in the eastern North Pacific at 48–120 hours.",
+        "delta": "AI hurricane forecasting moved from strong track predictions paired with largely unusable raw intensity forecasts to one AI ensemble providing operationally competitive guidance for both track and intensity during a live hurricane season."
+      },
+      "details": {
+        "what_happened": "On 12 June 2025, Google DeepMind and Google Research launched Weather Lab and began sharing live predictions from an experimental tropical-cyclone model with NHC forecasters. The system generated 50 possible cyclone scenarios extending as far as 15 days and attempted to predict formation, track, intensity, size and structure within one probabilistic model. DeepMind’s launch evidence was retrospective and developer-controlled, so the 2025 season was the first important prospective operational test.\n\nNHC later described 2025 as the first season in which it incorporated AI-based models into real-time operations. Its preliminary report called GDMI “very useful,” while warning that several AI systems remained under development and were not always delivered reliably enough for routine use. The completed seasonal verification subsequently showed that GDMI was not merely an interesting experimental output: it had become competitive with, and under defined conditions better than, established operational guidance.",
+        "what_evidence_shows": "In homogeneous Atlantic comparisons, meaning forecasts were compared only where every included model was available for the same cases, GDMI slightly outperformed the NHC official track forecast from 12 through 72 hours. Its Atlantic intensity forecasts had skill comparable to the official NHC forecast and placed it among the strongest individual intensity models at several lead times.\n\nIts strongest relative result came in the eastern North Pacific. From 48 through 120 hours, GDMI performed considerably better than the other individual track models and beat both the official NHC forecast and every tested consensus aid. That is especially notable because consensus aids combine several strong models and are normally more difficult for one individual system to outperform consistently.\n\nDeepMind later summarized the merged Atlantic and North Pacific results by saying WeatherNext was the season’s top-performing individual model for both track and intensity. That summary is useful, but it remains a **Developer / Vendor Claim** and compresses substantial variation between basins, forecast ranges and metrics. The more granular NHC findings above should therefore define the public VyDex claim.\n\nHurricane Melissa provides the clearest operational example. On 24 October, while Melissa was still a relatively weak tropical storm, every DeepMind ensemble member projected Category 4 strength or higher, and NHC said its track and intensity forecasts were being blended with GDMI guidance. By the following day, roughly four-fifths of the 50 members projected Category 5 strength, and an NHC discussion described GDMI as the best-performing intensity guidance to that point in the season. On 26 October, 48 of the 50 members still reached Category 5.\n\nMelissa ultimately struck Jamaica on 28 October with estimated sustained winds of 185 mph and a central pressure of 892 millibars. NHC had issued almost three days of advance notice of a Category 5 Jamaican landfall—the first time it had forecast Category 5 intensity while a storm was still only Category 1.",
+        "context_changes_interpretation": "This result does **not** mean GDMI beat NHC or the best consensus systems everywhere. Performance depended on basin, forecast horizon and metric. The strongest verified superiority was in eastern North Pacific track forecasting at 48–120 hours. Atlantic track advantages were smaller and concentrated at shorter ranges, while Atlantic intensity performance was described as comparable to the official forecast rather than universally superior.\n\nNHC’s official forecast remained the stronger overall decision product in several of the season’s hardest situations. Across Atlantic rapid-intensification cases, NHC achieved a higher probability of detection and critical success index than every real-time model. For Melissa specifically, its official intensity forecast outperformed every model at nearly every lead time. GDMI contributed valuable evidence to the human forecast; it did not independently produce the official warning or replace the observations, aircraft reconnaissance, physical models, consensus systems and forecaster judgment behind it.\n\nGDMI was also unavailable during the early portion of the season. The homogeneous comparisons excluded the first two Atlantic storms and the first five eastern North Pacific storms, so this was not a complete all-storm evaluation. NHC separately noted that some experimental AI systems were not consistently available in time for routine operational use.\n\nOne season is important prospective evidence, but it cannot establish performance across every possible hurricane environment. The Atlantic had fewer forecast cases than normal, while an unusual concentration of Category 5 storms and rapid-intensification episodes made intensity prediction particularly difficult. Future seasons could expose weaknesses that the 2025 sample did not.\n\nThe system’s ability to generate scenarios extending 15 days should also not be confused with verified, high-accuracy hurricane intensity guidance across that entire horizon. The central operational comparisons in the NHC report extend through five days. The 15-day horizon describes what the model can generate, not a demonstrated 15-day intensity-forecasting threshold.",
+        "reader_takeaway": "The supported conclusion is that AI hurricane forecasting crossed a meaningful operational threshold in 2025. Earlier global AI weather models could provide useful track guidance but generally smoothed away the strongest winds and failed badly at intensity. GDMI became a system that forecasters could consult in real time for both dimensions and that subsequently achieved leading individual-model performance under formal NHC verification.\n\nThe result should not be interpreted as hurricane forecasting being solved or human forecasters becoming unnecessary. It shows something narrower and more consequential: an AI model overcame a central documented limitation of the previous model generation well enough to become useful inside one of the world’s highest-stakes operational forecasting workflows."
+      },
+      "confirmed_significance": "This was the first formally verified season in which NHC incorporated AI-based model output into real-time hurricane operations. The system’s strongest contribution was not merely faster global weather prediction or improved track forecasting—areas where earlier AI models had already shown substantial capability—but competitive intensity guidance, historically the major weakness of global AI weather models.\n\nThe milestone is therefore the movement from retrospective model-development claims to prospective, real-time and institutionally verified performance. GDMI’s forecasts influenced operational discussions during major storms, survived comparison against final post-season storm records, and in some conditions outperformed both the official forecast and multi-model consensus guidance.",
+      "potential_significance_if_confirmed": "If comparable performance is reproduced across additional seasons, basins, and operational centres, AI guidance could become a durable part of high-stakes tropical-cyclone forecasting for both track and intensity, giving human forecasters stronger probabilistic evidence earlier in a storm’s development. The 2025 result does not establish worldwide generalisation, consistently longer warning lead times, or reduced casualties.",
+      "caveats": [
+        "**Performance was conditional.** GDMI’s relative position changed across basins, forecast horizons and metrics. “Leading individual model” must not be rewritten as “best forecast system everywhere.”",
+        "**The evaluation covered only part of the season.** GDMI was unavailable for the first two Atlantic storms and first five eastern North Pacific storms.",
+        "**Human forecasts remained stronger in crucial cases.** NHC performed better across the rapid-intensification subset and outperformed all individual models for Melissa’s intensity at almost every lead time.",
+        "**This is one season.** Formal operational verification makes the result much stronger than a retrospective demonstration, but it does not yet establish durable performance across different multi-year storm distributions.",
+        "**The system remained experimental.** NHC reported availability and timeliness problems, and DeepMind described Weather Lab as a research tool rather than an official warning service.",
+        "**The 15-day output horizon is easy to overread.** The strongest verified comparisons concern forecasts through 120 hours, not consistently accurate hurricane intensity prediction 15 days ahead.",
+        "**Melissa is supporting evidence, not the whole case.** Its forecast demonstrates practical relevance, but the entry’s status and evidence strength rest on the complete season verification rather than one successful storm."
+      ],
+      "evidence_types": [
+        "preprint",
+        "peer_reviewed_paper",
+        "official_claim",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "government_report",
+        "media_report"
+      ],
+      "sources": [
+        {
+          "citation_id": "nhc-2025-hurricane-season-verification",
+          "title": "Forecast Verification Report: 2025 Hurricane Season",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/verification/pdfs/Verification_2025.pdf",
+          "evidence_types": [
+            "benchmark_result",
+            "government_report"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Final post-season verification methodology; Atlantic and eastern North Pacific model comparisons; GDMI’s track and intensity performance; homogeneous sample boundaries; model availability limitations; official 2025 season findings. The report was published on 30 March 2026."
+        },
+        {
+          "citation_id": "nhc-2025-verification-preview",
+          "title": "2025 NHC Verification Report Preview",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/pdf/NHC_Verification_Report_2025_Preview.pdf",
+          "evidence_types": [
+            "benchmark_result",
+            "government_report"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Confirmation that 2025 was NHC’s first season incorporating AI models in real time; preliminary rapid-intensification evaluation; Melissa forecast verification; statement that GDMI was useful but experimental systems were not always available on time."
+        },
+        {
+          "citation_id": "melissa-landfall-update",
+          "title": "Category 5 Melissa makes landfall in Jamaica",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.update.10281700.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Official observed landfall outcome: Category 5 intensity, estimated 185 mph sustained winds and 892-millibar central pressure."
+        },
+        {
+          "citation_id": "melissa-discussion-13",
+          "title": "Hurricane Melissa Forecast Discussion 13",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.discus.013.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Real-time evidence that every DeepMind ensemble member forecast Category 4 intensity or higher; documentation that NHC blended GDMI into its track and intensity forecasts while Melissa was still weak."
+        },
+        {
+          "citation_id": "melissa-discussion-18",
+          "title": "Hurricane Melissa Forecast Discussion 18",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.discus.018.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Real-time evidence that approximately four-fifths of the DeepMind ensemble projected Category 5 intensity and that NHC regarded GDMI as its best-performing intensity guidance to that point in the season."
+        },
+        {
+          "citation_id": "melissa-discussion-22",
+          "title": "Hurricane Melissa Forecast Discussion 22",
+          "publisher_or_domain": "National Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/archive/2025/al13/al132025.discus.022.shtml",
+          "evidence_types": [
+            "official_claim"
+          ],
+          "source_role": "official_record",
+          "source_role_label": "Official Record",
+          "used_for": "Confirmation that 48 of 50 DeepMind ensemble members projected Category 5 intensity and that GDMI remained part of NHC’s operational track blend."
+        },
+        {
+          "citation_id": "ai-tropical-cyclone-operations-evaluation",
+          "title": "An Operations-Based Evaluation of Tropical Cyclone Track and Intensity Forecasts from Artificial Intelligence Weather Prediction Models",
+          "publisher_or_domain": "DeMaria et al. / AMS",
+          "url": "https://journals.ametsoc.org/view/journals/aies/4/4/AIES-D-24-0085.1.xml",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous-frontier baseline showing that GraphCast, Pangu-Weather and FourCastNet produced competitive tracks but severe intensity underprediction, substantial low bias and no improvement to the intensity consensus."
+        },
+        {
+          "citation_id": "deepmind-tropical-cyclone-prediction",
+          "title": "How we’re supporting better tropical cyclone prediction with AI",
+          "publisher_or_domain": "Google DeepMind",
+          "url": "https://deepmind.google/blog/how-were-supporting-better-tropical-cyclone-prediction-with-ai/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Weather Lab launch date; 50-scenario and 15-day output design; training-data description; retrospective 2023–2024 testing; commencement of live NHC evaluation. Its performance claims are treated as developer evidence, not as independent verification."
+        },
+        {
+          "citation_id": "deepmind-hurricane-melissa",
+          "title": "How WeatherNext helped NHC better predict Hurricane Melissa",
+          "publisher_or_domain": "Google DeepMind",
+          "url": "https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "DeepMind’s merged-basin interpretation of the 2025 results; its account of WeatherNext’s Melissa probabilities; the developer’s description of its continuing NHC collaboration."
+        },
+        {
+          "citation_id": "skillful-joint-probabilistic-weather-forecasting",
+          "title": "Skillful joint probabilistic weather forecasting from marginals",
+          "publisher_or_domain": "Alet et al. / arXiv",
+          "url": "https://arxiv.org/abs/2506.10772",
+          "evidence_types": [
+            "preprint"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Technical description of the Forecast Generative Network underlying Weather Lab’s probabilistic forecasts. It supports architectural context but is not used to establish the season-level operational result."
+        },
+        {
+          "citation_id": "weather-network-ai-hurricane-model",
+          "title": "This AI weather model helped predict 2025’s huge hurricanes",
+          "publisher_or_domain": "The Weather Network",
+          "url": "https://www.theweathernetwork.com/en/news/weather/severe/this-ai-weather-model-helped-forecasters-predict-2025s-huge-hurricanes",
+          "evidence_types": [
+            "media_report"
+          ],
+          "source_role": "media_report",
+          "source_role_label": "Media Report",
+          "used_for": "Independent journalistic explanation of the completed NHC verification report, including the exact Atlantic and eastern North Pacific comparisons. It is contextual coverage rather than the primary basis for confirmation."
+        }
+      ]
+    },
+    {
+      "id": "019fcc3d-5f44-706a-8286-8a6bdaa6a9bf",
+      "slug": "gpt-5-erdos-literature-search-status-changes",
+      "canonical_url": "https://vydex.pages.dev/entries/gpt-5-erdos-literature-search-status-changes/",
+      "revision_id": "019fcc3d-5f46-75ff-9ae8-fad825ad77a2",
+      "revision_number": 1,
+      "revision_published_at": "2026-08-04T10:06:42Z",
+      "latest_update_summary": "Initial publication of six GPT-5-assisted Erdős Problems literature recoveries and their human-verified status changes.",
+      "title": "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
+      "claim": "By 14 October 2025, human-reviewed GPT-5 literature searches had found earlier published results that led the Erdős Problems project to change six database entries—Problems 339, 494, 621, 822, 903, and 1043—from open or falsifiable to solved, proved, or disproved without GPT-5 producing new proofs.",
+      "claim_status": "supported",
+      "evidence_strength": "strong",
+      "evidence_strength_score": 3,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "mathematics"
+      ],
+      "primary_topic_trail": {
+        "id": "019fcc3d-5f46-75ff-9ae8-fd9a65062332",
+        "name": "AI-assisted scientific literature discovery",
+        "slug": "ai-assisted-scientific-literature-discovery",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/ai-assisted-scientific-literature-discovery/"
+      },
+      "secondary_topic_trails": [
+        {
+          "id": "019fcc3d-5f46-75ff-9ae9-02c7d98621f7",
+          "name": "AI in research mathematics",
+          "slug": "ai-in-research-mathematics",
+          "canonical_url": "https://vydex.pages.dev/topic-trails/ai-in-research-mathematics/"
+        }
+      ],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": "2025-10-14",
+        "date_disclosed": "2025-10-16",
+        "date_added": "2026-08-04",
+        "date_updated": "2026-08-04",
+        "date_last_checked": "2026-08-04",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Open-problem databases depended on maintainers and subject experts recognizing equivalent formulations, searching older terminology, and following references across specialized literatures. AI tools had already assisted individual searches and the Erdős Problems website, but those uses had not yet produced a publicly identified cluster of several human-verified status changes.",
+        "new_claim_result": "GPT-5-assisted searches surfaced earlier human results for six entries that the Erdős Problems project had still listed as open or falsifiable. After human review, the project changed Problems 339, 494, 621, 822, 903, and 1043 to solved, proved, or disproved by 14 October 2025.",
+        "delta": "The demonstrated frontier moved from isolated literature-search assistance to a repeatable multi-problem sweep that connected differently stated mathematical questions with existing literature and produced accepted changes to a maintained research database."
+      },
+      "details": {
+        "what_happened": "The Erdős Problems project maintains more than one thousand problems associated with Paul Erdős, including their status, references, and known partial results. Because the relevant literature spans decades, languages, and mathematical subfields, a database entry can remain provisionally open even when a relevant result already exists under different terminology or in an unexpected source.\n\nResearchers used GPT-5 through ChatGPT, the OpenAI API, and internal OpenAI tools to search the collection in parallel and filter candidate references. The model's outputs were not accepted directly: contributors examined the returned papers and checked whether the results actually matched each problem.\n\nA 12 October 2025 repository commit changed Problem 339 from open to proved and Problem 1043 from falsifiable to disproved. A 14 October commit changed Problems 494, 822, and 903 from open to solved and Problem 621 from falsifiable to solved. On 16 October, Terence Tao identified those exact six entries as a cluster of AI-assisted literature recoveries.\n\nA later November 2025 preprint described a broader experiment that found previously published solutions for ten entries: Problems 223, 339, 494, 515, 621, 822, 883 part 2, 903, 1043, and 1079, plus noteworthy partial progress for ten more. That later total is subsequent evidence about the expanded search, not a replacement for the dated six-entry milestone.",
+        "what_evidence_shows": "The two repository commits are durable evidence that the six named records changed status. Tao's contemporaneous report connects those exact changes to AI-assisted searches and states that contributors reviewed the outputs before adding relevant findings. The project's maintained AI-contributions table independently records GPT-5 literature-search contributions for the six problems with dates from 11 through 14 October.\n\nThe later preprint documents why some matches required more than keyword retrieval. For Problem 339, the relevant result was buried in a roughly one-hundred-page paper with hundreds of citations. For Problem 515 in the expanded set, the connection depended on translating the problem into the language of subharmonic functions. For Problem 1043, the relevant observation appeared as a brief comment connected to earlier German-language work that GPT-5 helped translate and explain for human checking.\n\nThe evidence supports a capability for scaled candidate discovery and literature reconciliation. It does not establish that GPT-5 could reliably adjudicate arbitrary open problems without expert review, and the public materials do not provide a frozen log of every query, rejected candidate, or unsuccessful search.",
+        "context_changes_interpretation": "The status changes corrected the project's knowledge record; they did not change when the underlying mathematics was first solved. Earlier human work supplied the results, while GPT-5 helped locate and connect that work to the database entries.\n\nThe project's labels are provisional rather than formal declarations by a mathematical authority. Its own contribution page warns that the collection is not a benchmark, many entries have not received exhaustive literature review, and success counts are affected by selection and reporting bias.\n\nSearch and mathematical reasoning are not cleanly separable in every example. Some matches required recognizing equivalent formulations, translating sources, or supplying a short implication between a paper's result and the stated problem. Even so, humans remained responsible for deciding that the literature answered the database entry.\n\nThe expanded ten-result study used public ChatGPT access alongside API automation and internal OpenAI tools. Its general procedure is described, but the complete query set, model configuration, filtering history, and human-review record were not released in a form that supports an independent end-to-end reproduction.",
+        "reader_takeaway": "GPT-5 did not solve six previously unsolved Erdős problems. It helped researchers find earlier human results that had been missed by a maintained problem database, and those findings survived expert review strongly enough to change six public status records.\n\nThe milestone matters because it shows that AI-assisted literature review can operate across many differently worded research questions and surface useful candidates at a scale that is difficult to sustain manually. It remains a human-supervised knowledge-recovery result, not evidence of autonomous theorem proving."
+      },
+      "confirmed_significance": "The event provides strong evidence that frontier language models can contribute to mathematical research infrastructure by recovering relevant literature across differences in vocabulary, subfield, language, and presentation. The result was externally observable in project history: six database records changed status, and an independently maintained contribution table attributes the associated literature searches to GPT-5.\n\nThe demonstrated advantage is scale. An expert can investigate one problem more deeply, while an automated search can examine many problems, vary terminology, follow candidate connections, and route promising references to specialists. Within the stated scope, the evidence supports repeatable literature discovery with human verification; it does not support autonomous mathematical adjudication or original proof generation.",
+      "potential_significance_if_confirmed": "If independently reproduced with complete logs, calibrated error rates, and other scientific databases, this approach could support systematic audits of open-problem collections, theorem databases, surveys, and review articles. It could identify missing citations, equivalent formulations, duplicate conjectures, and results known in one specialty but overlooked in another.\n\nA mature version could also reduce false novelty claims by checking proposed arguments against a wider literature before publication. Those broader uses remain conditional because the October event did not establish comprehensive coverage, low false-positive rates, or reliable operation without expert review.",
+      "caveats": [
+        "GPT-5 found earlier human results; it did not produce the proofs that changed the six database records.",
+        "The October dates mark changes to a maintained knowledge record, not the historical dates on which the mathematical results were first established.",
+        "Human reviewers had to check the returned papers for exact relevance, assumptions, quantifiers, and completeness.",
+        "The detailed methodological account was written by researchers affiliated with OpenAI and collaborators, and the complete workflow was not independently reproduced.",
+        "Public materials do not include a frozen record of every prompt, model configuration, candidate reference, rejected match, or unsuccessful search.",
+        "The Erdős Problems collection varies widely in problem difficulty, prior scrutiny, and literature-review completeness, so raw success counts are not a calibrated benchmark of general mathematical intelligence.",
+        "Literature recovery is selected toward cases where an answer already exists and therefore says little about performance on problems requiring genuinely new mathematics.",
+        "Some matches involved mathematical interpretation as well as retrieval, but humans—not GPT-5—made the final status decisions.",
+        "A later report expanded the literature-search result to ten full matches and ten partial-progress matches; those later figures should not be substituted for this dated six-entry milestone."
+      ],
+      "evidence_types": [
+        "preprint",
+        "developer_vendor_claim",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "early-science-acceleration-gpt-5",
+          "title": "Early science acceleration experiments with GPT-5",
+          "publisher_or_domain": "arXiv / OpenAI researchers and collaborators",
+          "url": "https://arxiv.org/abs/2511.16072",
+          "evidence_types": [
+            "preprint",
+            "developer_vendor_claim"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Search methodology; use of ChatGPT, the OpenAI API, and internal tools; human verification; the later ten-problem full-solution list; partial-progress findings; detailed examples; and reproducibility limits."
+        },
+        {
+          "citation_id": "tao-october-ai-literature-review-thread",
+          "title": "I am increasingly of the opinion that the most productive near-term adoptions of AI in mathematics…",
+          "publisher_or_domain": "Terence Tao / Mathstodon",
+          "url": "https://mathstodon.xyz/@tao/115385022005130505",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Contemporaneous identification of the exact six-entry cluster, the 16 October disclosure date, the use of systematic AI-assisted literature review, and the requirement for contributor review before findings were added to the project."
+        },
+        {
+          "citation_id": "erdos-ai-contributions-table",
+          "title": "AI contributions to Erdős problems",
+          "publisher_or_domain": "Erdős Problems project / GitHub",
+          "url": "https://github.com/teorth/erdosproblems/wiki/AI-contributions-to-Erd%C5%91s-problems",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Maintained attribution and dates for GPT-5 literature-search contributions, the distinction between literature recovery and primary mathematical contributions, and project warnings about incompleteness, selection bias, and benchmark interpretation."
+        },
+        {
+          "citation_id": "erdos-status-commit-october-14",
+          "title": "Mark various problems as solved, add 1081",
+          "publisher_or_domain": "Erdős Problems project / GitHub",
+          "url": "https://github.com/teorth/erdosproblems/commit/2b5bce4617fa80d369561d37049ba24b07dae0c2",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Direct repository evidence that Problems 494, 621, 822, and 903 changed to solved on 14 October 2025, establishing the event date for the six-entry cluster."
+        },
+        {
+          "citation_id": "erdos-status-commit-339-1043",
+          "title": "Update 339 to proved and 1043 to disproved",
+          "publisher_or_domain": "Erdős Problems project / GitHub",
+          "url": "https://github.com/teorth/erdosproblems/commit/f9502bad032dce9a572f1824923e5d0336a5606b",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Direct repository evidence that Problem 339 changed from open to proved and Problem 1043 changed from falsifiable to disproved on 12 October 2025."
+        }
+      ]
+    },
+    {
+      "id": "019fd2d8-c7f3-7108-9297-21223bf62764",
+      "slug": "kosmos-ai-neuron-clearance-signal",
+      "canonical_url": "https://vydex.pages.dev/entries/kosmos-ai-neuron-clearance-signal/",
+      "revision_id": "019fd2d8-c7f3-7108-9297-25331eb394df",
+      "revision_number": 1,
+      "revision_published_at": "2026-08-05T16:54:10Z",
+      "latest_update_summary": "Initial publication of Kosmos Discovery 7 and its cross-dataset flippase–phagocytosis signature.",
+      "title": "Kosmos AI discovers an overlooked molecular clue to early neuron vulnerability in Alzheimer’s disease",
+      "claim": "Edison Scientific’s Kosmos autonomously surfaced an age-linked transcriptomic pattern—lower P4-ATPase flippase expression in vulnerable entorhinal neurons alongside higher microglial phagocytosis-marker expression—in a mouse dataset whose researchers had not identified it; the paper’s authors then reported the same directional pattern in a separately published mouse dataset and a corresponding regional pattern in human Alzheimer’s disease data.",
+      "claim_status": "supported",
+      "evidence_strength": "strong",
+      "evidence_strength_score": 3,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "biology"
+      ],
+      "primary_topic_trail": {
+        "id": "019fd2d8-c7ef-72cf-86b1-8f8c171ff7b7",
+        "name": "AI systems in scientific discovery",
+        "slug": "ai-systems-in-scientific-discovery",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/ai-systems-in-scientific-discovery/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": null,
+        "date_disclosed": "2025-11-05",
+        "date_added": "2026-08-05",
+        "date_updated": "2026-08-05",
+        "date_last_checked": "2026-08-05",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "By early 2025, AI scientist systems had already moved beyond literature summarization. Google’s AI co-scientist generated biomedical hypotheses and experimental proposals that collaborators tested, while Edison Scientific’s preceding Robin system combined literature search and data analysis with a laboratory feedback loop to propose and help validate a previously unreported therapeutic candidate for dry age-related macular degeneration. These systems established AI-assisted hypothesis generation, computational analysis, and laboratory validation, but they did not demonstrate one long-running investigation coordinating hundreds of analysis and literature trajectories through a shared, inspectable research state.",
+        "new_claim_result": "Given a broad research objective and a human-prepared mouse brain dataset, Kosmos coordinated repeated parallel data-analysis and literature-search tasks through a structured world model. It identified age-related downregulation of neuronal P4-ATPase flippases alongside increased microglial phagocytosis-marker expression, connected the pattern to a possible phosphatidylserine-mediated neuron-clearance pathway, and surfaced a finding that the dataset’s researchers had not identified. The paper’s authors reported the same directional signature in a separately published mouse dataset and a corresponding regional pattern in human Alzheimer’s disease data.",
+        "delta": "The demonstrated frontier moved from AI systems generating scientific hypotheses or handling shorter, more separated research stages to a long-horizon agent conducting broad, traceable computational exploration and surfacing an overlooked biological association that remained visible across additional mouse and human datasets. The result is a replicated candidate mechanism, not experimentally demonstrated biological causality."
+      },
+      "details": {
+        "what_happened": "Edison Scientific researchers and academic collaborators publicly released the Kosmos technical report on 5 November 2025. Kosmos was presented as a successor to FutureHouse’s Robin and as a general-purpose system for data-driven discovery across fields including metabolomics, materials science, connectomics, statistical genetics, proteomics, and transcriptomics.\n\nA scientist began each run by supplying a broad objective and a curated dataset. Kosmos then launched parallel literature-search and data-analysis tasks, summarized their outputs into a structured world model, and used that shared state to choose subsequent tasks. Runs could continue for up to 20 cycles and approximately 12 hours before the system synthesized candidate findings into reports linked to analysis notebooks or primary-literature passages. The reported implementation did not allow scientists to intervene during intermediate cycles.\n\nFor Discovery 7, Kosmos received single-nucleus RNA-sequencing data from mice aged 6 to 28 months and a broad objective concerning the vulnerability of entorhinal neurons during ageing. It found that Atp10a expression declined with age in vulnerable entorhinal neurons and that nine other P4-ATPase flippase-family members showed concurrent downregulation. Kosmos connected this pattern to increased expression of phosphatidylserine-sensing and phagocytic-pathway genes in microglia, proposing that reduced membrane-flippase activity could expose more phosphatidylserine “eat-me” signals and make vulnerable neurons more susceptible to microglial removal.",
+        "what_evidence_shows": "The reported result has three computational layers. Five prompted reanalyses supported the signature in the original mouse dataset. Five additional trajectories supported the same directional relationship in a separately published mouse ageing dataset, although the validation effects were more modest. In a public human Alzheimer’s dataset, four of five prompted trajectories supported a comparable regional pattern: entorhinal supragranular neurons showed lower flippase expression at Braak stage II than at Braak stage 0, while the same neuronal decrease was not observed in the later-affected superior frontal gyrus and microglia showed increased phagocytosis-marker expression.\n\nThe technical report exposes the Discovery 7 report, validation trajectories, and figure-analysis code. Those materials provide substantially more support than a bare developer announcement and justify documenting the narrowly stated computational finding. They do not permit complete independent reproduction because the original Discovery 7 dataset remains unavailable pending a separate publication, and the external validation analyses were conducted within the same developer-led project rather than by unaffiliated replicators.\n\nAcross three representative Kosmos reports, project experts evaluated 102 statements and marked 79.4% supported overall: 85.5% of data-analysis statements, 82.1% of literature-review statements, and 57.9% of synthesis or interpretation statements. The largest measured weakness was therefore the step from supported observations to claims about scientific meaning. The entorhinal result should be read as a cross-dataset gene-expression signature and mechanistic hypothesis, not proof that flippase loss causes phosphatidylserine exposure or microglial engulfment.",
+        "context_changes_interpretation": "The domain experts who evaluated Kosmos reports, supplied datasets, and performed validations were collaborators and paper coauthors. Their analyses were separate from the original Kosmos trajectory, but they do not constitute external replication by investigators unaffiliated with Edison Scientific or the study. A later independent radiation-biology preprint tested different Kosmos outputs and found one supported result, one uncertain result, and one false hypothesis; it neither reproduces nor refutes Discovery 7, but it reinforces the need for adversarial statistical checks.\n\nThe seven highlighted discoveries were selected case studies, not a preregistered random sample of all Kosmos runs. Edison Scientific states that it often runs Kosmos multiple times on the same objective to sample different research directions. The public evidence does not disclose the total number of runs, failed investigations, or candidate findings reviewed to produce the seven showcased cases, so it cannot establish a dependable discovery rate.\n\nThe system’s autonomy also had firm boundaries. Humans chose the objective, generated or curated the data, prepared and normalized inputs, evaluated reports, ran external validation analyses, and decided which findings were accurate and important. Kosmos could not autonomously obtain external datasets for orthogonal validation, handled only datasets up to approximately 5 GB, performed poorly on raw images and raw sequencing files, varied with prompt wording, and did not reliably converge on the same finding across independent runs. Its demonstrated capability was wide computational exploration within a human-defined research frame, not autonomous control of the complete scientific process.",
+        "reader_takeaway": "Kosmos did more than produce a plausible biological story. It conducted a broad computational investigation, connected gene-expression patterns with relevant literature, and surfaced an association that the researchers who produced the original dataset had not identified. The principal signature remained visible when the project checked a separately published mouse dataset and human Alzheimer’s data.\n\nThe result is not a proven explanation for Alzheimer’s disease or demonstrated neuron loss. No experiment measured increased phosphatidylserine on the affected neurons, showed microglia engulfing them because of flippase reduction, or tested whether intervening in the proposed pathway changes disease. The milestone is an AI-led discovery of a cross-dataset candidate mechanism that human experts considered scientifically useful enough to validate and report."
+      },
+      "confirmed_significance": "Kosmos provides strong initial evidence that a long-horizon research agent can coordinate roughly 200 analysis and literature trajectories within one human-defined objective while preserving links from report statements to supporting work. In Discovery 7, that scale yielded an overlooked biological association rather than only a larger volume of generated output.\n\nThe confirmed milestone is AI-led computational discovery of a candidate neuron-vulnerability mechanism from existing data, followed by same-project checks in separately published mouse and human datasets. It is not the first AI-generated scientific hypothesis to receive validation, proof of the proposed biological pathway, or evidence that Kosmos can replace expert scientific review.",
+      "potential_significance_if_confirmed": "If unaffiliated groups reproduce the transcriptomic result and laboratory experiments show that age-related flippase loss increases phosphatidylserine exposure and causes microglial engulfment of vulnerable neurons, Kosmos would have contributed to identifying a previously unknown causal pathway relevant to early Alzheimer’s disease. That biological confirmation would cross a distinct frontier and warrant separate assessment.\n\nIf similarly novel findings recur in preregistered evaluations that disclose all runs, failed paths, verification labour, and appropriate null comparisons, structured-world-model agents could allow research groups to explore substantially more serious hypotheses within existing datasets. The current evidence does not establish how often valuable discoveries occur, whether verification requires less expert time than the exploration saves, or whether the performance generalizes to poorly curated data and experimental work.",
+      "caveats": [
+        "**Causality was not demonstrated:** The study measured coordinated gene-expression changes; it did not directly measure phosphatidylserine exposure, microglial engulfment, neuron loss caused by reduced flippase activity, or therapeutic benefit.",
+        "**The original dataset is not public:** The complete Discovery 7 mouse dataset remains promised for a separate publication, preventing an unaffiliated end-to-end reproduction of the flagship analysis.",
+        "**The validation was not external replication:** The additional mouse dataset came from another research group, but Edison Scientific’s project and its collaborators performed the reported validation analyses.",
+        "**Human-data convergence was incomplete:** Four of five prompted trajectories over the human Alzheimer’s dataset supported the initial discovery.",
+        "**The human evidence was corresponding rather than complete replication:** It showed a regional gene-expression pattern associated with early tau pathology, not the full proposed sequence from flippase loss to neuronal engulfment.",
+        "**Developer-led preprint evidence:** Edison Scientific developed Kosmos and led the technical report, which had not completed formal peer review as of 5 August 2026.",
+        "**Project experts were collaborators:** The domain experts who evaluated outputs and validated the showcased findings were involved in the project and appear among the paper’s authors.",
+        "**Selected case studies omit the denominator:** Seven highlighted runs do not reveal the number of unsuccessful runs, discarded candidate findings, or repeated objectives from which they were selected.",
+        "**No discovery rate was established:** The evidence does not support a claim that each 12-hour run reliably produces one or more genuine discoveries.",
+        "**Interpretive reliability was substantially weaker:** Only 57.9% of evaluated synthesis and interpretation statements were supported, compared with 85.5% of data-analysis statements.",
+        "**Human scientific judgment remained essential:** Experts selected and prepared datasets, assessed novelty and importance, performed validation analyses, and rejected misleading interpretations.",
+        "**The six-month comparison was subjective:** The 6.14-month figure came from seven collaborators estimating elapsed research time rather than a controlled productivity study.",
+        "**Activity volume is not scientific value:** Lines of code executed and papers read measure workload, not correctness, novelty, or insight.",
+        "**Runs were stochastic and prompt-sensitive:** Independent runs could pursue different directions and did not necessarily converge on the same findings.",
+        "**Data autonomy was limited:** Kosmos depended on curated, well-labelled inputs, could not fetch external validation datasets itself, struggled with raw data, and accepted datasets only up to approximately 5 GB.",
+        "**Public provenance is incomplete:** Reports, selected trajectories, and figure scripts are public, but no frozen archive was located containing the complete system configuration, every intermediate world-model state, and all rejected candidate paths.",
+        "**Prior systems crossed adjacent thresholds:** Robin and Google’s AI co-scientist had already generated scientific hypotheses or candidates associated with laboratory validation."
+      ],
+      "evidence_types": [
+        "preprint",
+        "peer_reviewed_paper",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "kosmos-technical-report",
+          "title": "Kosmos: An AI Scientist for Autonomous Discovery",
+          "publisher_or_domain": "arXiv / Edison Scientific researchers and academic collaborators",
+          "url": "https://arxiv.org/abs/2511.02824",
+          "evidence_types": [
+            "preprint",
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Kosmos architecture; run duration and rollout volume; statement-level evaluation; case-study classification; Discovery 7 analyses and validation methods; human-time estimates; data availability; contributor roles; and system limitations."
+        },
+        {
+          "citation_id": "kosmos-figure-eight-artifacts",
+          "title": "Kosmos Figure 8 aging neuron vulnerability artifacts",
+          "publisher_or_domain": "Edison Scientific / GitHub",
+          "url": "https://github.com/EdisonScientific/kosmos-figures/tree/main/Figure_8_aging_neuron_vulnerability",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public code, notebooks, and plotted data supporting the technical report’s Discovery 7 figure and validation analyses."
+        },
+        {
+          "citation_id": "kosmos-discovery-seven-report",
+          "title": "Mechanism of neuron vulnerability in aging",
+          "publisher_or_domain": "Edison Scientific Platform",
+          "url": "https://platform.edisonscientific.com/kosmos/28c427d2-be31-48b5-b272-28d5a1e3ea5c",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public Discovery 7 report, linked analysis trajectories, literature provenance, candidate hypotheses, and the path from initial exploration to the reported flippase–phagocytosis signature."
+        },
+        {
+          "citation_id": "google-ai-co-scientist",
+          "title": "Accelerating scientific breakthroughs with an AI co-scientist",
+          "publisher_or_domain": "Google Research",
+          "url": "https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous multi-agent hypothesis-generation frontier; laboratory testing of drug-repurposing candidates and liver-fibrosis targets; and evidence against describing Kosmos as the first AI system to generate experimentally tested scientific hypotheses."
+        },
+        {
+          "citation_id": "jin-2025-mouse-brain-aging",
+          "title": "Brain-wide cell-type-specific transcriptomic signatures of healthy ageing in mice",
+          "publisher_or_domain": "Nature",
+          "url": "https://www.nature.com/articles/s41586-024-08350-8",
+          "evidence_types": [
+            "peer_reviewed_paper"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Provenance, design, and public availability of the separately produced mouse single-cell ageing dataset used for the project’s cross-dataset validation. The paper did not report the Kosmos flippase–phagocytosis finding."
+        },
+        {
+          "citation_id": "kosmos-announcement",
+          "title": "Kosmos: An AI Scientist for Autonomous Discovery",
+          "publisher_or_domain": "Edison Scientific",
+          "url": "https://edisonscientific.com/news/announcing-kosmos",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Public disclosure date; developer interpretation of Discovery 7; the stated wet-lab validation plan; explanation of the six-month estimate; repeated-run practice; pricing and product context; and developer-stated caveats."
+        },
+        {
+          "citation_id": "leng-2021-vulnerable-alzheimers-neurons",
+          "title": "Molecular characterization of selectively vulnerable neurons in Alzheimer’s disease",
+          "publisher_or_domain": "Nature Neuroscience",
+          "url": "https://www.nature.com/articles/s41593-020-00764-7",
+          "evidence_types": [
+            "peer_reviewed_paper"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Provenance and design of the public human entorhinal-cortex and superior-frontal-gyrus dataset used to assess whether the mouse signature had a corresponding regional pattern in Alzheimer’s disease."
+        },
+        {
+          "citation_id": "robin-ai-scientist-paper",
+          "title": "Robin: A multi-agent system for automating scientific discovery",
+          "publisher_or_domain": "arXiv / FutureHouse researchers",
+          "url": "https://arxiv.org/abs/2505.13400",
+          "evidence_types": [
+            "preprint",
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Previous Edison/FutureHouse frontier; integration of literature search, hypothesis generation, experiment planning, and data analysis; the ripasudil candidate and follow-up RNA-sequencing interpretation; and evidence that validated AI-led biological discovery preceded Kosmos."
+        },
+        {
+          "citation_id": "independent-kosmos-radiation-biology-evaluation",
+          "title": "When AI Does Science: Evaluating the Autonomous AI Scientist KOSMOS in Radiation Biology",
+          "publisher_or_domain": "arXiv",
+          "url": "https://arxiv.org/abs/2511.13825",
+          "evidence_types": [
+            "preprint",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Separate-party evidence that useful Kosmos findings can coexist with uncertain or false hypotheses and that random-gene null comparisons can materially change interpretation. This study did not test Discovery 7."
+        }
+      ]
+    },
+    {
+      "id": "019f95f1-29e6-7b1a-b120-8c2d9d628ed9",
+      "slug": "metr-software-task-horizons-doubling-seven-months",
+      "canonical_url": "https://vydex.pages.dev/entries/metr-software-task-horizons-doubling-seven-months/",
+      "revision_id": "019f95f1-29e6-7ad1-9775-b85f07fd5b10",
+      "revision_number": 1,
+      "revision_published_at": "2026-07-24T20:18:26Z",
+      "latest_update_summary": "Initial entry added from METR’s peer-reviewed task-horizon study, public analysis artifacts, Time Horizon 1.1, and the BRIDGE reproduction.",
+      "title": "METR finds frontier AI software-task horizons doubling about every seven months",
+      "claim": "Using a 170-task suite calibrated to expert human completion times, METR introduced the 50% task-completion time horizon and estimated that the frontier for model agents on software and research tasks doubled approximately every seven months from 2019 to early 2025.",
+      "claim_status": "confirmed",
+      "evidence_strength": "very_strong",
+      "evidence_strength_score": 4,
+      "review_status": "stable",
+      "review_reason": null,
+      "entry_state": "main_entry",
+      "domains": [
+        "ai_capabilities",
+        "ai_evaluation"
+      ],
+      "primary_topic_trail": {
+        "id": "019f95f1-29e6-7321-8eae-45113baba7cd",
+        "name": "AI agents in software engineering",
+        "slug": "ai-agents-in-software-engineering",
+        "canonical_url": "https://vydex.pages.dev/topic-trails/ai-agents-in-software-engineering/"
+      },
+      "secondary_topic_trails": [],
+      "methodology": {
+        "id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+        "version": "1.0.0",
+        "canonical_url": "https://vydex.pages.dev/methodology/1.0.0/"
+      },
+      "dates": {
+        "date_happened": "2025-03-19",
+        "date_disclosed": "2025-03-19",
+        "date_added": "2026-07-24",
+        "date_updated": "2026-07-24",
+        "date_last_checked": "2026-07-24",
+        "next_check_date": null
+      },
+      "frontier_delta": {
+        "previous_frontier": "Agent evaluations generally produced benchmark-specific scores that were difficult to compare across model generations or translate into the amount of expert work represented.",
+        "new_claim_result": "METR fitted model-agent success against expert human task duration across a 170-task suite and reported Claude 3.7 Sonnet at roughly a 50-minute 50% horizon, alongside an approximately seven-month frontier doubling trend from 2019 to early 2025.",
+        "delta": "The measurement frontier moved from isolated benchmark scores toward a longitudinal, human-time-calibrated measure that could compare model-agent generations across software and research tasks ranging from seconds to hours."
+      },
+      "details": {
+        "what_happened": "On March 19, 2025, METR published a method for measuring model-agent capability using the estimated time a relevant human expert would need to complete a task. The original suite combined 97 HCAST software tasks, seven RE-Bench machine-learning research tasks, and 66 short Software Atomic Actions, covering 170 tasks in total.\n\nFor each agent, METR modelled success probability as a function of the logarithm of human completion time. Its 50% task-completion time horizon is the human task duration at which the fitted model predicts that the agent will succeed half the time. In METR’s original March 2025 disclosure and version, Claude 3.7 Sonnet’s estimate was approximately 50 minutes, while the fitted frontier trend implied a doubling roughly every seven months from 2019 to early 2025.\n\nThe peer-reviewed NeurIPS 2025 version later evaluated agents based on 12 frontier models and reported o3 at roughly a 110-minute 50% horizon, while retaining the approximately seven-month long-run doubling trend. METR later expanded the suite from 170 to 228 tasks in Time Horizon 1.1, increasing the number of tasks estimated to take humans at least eight hours from 14 to 31.",
+        "what_evidence_shows": "METR’s original March 2025 disclosure found a strong relationship between human task duration and model-agent success across the evaluated software and research tasks. It reported an approximately exponential increase in the frontier 50% horizon between 2019 and early 2025 and found a similar growth trend at the stricter 80% success threshold, although the 80% horizons were approximately five times shorter. The later peer-reviewed NeurIPS 2025 evaluation retained the approximately seven-month long-run trend while reporting its results for 12 frontier models, including o3 at roughly a 110-minute 50% horizon.\n\nThe later TH1.1 evaluation preserved the stitched long-run result: approximately 196.5 days per doubling, effectively the same as the original TH1 estimate of 195.8 days. Shorter-window estimates were faster—approximately 130.8 days from 2023 onward and 88.6 days from 2024 onward under TH1.1—but METR found that these recent slopes were more sensitive to task composition and the set of models included.\n\nA separate ICML 2026 paper, BRIDGE, used a two-parameter item-response model and performance data from METR, SWE-bench Verified, MLE-bench, GDPval, and Cybench. Its authors independently recovered an exponential frontier trend with a roughly six-month doubling time. This supports the broad scaling result, although BRIDGE still used METR’s human-time annotations to calibrate its latent difficulty scale and therefore is not fully independent of the original dataset.\n\nMETR has published the analysis pipeline and associated data used to calculate the time horizons, allowing the statistical analysis and generated figures to be inspected and rerun.",
+        "context_changes_interpretation": "A time horizon is **not** the amount of wall-clock time an AI can continuously operate without intervention. It is the amount of human expert task time associated with tasks the evaluated agent is predicted to complete at a specified success rate. Agents often finish successful tasks substantially faster than humans.\n\nThe result measures complete agent configurations rather than bare language models. Performance depends on the model, scaffold, prompts, tools, context management, resource limits, and elicitation effort. Most models in the original study used METR’s modular-public scaffold, while some models used modified setups because of differences in tool-use behaviour.\n\nThe evaluated distribution was concentrated on automatically gradable, self-contained software and research tasks. These tasks generally require less organizational context, collaboration, ambiguous goal interpretation, and accumulated codebase knowledge than normal long-running workplace projects. The original paper found that agents performed worse on “messier” tasks even after controlling for human task duration.\n\nHuman completion times are also an imperfect difficulty measure. Baselines were collected from people with different skills, some longer tasks used researcher estimates rather than measured completions, and successful runs were used to calculate task length. METR’s expanded TH1.1 suite had measured human baselines for only five of its 31 tasks estimated at eight hours or longer.\n\nLater analysis found that recent frontier estimates are increasingly sensitive to task selection, benchmark saturation, regularization, curve-fitting assumptions, and uncertainty in human task lengths. A corrected regularization mistake reduced some recent 50% horizon estimates by as much as 20%, while reasonable alternative modelling choices could shift recent estimates further. These issues affect precise model values more than the broad multi-year trend.",
+        "reader_takeaway": "The durable result is that model agents improved extremely rapidly on METR’s human-calibrated software and research tasks across multiple model generations, and that human task duration provided a useful common scale for comparing systems whose raw benchmark scores were otherwise difficult to relate.\n\nThe entry should not be read as evidence that a model with a one-hour horizon can perform every one-hour professional task, work independently for an hour, replace an hour of labour without supervision, or reliably complete tasks below that horizon. It also does not establish that the faster post-2024 slope will continue or that month-long general workplace autonomy will arrive on the paper’s extrapolated schedule."
+      },
+      "confirmed_significance": "METR established a human-interpretable method for expressing model-agent capability as the difficulty of tasks measured by expert human completion time. This allowed systems released across several years to be compared on one continuous scale rather than through unrelated benchmark percentages.\n\nWithin the evaluated software-and-research domain, the research provides strong evidence that the frontier 50% task-completion horizon increased exponentially between 2019 and early 2025 at approximately one doubling every six to seven months. The broad rate remained similar after peer review, expansion of the benchmark suite, and a separate-team reproduction using a different statistical framework.",
+      "potential_significance_if_confirmed": "If the measured trend remains robust across broader, messier, and substantially longer workplace tasks, it would imply rapidly increasing ability for model-agent systems to complete meaningful software and research projects with limited intervention. The current evidence does not show that the same doubling rate generalises beyond METR-like task distributions, continues indefinitely, or directly translates into equivalent labour automation.",
+      "caveats": [
+        "The time horizon measures the human duration of tasks associated with a fitted success probability, not how long the AI itself runs autonomously.",
+        "Results apply to model-and-scaffold agent configurations, not isolated base models.",
+        "The original suite is dominated by self-contained, automatically gradable software and research tasks and does not represent all professional work.",
+        "A 50% success rate is too low for many practical, safety-critical, expensive, or difficult-to-verify tasks.",
+        "Human baseline times are noisy and depend on expertise, familiarity, incentives, task context, and the treatment of failed human attempts.",
+        "Recent model estimates and shorter-window acceleration rates are more sensitive to task composition, benchmark saturation, and analysis choices than the long-run trend.",
+        "The independent BRIDGE result uses a separate method and additional benchmarks but calibrates its human-time scale using METR data, so it is not a completely data-independent replication.",
+        "Extrapolations to week-long or month-long projects remain conditional forecasts rather than demonstrated capabilities."
+      ],
+      "evidence_types": [
+        "peer_reviewed_paper",
+        "independent_replication",
+        "developer_vendor_claim",
+        "benchmark_result",
+        "technical_artifact"
+      ],
+      "sources": [
+        {
+          "citation_id": "metr-neurips-time-horizon-paper",
+          "title": "Measuring AI Ability to Complete Long Software Tasks",
+          "publisher_or_domain": "NeurIPS 2025",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2025/hash/85069585133c4c168c865e65d72e9775-Abstract-Conference.html",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Peer-reviewed methodology, composition of the original task suite, model results, long-run doubling trend, robustness work, and limitations."
+        },
+        {
+          "citation_id": "metr-time-horizon-1-1",
+          "title": "Time Horizon 1.1",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/blog/2026-1-29-time-horizon-1-1/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "primary_evidence",
+          "source_role_label": "Primary Evidence",
+          "used_for": "Expansion from 170 to 228 tasks, revised model estimates, long-run and recent-window doubling rates, task-composition sensitivity, and updated Claude 3.7 Sonnet estimates."
+        },
+        {
+          "citation_id": "bridge-time-horizon-replication",
+          "title": "BRIDGE: Predicting Human Task Completion Time From Model Performance",
+          "publisher_or_domain": "ICML 2026 / arXiv",
+          "url": "https://arxiv.org/abs/2602.07267",
+          "evidence_types": [
+            "peer_reviewed_paper",
+            "independent_replication"
+          ],
+          "source_role": "independent_replication",
+          "source_role_label": "Independent Replication",
+          "used_for": "Separate-team reproduction of the exponential task-horizon trend using a different item-response framework and additional benchmark data; also used to assess how independent the replication is from METR’s calibration data."
+        },
+        {
+          "citation_id": "metr-time-horizon-analysis",
+          "title": "METR Time Horizon Analysis",
+          "publisher_or_domain": "METR / GitHub",
+          "url": "https://github.com/METR/eval-analysis-public",
+          "evidence_types": [
+            "technical_artifact"
+          ],
+          "source_role": "strong_artifact",
+          "source_role_label": "Strong Artifact",
+          "used_for": "Public analysis code, data pipeline, logistic fitting procedure, bootstrap analysis, and reproducibility of the reported figures and time-horizon estimates."
+        },
+        {
+          "citation_id": "metr-time-horizon-limitations",
+          "title": "Clarifying Limitations of Time Horizon",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/notes/2026-01-22-time-horizon-limitations/",
+          "evidence_types": [
+            "developer_vendor_claim"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Clarification that time horizon is not wall-clock autonomous runtime, domain and task-distribution limits, uncertainty in individual estimates, reliability limits, and warnings against treating the metric as a direct automation rate."
+        },
+        {
+          "citation_id": "metr-modelling-assumptions",
+          "title": "Impact of Modelling Assumptions on Time Horizon Results",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/notes/2026-03-20-impact-of-modelling-assumptions-on-time-horizon-results/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "The corrected regularization mistake, benchmark-saturation concerns, sensitivity to curve fitting and task-length noise, and the scale of uncertainty in recent model estimates."
+        },
+        {
+          "citation_id": "metr-original-time-horizon-post",
+          "title": "Measuring AI Ability to Complete Long Tasks",
+          "publisher_or_domain": "METR",
+          "url": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/",
+          "evidence_types": [
+            "developer_vendor_claim",
+            "benchmark_result"
+          ],
+          "source_role": "context_source",
+          "source_role_label": "Context Source",
+          "used_for": "Original March 19, 2025 disclosure, public explanation of the 50% task-completion time horizon, original Claude 3.7 Sonnet result, and the approximately seven-month trend claim."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "contract_version": "1.0.0",
+  "release_id": "019fd30f-2e34-734a-8ed7-19bc11426c76",
+  "routes": [
+    {
+      "public_path": "/datasets/releases/019fd30f-2e34-734a-8ed7-19bc11426c76/vydex-latest-entry-versions-v1-0-0-2026-08-05.json",
+      "archive_path": "datasets/releases/019fd30f-2e34-734a-8ed7-19bc11426c76/vydex-latest-entry-versions-v1-0-0-2026-08-05.json",
+      "bytes": 125244,
+      "sha256": "d19f7ea889f7424fdeba2bab7faff68376f7e0b82e7488fbb68b38ecd5b57b5d",
+      "content_type": "application/json; charset=utf-8",
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_disposition": "attachment; filename=\"vydex-latest-entry-versions-v1-0-0-2026-08-05.json\""
+    },
+    {
+      "public_path": "/schemas/vydex-dataset/1.0.0.json",
+      "archive_path": "schemas/vydex-dataset/1.0.0.json",
+      "bytes": 17944,
+      "sha256": "a2a1feb0a292640e1865ca19193b607f475633a89977188b5d953e50d1358d96",
+      "content_type": "application/schema+json; charset=utf-8",
+      "cache_control": "public, max-age=31536000, immutable"
+    }
+  ]
+}
