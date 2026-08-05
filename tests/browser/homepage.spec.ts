@@ -4,14 +4,14 @@ import { expect, test, type Page } from "@playwright/test";
 import { IS_PREVIOUS_PRODUCTION_BROWSER_VERIFICATION } from "./playwright-config";
 
 const RECENT_ENTRY_TITLES = [
+  "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
   "Epoch estimates frontier AI benchmark progress nearly doubled in pace around April 2024",
   "Artificial neuron repeatedly fires within living-neuron voltage and energy ranges",
   "Dreamer 4 becomes first reported agent to obtain Minecraft diamonds using only offline training data",
   "NHC verification finds Google DeepMind’s GDMI leading individual hurricane guidance in 2025",
-  "METR finds frontier AI software-task horizons doubling about every seven months",
 ];
 const LATEST_ENTRY_TITLE =
-  "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results";
+  "Kosmos AI discovers an overlooked molecular clue to early neuron vulnerability in Alzheimer’s disease";
 
 async function setViewport(page: Page, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 1000 });

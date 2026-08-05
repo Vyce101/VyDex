@@ -53,17 +53,18 @@ test("renders the required hierarchy, section order, legend, and launch events",
   ]);
 
   await expect(page.locator("[data-changelog-date-group] > h3")).toHaveText([
+    "2026-08-05",
     "2026-08-04",
     "2026-08-03",
     "2026-07-30",
     "2026-07-25",
     "2026-07-24",
   ]);
-  await expect(page.locator("[data-changelog-record]")).toHaveCount(8);
+  await expect(page.locator("[data-changelog-record]")).toHaveCount(9);
   await expect(page.locator("[data-changelog-date-group]").nth(0).locator("[data-changelog-record]"))
     .toHaveAttribute("data-change-type", "added");
   await expect(
-    page.locator("[data-changelog-date-group]").nth(4).locator(".changelog-type-tab"),
+    page.locator("[data-changelog-date-group]").nth(5).locator(".changelog-type-tab"),
   ).toHaveText(["Added", "Added", "Added", "Methodology Change"]);
   await expect(page.getByRole("heading", { level: 4, name: "Methodology v1.0.0 Published" }))
     .toHaveCount(1);
@@ -71,17 +72,19 @@ test("renders the required hierarchy, section order, legend, and launch events",
 
 test("uses semantic date-only output and record-specific accessible link names", async ({ page }) => {
   const dates = page.locator("[data-changelog-date-group] time");
-  await expect(dates).toHaveCount(5);
-  await expect(dates.nth(0)).toHaveAttribute("datetime", "2026-08-04");
-  await expect(dates.nth(1)).toHaveAttribute("datetime", "2026-08-03");
-  await expect(dates.nth(2)).toHaveAttribute("datetime", "2026-07-30");
-  await expect(dates.nth(3)).toHaveAttribute("datetime", "2026-07-25");
-  await expect(dates.nth(4)).toHaveAttribute("datetime", "2026-07-24");
-  await expect(page.getByRole("main")).not.toContainText(/10:06:42|10:50:41|19:21:21|20:18:26|13:03:03/);
+  await expect(dates).toHaveCount(6);
+  await expect(dates.nth(0)).toHaveAttribute("datetime", "2026-08-05");
+  await expect(dates.nth(1)).toHaveAttribute("datetime", "2026-08-04");
+  await expect(dates.nth(2)).toHaveAttribute("datetime", "2026-08-03");
+  await expect(dates.nth(3)).toHaveAttribute("datetime", "2026-07-30");
+  await expect(dates.nth(4)).toHaveAttribute("datetime", "2026-07-25");
+  await expect(dates.nth(5)).toHaveAttribute("datetime", "2026-07-24");
+  await expect(page.getByRole("main")).not.toContainText(/16:54:10|10:06:42|10:50:41|19:21:21|20:18:26|13:03:03/);
 
   const entryLinks = page.locator('a[aria-label^="View Entry:"]');
-  await expect(entryLinks).toHaveCount(7);
+  await expect(entryLinks).toHaveCount(8);
   await expect(entryLinks).toHaveText([
+    "View Entry →",
     "View Entry →",
     "View Entry →",
     "View Entry →",
@@ -179,7 +182,7 @@ test("requires no runtime loading to render the complete Changelog", async ({ pa
   });
 
   await page.reload();
-  await expect(page.locator("[data-changelog-record]")).toHaveCount(8);
+  await expect(page.locator("[data-changelog-record]")).toHaveCount(9);
   expect(dynamicRequests).toEqual([]);
 });
 
@@ -189,7 +192,7 @@ test.describe("without browser JavaScript", () => {
   test("keeps every material event in normal readable flow", async ({ page }) => {
     await page.goto("/changelog/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Changelog");
-    await expect(page.locator("[data-changelog-record]")).toHaveCount(8);
+    await expect(page.locator("[data-changelog-record]")).toHaveCount(9);
     await expect(page.getByRole("contentinfo")).toBeVisible();
   });
 });

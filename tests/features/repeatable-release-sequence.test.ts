@@ -1,4 +1,4 @@
-// Verifies complete seven-Entry and material-revision fixtures across successor releases.
+// Verifies additional-Entry and material-revision fixtures across successor releases.
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -17,8 +17,8 @@ const ROOT = resolve(import.meta.dirname, "../..");
 const STAGE_ONE_RELEASE_ID = "019f9b40-a3a8-75ad-b2b2-05a7100bcc34";
 const RELEASE_TWO_ID = "019fa000-0000-7000-8000-000000000001";
 const RELEASE_THREE_ID = "019fa000-0001-7000-8000-000000000001";
-const SEVENTH_ENTRY_ID = "019f9fff-0000-7000-8000-000000000001";
-const SEVENTH_SNAPSHOT_ID = "019f9fff-0001-7000-8000-000000000001";
+const EIGHTH_ENTRY_ID = "019f9fff-0000-7000-8000-000000000001";
+const EIGHTH_SNAPSHOT_ID = "019f9fff-0001-7000-8000-000000000001";
 const RELEASE_TWO_REVISION_ID = "019f9fff-0002-7000-8000-000000000001";
 const RELEASE_THREE_REVISION_ID = "019f9fff-0003-7000-8000-000000000001";
 
@@ -81,25 +81,25 @@ function createReleaseTwoRecords(stageOne: LoadedCanonicalRecords): { records: L
   )!.value as EntryPublicationSnapshot);
   const revisedEntryId = templateEntry.id;
 
-  const seventhEntry = structuredClone(templateEntry);
-  seventhEntry.id = SEVENTH_ENTRY_ID as Entry["id"];
-  seventhEntry.slug = "release-two-seventh-entry" as Entry["slug"];
-  seventhEntry.aliases = [];
-  seventhEntry.title = "Release 2 seventh accepted Entry fixture";
-  const seventhSnapshot = structuredClone(templateSnapshot);
-  seventhSnapshot.revision_id = SEVENTH_SNAPSHOT_ID as EntryPublicationSnapshot["revision_id"];
-  seventhSnapshot.entry_id = seventhEntry.id;
-  seventhSnapshot.revision_number = 1;
-  seventhSnapshot.published_at = "2026-07-31T14:00:00Z" as EntryPublicationSnapshot["published_at"];
-  seventhSnapshot.revision_category = "initial_publication";
-  seventhSnapshot.materiality = "material";
-  seventhSnapshot.update_summary = "Accepted the seventh Entry fixture for Release 2.";
-  seventhSnapshot.entry = structuredClone(seventhEntry);
-  records.entries.push(source("entry", "data/canonical-records/entries/release-two-seventh-entry.json", seventhEntry));
+  const eighthEntry = structuredClone(templateEntry);
+  eighthEntry.id = EIGHTH_ENTRY_ID as Entry["id"];
+  eighthEntry.slug = "release-two-eighth-entry" as Entry["slug"];
+  eighthEntry.aliases = [];
+  eighthEntry.title = "Release 2 eighth accepted Entry fixture";
+  const eighthSnapshot = structuredClone(templateSnapshot);
+  eighthSnapshot.revision_id = EIGHTH_SNAPSHOT_ID as EntryPublicationSnapshot["revision_id"];
+  eighthSnapshot.entry_id = eighthEntry.id;
+  eighthSnapshot.revision_number = 1;
+  eighthSnapshot.published_at = "2026-07-31T14:00:00Z" as EntryPublicationSnapshot["published_at"];
+  eighthSnapshot.revision_category = "initial_publication";
+  eighthSnapshot.materiality = "material";
+  eighthSnapshot.update_summary = "Accepted the eighth Entry fixture for Release 2.";
+  eighthSnapshot.entry = structuredClone(eighthEntry);
+  records.entries.push(source("entry", "data/canonical-records/entries/release-two-eighth-entry.json", eighthEntry));
   records.entry_publication_snapshots.push(source(
     "entry_publication_snapshot",
-    `data/publication-snapshots/entries/${SEVENTH_ENTRY_ID}/1-${SEVENTH_SNAPSHOT_ID}.json`,
-    seventhSnapshot,
+    `data/publication-snapshots/entries/${EIGHTH_ENTRY_ID}/1-${EIGHTH_SNAPSHOT_ID}.json`,
+    eighthSnapshot,
   ));
   addMaterialRevision({
     records,
@@ -124,7 +124,7 @@ describe("repeatable release sequence fixtures", { timeout: 15_000 }, () => {
     ), "utf8")) as ReleaseMetadata;
   });
 
-  test("constructs Release 2 with a seventh Entry and more than one accepted Entry change", () => {
+  test("constructs Release 2 with an eighth Entry and more than one accepted Entry change", () => {
     const stageOne = construct(structuredClone(stageOneRecords), stageOneMetadata);
     const releaseTwoFixture = createReleaseTwoRecords(stageOneRecords);
     const releaseTwo = construct(releaseTwoFixture.records, {
@@ -132,11 +132,11 @@ describe("repeatable release sequence fixtures", { timeout: 15_000 }, () => {
       generated_at: "2026-08-01T12:00:00Z" as ReleaseMetadata["generated_at"],
     });
 
-    expect(stageOne.current_entries).toHaveLength(6);
-    expect(releaseTwo.current_entries).toHaveLength(7);
-    expect(releaseTwo.current_entries.some(({ entry }) => entry.id === SEVENTH_ENTRY_ID)).toBe(true);
+    expect(stageOne.current_entries).toHaveLength(7);
+    expect(releaseTwo.current_entries).toHaveLength(8);
+    expect(releaseTwo.current_entries.some(({ entry }) => entry.id === EIGHTH_ENTRY_ID)).toBe(true);
     expect(releaseTwo.changelog_events).toEqual(expect.arrayContaining([
-      expect.objectContaining({ source_identity: SEVENTH_SNAPSHOT_ID, type: "added" }),
+      expect.objectContaining({ source_identity: EIGHTH_SNAPSHOT_ID, type: "added" }),
       expect.objectContaining({ source_identity: RELEASE_TWO_REVISION_ID, type: "updated" }),
     ]));
   });
@@ -189,7 +189,7 @@ describe("repeatable release sequence fixtures", { timeout: 15_000 }, () => {
       ],
     });
 
-    expect(releaseThree.current_entries).toHaveLength(7);
+    expect(releaseThree.current_entries).toHaveLength(8);
     expect(releaseThree.changelog_events).toContainEqual(expect.objectContaining({
       source_identity: RELEASE_THREE_REVISION_ID,
       type: "updated",

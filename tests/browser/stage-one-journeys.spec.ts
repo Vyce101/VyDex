@@ -13,8 +13,9 @@ const ENTRY_PATHS = [
   "/entries/artificial-neuron-biological-voltage-energy/",
   "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/",
   "/entries/gpt-5-erdos-literature-search-status-changes/",
+  "/entries/kosmos-ai-neuron-clearance-signal/",
 ] as const;
-const LATEST_ENTRY_PATH = "/entries/gpt-5-erdos-literature-search-status-changes/";
+const LATEST_ENTRY_PATH = "/entries/kosmos-ai-neuron-clearance-signal/";
 const TOPIC_TRAIL_PATHS = [
   "/topic-trails/world-models-for-agent-training/",
   "/topic-trails/ai-in-operational-weather-forecasting/",
@@ -23,6 +24,7 @@ const TOPIC_TRAIL_PATHS = [
   "/topic-trails/frontier-ai-capability-progress-over-time/",
   "/topic-trails/ai-assisted-scientific-literature-discovery/",
   "/topic-trails/ai-in-research-mathematics/",
+  "/topic-trails/ai-systems-in-scientific-discovery/",
 ] as const;
 const REPRESENTATIVE_ROUTES = [
   ["Homepage", "/", "Versioned Evidence for Frontier Claims"],

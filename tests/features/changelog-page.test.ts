@@ -44,14 +44,15 @@ describe("Changelog Page projection", () => {
       },
     ]);
     expect(model.date_groups.map(({ date }) => date)).toEqual([
+      "2026-08-05",
       "2026-08-04",
       "2026-08-03",
       "2026-07-30",
       "2026-07-25",
       "2026-07-24",
     ]);
-    expect(model.date_groups.map(({ records }) => records.length)).toEqual([1, 1, 1, 1, 4]);
-    expect(model.date_groups[4]!.records.map(({ type }) => type)).toEqual([
+    expect(model.date_groups.map(({ records }) => records.length)).toEqual([1, 1, 1, 1, 1, 4]);
+    expect(model.date_groups[5]!.records.map(({ type }) => type)).toEqual([
       "added",
       "added",
       "added",

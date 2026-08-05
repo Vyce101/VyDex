@@ -18,6 +18,7 @@ const DREAMER_REVIEW_PUBLISHED_AT = "2026-07-25T13:03:03Z";
 const UMASS_PUBLISHED_AT = "2026-07-30T13:28:14Z";
 const EPOCH_PUBLISHED_AT = "2026-08-03T10:50:41Z";
 const GPT5_ERDOS_PUBLISHED_AT = "2026-08-04T10:06:42Z";
+const KOSMOS_PUBLISHED_AT = "2026-08-05T16:54:10Z";
 
 const SEEDS = {
   dreamer: {
@@ -99,6 +100,19 @@ const SEEDS = {
     update_summary:
       "Initial publication of six GPT-5-assisted Erdős Problems literature recoveries and their human-verified status changes.",
   },
+  kosmos: {
+    entry_id: "019fd2d8-c7f3-7108-9297-21223bf62764",
+    revision_id: "019fd2d8-c7f3-7108-9297-25331eb394df",
+    trail_id: "019fd2d8-c7ef-72cf-86b1-8f8c171ff7b7",
+    secondary_trail_ids: [],
+    slug: "kosmos-ai-neuron-clearance-signal",
+    aliases: [],
+    published_at: KOSMOS_PUBLISHED_AT,
+    date_added: "2026-08-05",
+    date_updated: "2026-08-05",
+    update_summary:
+      "Initial publication of Kosmos Discovery 7 and its cross-dataset flippase–phagocytosis signature.",
+  },
 } as const;
 
 const EXPECTED_SOURCE_ROLES = {
@@ -156,6 +170,17 @@ const EXPECTED_SOURCE_ROLES = {
     "early-science-acceleration-gpt-5": "primary_evidence",
     "erdos-ai-contributions-table": "strong_artifact",
   },
+  [SEEDS.kosmos.entry_id]: {
+    "kosmos-technical-report": "primary_evidence",
+    "kosmos-discovery-seven-report": "strong_artifact",
+    "kosmos-figure-eight-artifacts": "strong_artifact",
+    "independent-kosmos-radiation-biology-evaluation": "context_source",
+    "jin-2025-mouse-brain-aging": "context_source",
+    "leng-2021-vulnerable-alzheimers-neurons": "context_source",
+    "kosmos-announcement": "context_source",
+    "robin-ai-scientist-paper": "context_source",
+    "google-ai-co-scientist": "context_source",
+  },
 } as const;
 
 describe("canonical Stage 1 seed content", () => {
@@ -195,9 +220,9 @@ describe("canonical Stage 1 seed content", () => {
 
   test("loads the complete seed ledger without diagnostics", () => {
     expect(records.diagnostics).toEqual([]);
-    expect(entries).toHaveLength(6);
-    expect(trails).toHaveLength(7);
-    expect(snapshots).toHaveLength(7);
+    expect(entries).toHaveLength(7);
+    expect(trails).toHaveLength(8);
+    expect(snapshots).toHaveLength(8);
     expect(records.methodologies).toHaveLength(1);
     expect(records.methodology_publication_events).toHaveLength(1);
   });
@@ -253,6 +278,18 @@ describe("canonical Stage 1 seed content", () => {
       date_disclosed: "2025-10-16",
       date_last_checked: "2026-08-04",
     });
+    expect(entries.find(({ id }) => id === SEEDS.kosmos.entry_id)).toMatchObject({
+      title:
+        "Kosmos AI discovers an overlooked molecular clue to early neuron vulnerability in Alzheimer’s disease",
+      claim_status: "supported",
+      evidence_strength: "strong",
+      review_status: "stable",
+      review_reason: null,
+      domains: ["ai_capabilities", "biology"],
+      date_happened: null,
+      date_disclosed: "2025-11-05",
+      date_last_checked: "2026-08-05",
+    });
 
     expect(trails.map(({ id, slug, aliases, name, description }) => ({ id, slug, aliases, name, description }))).toEqual([
       {
@@ -286,6 +323,14 @@ describe("canonical Stage 1 seed content", () => {
         name: "AI in research mathematics",
         description:
           "Tracks verified changes in how AI systems contribute to research mathematics through literature discovery, proof development, formalization, computation, and expert collaboration.",
+      },
+      {
+        id: SEEDS.kosmos.trail_id,
+        slug: "ai-systems-in-scientific-discovery",
+        aliases: [],
+        name: "AI systems in scientific discovery",
+        description:
+          "Tracks verified changes in how AI systems contribute to novel scientific findings through literature work, computational analysis, experiment design or execution, and expert validation.",
       },
       {
         id: SEEDS.umass.trail_id,
@@ -404,8 +449,9 @@ describe("canonical Stage 1 seed content", () => {
   });
 
   test("constructs the complete production release with URLs, relationships, and activity dates", () => {
-    expect(release.current_entries).toHaveLength(6);
+    expect(release.current_entries).toHaveLength(7);
     expect(release.current_entries.map(({ entry }) => entry.id)).toEqual([
+      SEEDS.kosmos.entry_id,
       SEEDS.gpt5Erdos.entry_id,
       SEEDS.epoch.entry_id,
       SEEDS.umass.entry_id,
@@ -413,7 +459,7 @@ describe("canonical Stage 1 seed content", () => {
       SEEDS.gdmi.entry_id,
       SEEDS.metr.entry_id,
     ]);
-    expect(release.topic_trails).toHaveLength(7);
+    expect(release.topic_trails).toHaveLength(8);
     expect(release.topic_trails.every(({ entry_count }) => entry_count === 1)).toBe(true);
 
     for (const seed of Object.values(SEEDS)) {
@@ -448,14 +494,14 @@ describe("canonical Stage 1 seed content", () => {
     ]);
   });
 
-  test("derives the six Added events, Dreamer update, and existing Methodology event", () => {
+  test("derives the seven Added events, Dreamer update, and existing Methodology event", () => {
     const entryEvents = release.changelog_events.filter(({ type }) => type === "added");
     const updateEvents = release.changelog_events.filter(({ type }) => type === "updated");
     const methodologyEvents = release.changelog_events.filter(
       ({ type }) => type === "methodology_change",
     );
 
-    expect(entryEvents).toHaveLength(6);
+    expect(entryEvents).toHaveLength(7);
     expect(updateEvents).toEqual([
       expect.objectContaining({
         date: "2026-07-25",
@@ -471,7 +517,7 @@ describe("canonical Stage 1 seed content", () => {
       published_at: "2026-07-24T19:21:21.438Z",
       source_identity: "019f9593-391e-79d1-8f4a-3c88e68fc069",
     });
-    expect(release.changelog_events).toHaveLength(8);
+    expect(release.changelog_events).toHaveLength(9);
     expect(entryEvents.map(({ source_identity }) => source_identity).sort()).toEqual(
       Object.values(SEEDS).map(({ revision_id }) => revision_id).sort(),
     );

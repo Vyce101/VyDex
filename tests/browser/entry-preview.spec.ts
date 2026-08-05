@@ -3,10 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const LATEST_ENTRY_TITLE =
-  "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results";
-const LATEST_ENTRY_PATH = "/entries/gpt-5-erdos-literature-search-status-changes/";
-const LATEST_TRAIL_NAME = "AI-assisted scientific literature discovery";
-const LATEST_TRAIL_PATH = "/topic-trails/ai-assisted-scientific-literature-discovery/";
+  "Kosmos AI discovers an overlooked molecular clue to early neuron vulnerability in Alzheimer’s disease";
+const LATEST_ENTRY_PATH = "/entries/kosmos-ai-neuron-clearance-signal/";
+const LATEST_TRAIL_NAME = "AI systems in scientific discovery";
+const LATEST_TRAIL_PATH = "/topic-trails/ai-systems-in-scientific-discovery/";
 const FIELD_SEQUENCE = [
   "domain",
   "date-updated",
@@ -62,8 +62,8 @@ test("shows resolved fields, canonical links, and contextual accessible names", 
   const entry = latestPreview(page);
   await expect(entry.locator('[data-entry-preview-field="domain"]')).toHaveText("AI Capabilities");
   const date = entry.locator('[data-entry-preview-field="date-updated"]');
-  await expect(date).toHaveAttribute("datetime", "2026-08-04");
-  await expect(date).toHaveText("Date Updated: 2026-08-04");
+  await expect(date).toHaveAttribute("datetime", "2026-08-05");
+  await expect(date).toHaveText("Date Updated: 2026-08-05");
 
   await expect(entry.getByRole("link", { name: LATEST_ENTRY_TITLE, exact: true })).toHaveAttribute(
     "href",

@@ -9,6 +9,7 @@ const ENTRY_PATHS = [
   "/entries/artificial-neuron-biological-voltage-energy/",
   "/entries/epoch-frontier-ai-benchmark-progress-acceleration-2024/",
   "/entries/gpt-5-erdos-literature-search-status-changes/",
+  "/entries/kosmos-ai-neuron-clearance-signal/",
   "/entries/google-deepmind-gdmi-leading-hurricane-guidance-2025/",
   METR_ENTRY_PATH,
 ] as const;

@@ -31,6 +31,13 @@ const TRAILS = [
       "GPT-5 literature search moves six Erdős database entries to solved status after finding earlier human results",
   },
   {
+    path: "/topic-trails/ai-systems-in-scientific-discovery/",
+    name: "AI systems in scientific discovery",
+    lastActivity: "2026-08-05",
+    entryTitle:
+      "Kosmos AI discovers an overlooked molecular clue to early neuron vulnerability in Alzheimer’s disease",
+  },
+  {
     path: "/topic-trails/brain-inspired-hardware-biological-function/",
     name: "Brain-inspired hardware approaching biological function",
     lastActivity: "2026-07-30",
@@ -58,7 +65,7 @@ async function openDefaultTrail(page: Page): Promise<void> {
 }
 
 test("generates exactly one working route for every seed Topic Trail", async ({ request }) => {
-  expect(new Set(TRAILS.map(({ path }) => path)).size).toBe(7);
+  expect(new Set(TRAILS.map(({ path }) => path)).size).toBe(8);
   for (const trail of TRAILS) {
     const response = await request.get(trail.path);
     expect(response.status(), trail.path).toBe(200);
