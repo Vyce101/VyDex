@@ -1,0 +1,172 @@
+{
+  "revision_id": "019fd2d8-c7f3-7108-9297-25331eb394df",
+  "entry_id": "019fd2d8-c7f3-7108-9297-21223bf62764",
+  "revision_number": 1,
+  "published_at": "2026-08-05T16:54:10Z",
+  "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+  "methodology_public_version": "1.0.0",
+  "revision_category": "initial_publication",
+  "materiality": "material",
+  "update_summary": "Initial publication of Kosmos Discovery 7 and its cross-dataset flippase–phagocytosis signature.",
+  "entry": {
+    "id": "019fd2d8-c7f3-7108-9297-21223bf62764",
+    "slug": "kosmos-ai-neuron-clearance-signal",
+    "aliases": [],
+    "title": "Kosmos AI discovers an overlooked molecular clue to early neuron vulnerability in Alzheimer’s disease",
+    "claim": "Edison Scientific’s Kosmos autonomously surfaced an age-linked transcriptomic pattern—lower P4-ATPase flippase expression in vulnerable entorhinal neurons alongside higher microglial phagocytosis-marker expression—in a mouse dataset whose researchers had not identified it; the paper’s authors then reported the same directional pattern in a separately published mouse dataset and a corresponding regional pattern in human Alzheimer’s disease data.",
+    "claim_status": "supported",
+    "evidence_strength": "strong",
+    "review_status": "stable",
+    "review_reason": null,
+    "entry_state": "main_entry",
+    "domains": [
+      "ai_capabilities",
+      "biology"
+    ],
+    "primary_topic_trail_id": "019fd2d8-c7ef-72cf-86b1-8f8c171ff7b7",
+    "secondary_topic_trail_ids": [],
+    "methodology_id": "019f9593-391e-79d1-8f4a-3c88e68fc069",
+    "date_happened": null,
+    "date_disclosed": "2025-11-05",
+    "date_last_checked": "2026-08-05",
+    "next_check_date": null,
+    "frontier_delta": {
+      "previous_frontier": "By early 2025, AI scientist systems had already moved beyond literature summarization. Google’s AI co-scientist generated biomedical hypotheses and experimental proposals that collaborators tested, while Edison Scientific’s preceding Robin system combined literature search and data analysis with a laboratory feedback loop to propose and help validate a previously unreported therapeutic candidate for dry age-related macular degeneration. These systems established AI-assisted hypothesis generation, computational analysis, and laboratory validation, but they did not demonstrate one long-running investigation coordinating hundreds of analysis and literature trajectories through a shared, inspectable research state.",
+      "new_claim_result": "Given a broad research objective and a human-prepared mouse brain dataset, Kosmos coordinated repeated parallel data-analysis and literature-search tasks through a structured world model. It identified age-related downregulation of neuronal P4-ATPase flippases alongside increased microglial phagocytosis-marker expression, connected the pattern to a possible phosphatidylserine-mediated neuron-clearance pathway, and surfaced a finding that the dataset’s researchers had not identified. The paper’s authors reported the same directional signature in a separately published mouse dataset and a corresponding regional pattern in human Alzheimer’s disease data.",
+      "delta": "The demonstrated frontier moved from AI systems generating scientific hypotheses or handling shorter, more separated research stages to a long-horizon agent conducting broad, traceable computational exploration and surfacing an overlooked biological association that remained visible across additional mouse and human datasets. The result is a replicated candidate mechanism, not experimentally demonstrated biological causality."
+    },
+    "details": {
+      "what_happened": "Edison Scientific researchers and academic collaborators publicly released the Kosmos technical report on 5 November 2025. Kosmos was presented as a successor to FutureHouse’s Robin and as a general-purpose system for data-driven discovery across fields including metabolomics, materials science, connectomics, statistical genetics, proteomics, and transcriptomics.\n\nA scientist began each run by supplying a broad objective and a curated dataset. Kosmos then launched parallel literature-search and data-analysis tasks, summarized their outputs into a structured world model, and used that shared state to choose subsequent tasks. Runs could continue for up to 20 cycles and approximately 12 hours before the system synthesized candidate findings into reports linked to analysis notebooks or primary-literature passages. The reported implementation did not allow scientists to intervene during intermediate cycles.\n\nFor Discovery 7, Kosmos received single-nucleus RNA-sequencing data from mice aged 6 to 28 months and a broad objective concerning the vulnerability of entorhinal neurons during ageing. It found that Atp10a expression declined with age in vulnerable entorhinal neurons and that nine other P4-ATPase flippase-family members showed concurrent downregulation. Kosmos connected this pattern to increased expression of phosphatidylserine-sensing and phagocytic-pathway genes in microglia, proposing that reduced membrane-flippase activity could expose more phosphatidylserine “eat-me” signals and make vulnerable neurons more susceptible to microglial removal.",
+      "what_evidence_shows": "The reported result has three computational layers. Five prompted reanalyses supported the signature in the original mouse dataset. Five additional trajectories supported the same directional relationship in a separately published mouse ageing dataset, although the validation effects were more modest. In a public human Alzheimer’s dataset, four of five prompted trajectories supported a comparable regional pattern: entorhinal supragranular neurons showed lower flippase expression at Braak stage II than at Braak stage 0, while the same neuronal decrease was not observed in the later-affected superior frontal gyrus and microglia showed increased phagocytosis-marker expression.\n\nThe technical report exposes the Discovery 7 report, validation trajectories, and figure-analysis code. Those materials provide substantially more support than a bare developer announcement and justify documenting the narrowly stated computational finding. They do not permit complete independent reproduction because the original Discovery 7 dataset remains unavailable pending a separate publication, and the external validation analyses were conducted within the same developer-led project rather than by unaffiliated replicators.\n\nAcross three representative Kosmos reports, project experts evaluated 102 statements and marked 79.4% supported overall: 85.5% of data-analysis statements, 82.1% of literature-review statements, and 57.9% of synthesis or interpretation statements. The largest measured weakness was therefore the step from supported observations to claims about scientific meaning. The entorhinal result should be read as a cross-dataset gene-expression signature and mechanistic hypothesis, not proof that flippase loss causes phosphatidylserine exposure or microglial engulfment.",
+      "context_changes_interpretation": "The domain experts who evaluated Kosmos reports, supplied datasets, and performed validations were collaborators and paper coauthors. Their analyses were separate from the original Kosmos trajectory, but they do not constitute external replication by investigators unaffiliated with Edison Scientific or the study. A later independent radiation-biology preprint tested different Kosmos outputs and found one supported result, one uncertain result, and one false hypothesis; it neither reproduces nor refutes Discovery 7, but it reinforces the need for adversarial statistical checks.\n\nThe seven highlighted discoveries were selected case studies, not a preregistered random sample of all Kosmos runs. Edison Scientific states that it often runs Kosmos multiple times on the same objective to sample different research directions. The public evidence does not disclose the total number of runs, failed investigations, or candidate findings reviewed to produce the seven showcased cases, so it cannot establish a dependable discovery rate.\n\nThe system’s autonomy also had firm boundaries. Humans chose the objective, generated or curated the data, prepared and normalized inputs, evaluated reports, ran external validation analyses, and decided which findings were accurate and important. Kosmos could not autonomously obtain external datasets for orthogonal validation, handled only datasets up to approximately 5 GB, performed poorly on raw images and raw sequencing files, varied with prompt wording, and did not reliably converge on the same finding across independent runs. Its demonstrated capability was wide computational exploration within a human-defined research frame, not autonomous control of the complete scientific process.",
+      "reader_takeaway": "Kosmos did more than produce a plausible biological story. It conducted a broad computational investigation, connected gene-expression patterns with relevant literature, and surfaced an association that the researchers who produced the original dataset had not identified. The principal signature remained visible when the project checked a separately published mouse dataset and human Alzheimer’s data.\n\nThe result is not a proven explanation for Alzheimer’s disease or demonstrated neuron loss. No experiment measured increased phosphatidylserine on the affected neurons, showed microglia engulfing them because of flippase reduction, or tested whether intervening in the proposed pathway changes disease. The milestone is an AI-led discovery of a cross-dataset candidate mechanism that human experts considered scientifically useful enough to validate and report."
+    },
+    "confirmed_significance": "Kosmos provides strong initial evidence that a long-horizon research agent can coordinate roughly 200 analysis and literature trajectories within one human-defined objective while preserving links from report statements to supporting work. In Discovery 7, that scale yielded an overlooked biological association rather than only a larger volume of generated output.\n\nThe confirmed milestone is AI-led computational discovery of a candidate neuron-vulnerability mechanism from existing data, followed by same-project checks in separately published mouse and human datasets. It is not the first AI-generated scientific hypothesis to receive validation, proof of the proposed biological pathway, or evidence that Kosmos can replace expert scientific review.",
+    "potential_significance_if_confirmed": "If unaffiliated groups reproduce the transcriptomic result and laboratory experiments show that age-related flippase loss increases phosphatidylserine exposure and causes microglial engulfment of vulnerable neurons, Kosmos would have contributed to identifying a previously unknown causal pathway relevant to early Alzheimer’s disease. That biological confirmation would cross a distinct frontier and warrant separate assessment.\n\nIf similarly novel findings recur in preregistered evaluations that disclose all runs, failed paths, verification labour, and appropriate null comparisons, structured-world-model agents could allow research groups to explore substantially more serious hypotheses within existing datasets. The current evidence does not establish how often valuable discoveries occur, whether verification requires less expert time than the exploration saves, or whether the performance generalizes to poorly curated data and experimental work.",
+    "caveats": [
+      "**Causality was not demonstrated:** The study measured coordinated gene-expression changes; it did not directly measure phosphatidylserine exposure, microglial engulfment, neuron loss caused by reduced flippase activity, or therapeutic benefit.",
+      "**The original dataset is not public:** The complete Discovery 7 mouse dataset remains promised for a separate publication, preventing an unaffiliated end-to-end reproduction of the flagship analysis.",
+      "**The validation was not external replication:** The additional mouse dataset came from another research group, but Edison Scientific’s project and its collaborators performed the reported validation analyses.",
+      "**Human-data convergence was incomplete:** Four of five prompted trajectories over the human Alzheimer’s dataset supported the initial discovery.",
+      "**The human evidence was corresponding rather than complete replication:** It showed a regional gene-expression pattern associated with early tau pathology, not the full proposed sequence from flippase loss to neuronal engulfment.",
+      "**Developer-led preprint evidence:** Edison Scientific developed Kosmos and led the technical report, which had not completed formal peer review as of 5 August 2026.",
+      "**Project experts were collaborators:** The domain experts who evaluated outputs and validated the showcased findings were involved in the project and appear among the paper’s authors.",
+      "**Selected case studies omit the denominator:** Seven highlighted runs do not reveal the number of unsuccessful runs, discarded candidate findings, or repeated objectives from which they were selected.",
+      "**No discovery rate was established:** The evidence does not support a claim that each 12-hour run reliably produces one or more genuine discoveries.",
+      "**Interpretive reliability was substantially weaker:** Only 57.9% of evaluated synthesis and interpretation statements were supported, compared with 85.5% of data-analysis statements.",
+      "**Human scientific judgment remained essential:** Experts selected and prepared datasets, assessed novelty and importance, performed validation analyses, and rejected misleading interpretations.",
+      "**The six-month comparison was subjective:** The 6.14-month figure came from seven collaborators estimating elapsed research time rather than a controlled productivity study.",
+      "**Activity volume is not scientific value:** Lines of code executed and papers read measure workload, not correctness, novelty, or insight.",
+      "**Runs were stochastic and prompt-sensitive:** Independent runs could pursue different directions and did not necessarily converge on the same findings.",
+      "**Data autonomy was limited:** Kosmos depended on curated, well-labelled inputs, could not fetch external validation datasets itself, struggled with raw data, and accepted datasets only up to approximately 5 GB.",
+      "**Public provenance is incomplete:** Reports, selected trajectories, and figure scripts are public, but no frozen archive was located containing the complete system configuration, every intermediate world-model state, and all rejected candidate paths.",
+      "**Prior systems crossed adjacent thresholds:** Robin and Google’s AI co-scientist had already generated scientific hypotheses or candidates associated with laboratory validation."
+    ],
+    "sources": [
+      {
+        "citation_id": "kosmos-technical-report",
+        "title": "Kosmos: An AI Scientist for Autonomous Discovery",
+        "publisher_or_domain": "arXiv / Edison Scientific researchers and academic collaborators",
+        "url": "https://arxiv.org/abs/2511.02824",
+        "evidence_types": [
+          "preprint",
+          "developer_vendor_claim",
+          "benchmark_result"
+        ],
+        "source_role": "primary_evidence",
+        "used_for": "Kosmos architecture; run duration and rollout volume; statement-level evaluation; case-study classification; Discovery 7 analyses and validation methods; human-time estimates; data availability; contributor roles; and system limitations."
+      },
+      {
+        "citation_id": "kosmos-discovery-seven-report",
+        "title": "Mechanism of neuron vulnerability in aging",
+        "publisher_or_domain": "Edison Scientific Platform",
+        "url": "https://platform.edisonscientific.com/kosmos/28c427d2-be31-48b5-b272-28d5a1e3ea5c",
+        "evidence_types": [
+          "technical_artifact",
+          "developer_vendor_claim"
+        ],
+        "source_role": "strong_artifact",
+        "used_for": "Public Discovery 7 report, linked analysis trajectories, literature provenance, candidate hypotheses, and the path from initial exploration to the reported flippase–phagocytosis signature."
+      },
+      {
+        "citation_id": "kosmos-figure-eight-artifacts",
+        "title": "Kosmos Figure 8 aging neuron vulnerability artifacts",
+        "publisher_or_domain": "Edison Scientific / GitHub",
+        "url": "https://github.com/EdisonScientific/kosmos-figures/tree/main/Figure_8_aging_neuron_vulnerability",
+        "evidence_types": [
+          "technical_artifact"
+        ],
+        "source_role": "strong_artifact",
+        "used_for": "Public code, notebooks, and plotted data supporting the technical report’s Discovery 7 figure and validation analyses."
+      },
+      {
+        "citation_id": "independent-kosmos-radiation-biology-evaluation",
+        "title": "When AI Does Science: Evaluating the Autonomous AI Scientist KOSMOS in Radiation Biology",
+        "publisher_or_domain": "arXiv",
+        "url": "https://arxiv.org/abs/2511.13825",
+        "evidence_types": [
+          "preprint",
+          "benchmark_result"
+        ],
+        "source_role": "context_source",
+        "used_for": "Separate-party evidence that useful Kosmos findings can coexist with uncertain or false hypotheses and that random-gene null comparisons can materially change interpretation. This study did not test Discovery 7."
+      },
+      {
+        "citation_id": "jin-2025-mouse-brain-aging",
+        "title": "Brain-wide cell-type-specific transcriptomic signatures of healthy ageing in mice",
+        "publisher_or_domain": "Nature",
+        "url": "https://www.nature.com/articles/s41586-024-08350-8",
+        "evidence_types": [
+          "peer_reviewed_paper"
+        ],
+        "source_role": "context_source",
+        "used_for": "Provenance, design, and public availability of the separately produced mouse single-cell ageing dataset used for the project’s cross-dataset validation. The paper did not report the Kosmos flippase–phagocytosis finding."
+      },
+      {
+        "citation_id": "leng-2021-vulnerable-alzheimers-neurons",
+        "title": "Molecular characterization of selectively vulnerable neurons in Alzheimer’s disease",
+        "publisher_or_domain": "Nature Neuroscience",
+        "url": "https://www.nature.com/articles/s41593-020-00764-7",
+        "evidence_types": [
+          "peer_reviewed_paper"
+        ],
+        "source_role": "context_source",
+        "used_for": "Provenance and design of the public human entorhinal-cortex and superior-frontal-gyrus dataset used to assess whether the mouse signature had a corresponding regional pattern in Alzheimer’s disease."
+      },
+      {
+        "citation_id": "kosmos-announcement",
+        "title": "Kosmos: An AI Scientist for Autonomous Discovery",
+        "publisher_or_domain": "Edison Scientific",
+        "url": "https://edisonscientific.com/news/announcing-kosmos",
+        "evidence_types": [
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Public disclosure date; developer interpretation of Discovery 7; the stated wet-lab validation plan; explanation of the six-month estimate; repeated-run practice; pricing and product context; and developer-stated caveats."
+      },
+      {
+        "citation_id": "robin-ai-scientist-paper",
+        "title": "Robin: A multi-agent system for automating scientific discovery",
+        "publisher_or_domain": "arXiv / FutureHouse researchers",
+        "url": "https://arxiv.org/abs/2505.13400",
+        "evidence_types": [
+          "preprint",
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Previous Edison/FutureHouse frontier; integration of literature search, hypothesis generation, experiment planning, and data analysis; the ripasudil candidate and follow-up RNA-sequencing interpretation; and evidence that validated AI-led biological discovery preceded Kosmos."
+      },
+      {
+        "citation_id": "google-ai-co-scientist",
+        "title": "Accelerating scientific breakthroughs with an AI co-scientist",
+        "publisher_or_domain": "Google Research",
+        "url": "https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/",
+        "evidence_types": [
+          "developer_vendor_claim"
+        ],
+        "source_role": "context_source",
+        "used_for": "Previous multi-agent hypothesis-generation frontier; laboratory testing of drug-repurposing candidates and liver-fibrosis targets; and evidence against describing Kosmos as the first AI system to generate experimentally tested scientific hypotheses."
+      }
+    ]
+  }
+}
